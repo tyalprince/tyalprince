@@ -14,11 +14,13 @@ function getCrypto(): Crypto {
   return c;
 }
 
-/** Uniform random index in [0, max) using crypto.getRandomValues (rejection sampling). */
+/** Uniform random index in [0, max) using crypto.getRandomValues (rejection
+ *  sampling over the full 32-bit range, so this stays correct for any max —
+ *  including the 1000+ word diceware list, not just small character pools). */
 function randomIndex(max: number): number {
   const crypto = getCrypto();
-  const range = 256 - (256 % max);
-  const buf = new Uint8Array(1);
+  const range = Math.floor(0x100000000 / max) * max;
+  const buf = new Uint32Array(1);
   let x: number;
   do {
     crypto.getRandomValues(buf);

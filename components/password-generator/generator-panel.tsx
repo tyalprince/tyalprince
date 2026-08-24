@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Copy, RefreshCw, Check } from "lucide-react";
 import {
@@ -36,32 +36,34 @@ export function GeneratorPanel({
   const [phraseOptions, setPhraseOptions] = useState<PassphraseOptions>(
     DEFAULT_PASSPHRASE_OPTIONS,
   );
-  const [value, setValue] = useState("");
-  const [copied, setCopied] = useState(false);
+  const [copiedValue, setCopiedValue] = useState<string | null>(null);
+  const [nonce, setNonce] = useState(0);
   const router = useRouter();
   const stash = useGeneratedPasswordStash();
 
-  const regenerate = useMemo(
-    () => () => {
-      setValue(
-        mode === "password"
-          ? generatePassword(pwOptions)
-          : generatePassphrase(phraseOptions),
-      );
-      setCopied(false);
-    },
-    [mode, pwOptions, phraseOptions],
+  // Regenerated whenever the mode/options change, or `nonce` is bumped by
+  // the manual regenerate button. Living in useMemo (rather than an effect)
+  // keeps this a pure derivation of current inputs instead of an extra
+  // render pass.
+  const value = useMemo(
+    () =>
+      mode === "password"
+        ? generatePassword(pwOptions)
+        : generatePassphrase(phraseOptions),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [mode, pwOptions, phraseOptions, nonce],
   );
 
-  useEffect(() => {
-    regenerate();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mode, pwOptions, phraseOptions]);
+  function regenerate() {
+    setNonce((n) => n + 1);
+  }
+
+  const copied = copiedValue === value;
 
   async function handleCopy() {
     await copyWithAutoClear(value);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setCopiedValue(value);
+    setTimeout(() => setCopiedValue((v) => (v === value ? null : v)), 2000);
   }
 
   function handleSaveToVault() {
