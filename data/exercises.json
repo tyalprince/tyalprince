@@ -1,0 +1,4981 @@
+[
+  {
+    "name": "Barbell Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings",
+      "core"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Brace your core, sit the hips back and down, then drive through the mid-foot to stand."
+  },
+  {
+    "name": "Dumbbell Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings",
+      "core"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Brace your core, sit the hips back and down, then drive through the mid-foot to stand."
+  },
+  {
+    "name": "Kettlebell Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings",
+      "core"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "Brace your core, sit the hips back and down, then drive through the mid-foot to stand."
+  },
+  {
+    "name": "Machine Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings",
+      "core"
+    ],
+    "equipment": "Machine",
+    "instructions": "Brace your core, sit the hips back and down, then drive through the mid-foot to stand."
+  },
+  {
+    "name": "Smith Machine Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings",
+      "core"
+    ],
+    "equipment": "Smith Machine",
+    "instructions": "Brace your core, sit the hips back and down, then drive through the mid-foot to stand."
+  },
+  {
+    "name": "Bodyweight Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings",
+      "core"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Brace your core, sit the hips back and down, then drive through the mid-foot to stand."
+  },
+  {
+    "name": "Goblet Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings",
+      "core"
+    ],
+    "equipment": "Goblet",
+    "instructions": "Brace your core, sit the hips back and down, then drive through the mid-foot to stand."
+  },
+  {
+    "name": "Barbell Deadlift",
+    "category": "strength",
+    "muscleGroups": [
+      "hamstrings",
+      "glutes",
+      "back",
+      "core"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Hinge at the hips with a flat back, drive the floor away, and lock out the hips at the top."
+  },
+  {
+    "name": "Dumbbell Deadlift",
+    "category": "strength",
+    "muscleGroups": [
+      "hamstrings",
+      "glutes",
+      "back",
+      "core"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Hinge at the hips with a flat back, drive the floor away, and lock out the hips at the top."
+  },
+  {
+    "name": "Trap Bar Deadlift",
+    "category": "strength",
+    "muscleGroups": [
+      "hamstrings",
+      "glutes",
+      "back",
+      "core"
+    ],
+    "equipment": "Trap Bar",
+    "instructions": "Hinge at the hips with a flat back, drive the floor away, and lock out the hips at the top."
+  },
+  {
+    "name": "Kettlebell Deadlift",
+    "category": "strength",
+    "muscleGroups": [
+      "hamstrings",
+      "glutes",
+      "back",
+      "core"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "Hinge at the hips with a flat back, drive the floor away, and lock out the hips at the top."
+  },
+  {
+    "name": "Smith Machine Deadlift",
+    "category": "strength",
+    "muscleGroups": [
+      "hamstrings",
+      "glutes",
+      "back",
+      "core"
+    ],
+    "equipment": "Smith Machine",
+    "instructions": "Hinge at the hips with a flat back, drive the floor away, and lock out the hips at the top."
+  },
+  {
+    "name": "Barbell Romanian Deadlift",
+    "category": "strength",
+    "muscleGroups": [
+      "hamstrings",
+      "glutes",
+      "back"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Keep a slight knee bend and push the hips back, lowering the weight along the shins."
+  },
+  {
+    "name": "Dumbbell Romanian Deadlift",
+    "category": "strength",
+    "muscleGroups": [
+      "hamstrings",
+      "glutes",
+      "back"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Keep a slight knee bend and push the hips back, lowering the weight along the shins."
+  },
+  {
+    "name": "Kettlebell Romanian Deadlift",
+    "category": "strength",
+    "muscleGroups": [
+      "hamstrings",
+      "glutes",
+      "back"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "Keep a slight knee bend and push the hips back, lowering the weight along the shins."
+  },
+  {
+    "name": "Barbell Bench Press",
+    "category": "strength",
+    "muscleGroups": [
+      "chest",
+      "shoulders",
+      "triceps"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Retract the shoulder blades, lower the bar to the chest, and press up over the shoulders."
+  },
+  {
+    "name": "Dumbbell Bench Press",
+    "category": "strength",
+    "muscleGroups": [
+      "chest",
+      "shoulders",
+      "triceps"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Retract the shoulder blades, lower the bar to the chest, and press up over the shoulders."
+  },
+  {
+    "name": "Machine Bench Press",
+    "category": "strength",
+    "muscleGroups": [
+      "chest",
+      "shoulders",
+      "triceps"
+    ],
+    "equipment": "Machine",
+    "instructions": "Retract the shoulder blades, lower the bar to the chest, and press up over the shoulders."
+  },
+  {
+    "name": "Smith Machine Bench Press",
+    "category": "strength",
+    "muscleGroups": [
+      "chest",
+      "shoulders",
+      "triceps"
+    ],
+    "equipment": "Smith Machine",
+    "instructions": "Retract the shoulder blades, lower the bar to the chest, and press up over the shoulders."
+  },
+  {
+    "name": "Barbell Incline Bench Press",
+    "category": "strength",
+    "muscleGroups": [
+      "chest",
+      "shoulders",
+      "triceps"
+    ],
+    "equipment": "Barbell",
+    "instructions": "On an incline bench, press the weight up and slightly back over the upper chest."
+  },
+  {
+    "name": "Dumbbell Incline Bench Press",
+    "category": "strength",
+    "muscleGroups": [
+      "chest",
+      "shoulders",
+      "triceps"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "On an incline bench, press the weight up and slightly back over the upper chest."
+  },
+  {
+    "name": "Machine Incline Bench Press",
+    "category": "strength",
+    "muscleGroups": [
+      "chest",
+      "shoulders",
+      "triceps"
+    ],
+    "equipment": "Machine",
+    "instructions": "On an incline bench, press the weight up and slightly back over the upper chest."
+  },
+  {
+    "name": "Smith Machine Incline Bench Press",
+    "category": "strength",
+    "muscleGroups": [
+      "chest",
+      "shoulders",
+      "triceps"
+    ],
+    "equipment": "Smith Machine",
+    "instructions": "On an incline bench, press the weight up and slightly back over the upper chest."
+  },
+  {
+    "name": "Barbell Overhead Press",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders",
+      "triceps",
+      "core"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Brace the core and press the weight straight overhead without arching the lower back."
+  },
+  {
+    "name": "Single-Leg Barbell Overhead Press",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders",
+      "triceps",
+      "core"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Unilateral variant: brace the core and press the weight straight overhead without arching the lower back."
+  },
+  {
+    "name": "Dumbbell Overhead Press",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders",
+      "triceps",
+      "core"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Brace the core and press the weight straight overhead without arching the lower back."
+  },
+  {
+    "name": "Single-Leg Dumbbell Overhead Press",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders",
+      "triceps",
+      "core"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Unilateral variant: brace the core and press the weight straight overhead without arching the lower back."
+  },
+  {
+    "name": "Machine Overhead Press",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders",
+      "triceps",
+      "core"
+    ],
+    "equipment": "Machine",
+    "instructions": "Brace the core and press the weight straight overhead without arching the lower back."
+  },
+  {
+    "name": "Single-Leg Machine Overhead Press",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders",
+      "triceps",
+      "core"
+    ],
+    "equipment": "Machine",
+    "instructions": "Unilateral variant: brace the core and press the weight straight overhead without arching the lower back."
+  },
+  {
+    "name": "Kettlebell Overhead Press",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders",
+      "triceps",
+      "core"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "Brace the core and press the weight straight overhead without arching the lower back."
+  },
+  {
+    "name": "Single-Leg Kettlebell Overhead Press",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders",
+      "triceps",
+      "core"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "Unilateral variant: brace the core and press the weight straight overhead without arching the lower back."
+  },
+  {
+    "name": "Smith Machine Overhead Press",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders",
+      "triceps",
+      "core"
+    ],
+    "equipment": "Smith Machine",
+    "instructions": "Brace the core and press the weight straight overhead without arching the lower back."
+  },
+  {
+    "name": "Single-Leg Smith Machine Overhead Press",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders",
+      "triceps",
+      "core"
+    ],
+    "equipment": "Smith Machine",
+    "instructions": "Unilateral variant: brace the core and press the weight straight overhead without arching the lower back."
+  },
+  {
+    "name": "Barbell Row",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "biceps"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Hinge forward with a flat back and pull the weight to the lower ribs, squeezing the shoulder blades."
+  },
+  {
+    "name": "Single-Leg Barbell Row",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "biceps"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Unilateral variant: hinge forward with a flat back and pull the weight to the lower ribs, squeezing the shoulder blades."
+  },
+  {
+    "name": "Dumbbell Row",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "biceps"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Hinge forward with a flat back and pull the weight to the lower ribs, squeezing the shoulder blades."
+  },
+  {
+    "name": "Single-Leg Dumbbell Row",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "biceps"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Unilateral variant: hinge forward with a flat back and pull the weight to the lower ribs, squeezing the shoulder blades."
+  },
+  {
+    "name": "Cable Row",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "biceps"
+    ],
+    "equipment": "Cable",
+    "instructions": "Hinge forward with a flat back and pull the weight to the lower ribs, squeezing the shoulder blades."
+  },
+  {
+    "name": "Single-Leg Cable Row",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "biceps"
+    ],
+    "equipment": "Cable",
+    "instructions": "Unilateral variant: hinge forward with a flat back and pull the weight to the lower ribs, squeezing the shoulder blades."
+  },
+  {
+    "name": "Machine Row",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "biceps"
+    ],
+    "equipment": "Machine",
+    "instructions": "Hinge forward with a flat back and pull the weight to the lower ribs, squeezing the shoulder blades."
+  },
+  {
+    "name": "Single-Leg Machine Row",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "biceps"
+    ],
+    "equipment": "Machine",
+    "instructions": "Unilateral variant: hinge forward with a flat back and pull the weight to the lower ribs, squeezing the shoulder blades."
+  },
+  {
+    "name": "T-Bar Row",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "biceps"
+    ],
+    "equipment": "T-Bar",
+    "instructions": "Hinge forward with a flat back and pull the weight to the lower ribs, squeezing the shoulder blades."
+  },
+  {
+    "name": "Single-Leg T-Bar Row",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "biceps"
+    ],
+    "equipment": "T-Bar",
+    "instructions": "Unilateral variant: hinge forward with a flat back and pull the weight to the lower ribs, squeezing the shoulder blades."
+  },
+  {
+    "name": "Cable Lat Pulldown",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "biceps"
+    ],
+    "equipment": "Cable",
+    "instructions": "Pull the bar down to the upper chest while keeping the chest tall."
+  },
+  {
+    "name": "Single-Leg Cable Lat Pulldown",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "biceps"
+    ],
+    "equipment": "Cable",
+    "instructions": "Unilateral variant: pull the bar down to the upper chest while keeping the chest tall."
+  },
+  {
+    "name": "Machine Lat Pulldown",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "biceps"
+    ],
+    "equipment": "Machine",
+    "instructions": "Pull the bar down to the upper chest while keeping the chest tall."
+  },
+  {
+    "name": "Single-Leg Machine Lat Pulldown",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "biceps"
+    ],
+    "equipment": "Machine",
+    "instructions": "Unilateral variant: pull the bar down to the upper chest while keeping the chest tall."
+  },
+  {
+    "name": "Bodyweight Pull-Up",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "biceps"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Pull the chin over the bar with a controlled descent to full arm extension."
+  },
+  {
+    "name": "Assisted Machine Pull-Up",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "biceps"
+    ],
+    "equipment": "Assisted Machine",
+    "instructions": "Pull the chin over the bar with a controlled descent to full arm extension."
+  },
+  {
+    "name": "Weighted Pull-Up",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "biceps"
+    ],
+    "equipment": "Weighted",
+    "instructions": "Pull the chin over the bar with a controlled descent to full arm extension."
+  },
+  {
+    "name": "Bodyweight Chin-Up",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "biceps"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Using an underhand grip, pull the chin over the bar and lower under control."
+  },
+  {
+    "name": "Assisted Machine Chin-Up",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "biceps"
+    ],
+    "equipment": "Assisted Machine",
+    "instructions": "Using an underhand grip, pull the chin over the bar and lower under control."
+  },
+  {
+    "name": "Weighted Chin-Up",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "biceps"
+    ],
+    "equipment": "Weighted",
+    "instructions": "Using an underhand grip, pull the chin over the bar and lower under control."
+  },
+  {
+    "name": "Barbell Hip Thrust",
+    "category": "strength",
+    "muscleGroups": [
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Barbell",
+    "instructions": "With shoulders on a bench, drive the hips up until the body forms a straight line."
+  },
+  {
+    "name": "Machine Hip Thrust",
+    "category": "strength",
+    "muscleGroups": [
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Machine",
+    "instructions": "With shoulders on a bench, drive the hips up until the body forms a straight line."
+  },
+  {
+    "name": "Bodyweight Hip Thrust",
+    "category": "strength",
+    "muscleGroups": [
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "With shoulders on a bench, drive the hips up until the body forms a straight line."
+  },
+  {
+    "name": "Band Hip Thrust",
+    "category": "strength",
+    "muscleGroups": [
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Band",
+    "instructions": "With shoulders on a bench, drive the hips up until the body forms a straight line."
+  },
+  {
+    "name": "Barbell Glute Bridge",
+    "category": "strength",
+    "muscleGroups": [
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Lying on the floor, drive the hips upward, squeezing the glutes at the top."
+  },
+  {
+    "name": "Bodyweight Glute Bridge",
+    "category": "strength",
+    "muscleGroups": [
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Lying on the floor, drive the hips upward, squeezing the glutes at the top."
+  },
+  {
+    "name": "Band Glute Bridge",
+    "category": "strength",
+    "muscleGroups": [
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Band",
+    "instructions": "Lying on the floor, drive the hips upward, squeezing the glutes at the top."
+  },
+  {
+    "name": "Barbell Lunge",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Step forward and lower until both knees reach roughly 90 degrees, then push back to start."
+  },
+  {
+    "name": "Single-Leg Barbell Lunge",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Unilateral variant: step forward and lower until both knees reach roughly 90 degrees, then push back to start."
+  },
+  {
+    "name": "Dumbbell Lunge",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Step forward and lower until both knees reach roughly 90 degrees, then push back to start."
+  },
+  {
+    "name": "Single-Leg Dumbbell Lunge",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Unilateral variant: step forward and lower until both knees reach roughly 90 degrees, then push back to start."
+  },
+  {
+    "name": "Kettlebell Lunge",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "Step forward and lower until both knees reach roughly 90 degrees, then push back to start."
+  },
+  {
+    "name": "Single-Leg Kettlebell Lunge",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "Unilateral variant: step forward and lower until both knees reach roughly 90 degrees, then push back to start."
+  },
+  {
+    "name": "Bodyweight Lunge",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Step forward and lower until both knees reach roughly 90 degrees, then push back to start."
+  },
+  {
+    "name": "Single-Leg Bodyweight Lunge",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Unilateral variant: step forward and lower until both knees reach roughly 90 degrees, then push back to start."
+  },
+  {
+    "name": "Barbell Split Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Barbell",
+    "instructions": "From a staggered stance, lower the back knee toward the floor and drive back up."
+  },
+  {
+    "name": "Single-Leg Barbell Split Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Unilateral variant: from a staggered stance, lower the back knee toward the floor and drive back up."
+  },
+  {
+    "name": "Dumbbell Split Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "From a staggered stance, lower the back knee toward the floor and drive back up."
+  },
+  {
+    "name": "Single-Leg Dumbbell Split Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Unilateral variant: from a staggered stance, lower the back knee toward the floor and drive back up."
+  },
+  {
+    "name": "Kettlebell Split Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "From a staggered stance, lower the back knee toward the floor and drive back up."
+  },
+  {
+    "name": "Single-Leg Kettlebell Split Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "Unilateral variant: from a staggered stance, lower the back knee toward the floor and drive back up."
+  },
+  {
+    "name": "Bodyweight Split Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "From a staggered stance, lower the back knee toward the floor and drive back up."
+  },
+  {
+    "name": "Single-Leg Bodyweight Split Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Unilateral variant: from a staggered stance, lower the back knee toward the floor and drive back up."
+  },
+  {
+    "name": "Dumbbell Bulgarian Split Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "With the rear foot elevated behind you, lower straight down and drive through the front heel."
+  },
+  {
+    "name": "Single-Leg Dumbbell Bulgarian Split Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Unilateral variant: with the rear foot elevated behind you, lower straight down and drive through the front heel."
+  },
+  {
+    "name": "Kettlebell Bulgarian Split Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "With the rear foot elevated behind you, lower straight down and drive through the front heel."
+  },
+  {
+    "name": "Single-Leg Kettlebell Bulgarian Split Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "Unilateral variant: with the rear foot elevated behind you, lower straight down and drive through the front heel."
+  },
+  {
+    "name": "Barbell Bulgarian Split Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Barbell",
+    "instructions": "With the rear foot elevated behind you, lower straight down and drive through the front heel."
+  },
+  {
+    "name": "Single-Leg Barbell Bulgarian Split Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Unilateral variant: with the rear foot elevated behind you, lower straight down and drive through the front heel."
+  },
+  {
+    "name": "Bodyweight Bulgarian Split Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "With the rear foot elevated behind you, lower straight down and drive through the front heel."
+  },
+  {
+    "name": "Single-Leg Bodyweight Bulgarian Split Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Unilateral variant: with the rear foot elevated behind you, lower straight down and drive through the front heel."
+  },
+  {
+    "name": "Dumbbell Step-Up",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Step fully onto the box and drive through the lead leg to stand tall."
+  },
+  {
+    "name": "Single-Leg Dumbbell Step-Up",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Unilateral variant: step fully onto the box and drive through the lead leg to stand tall."
+  },
+  {
+    "name": "Barbell Step-Up",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Step fully onto the box and drive through the lead leg to stand tall."
+  },
+  {
+    "name": "Single-Leg Barbell Step-Up",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Unilateral variant: step fully onto the box and drive through the lead leg to stand tall."
+  },
+  {
+    "name": "Bodyweight Step-Up",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Step fully onto the box and drive through the lead leg to stand tall."
+  },
+  {
+    "name": "Single-Leg Bodyweight Step-Up",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Unilateral variant: step fully onto the box and drive through the lead leg to stand tall."
+  },
+  {
+    "name": "Kettlebell Step-Up",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "Step fully onto the box and drive through the lead leg to stand tall."
+  },
+  {
+    "name": "Single-Leg Kettlebell Step-Up",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "Unilateral variant: step fully onto the box and drive through the lead leg to stand tall."
+  },
+  {
+    "name": "Machine Leg Press",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Machine",
+    "instructions": "Lower the sled until the knees reach about 90 degrees, then press back to start."
+  },
+  {
+    "name": "Single-Leg Machine Leg Press",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Machine",
+    "instructions": "Unilateral variant: lower the sled until the knees reach about 90 degrees, then press back to start."
+  },
+  {
+    "name": "Barbell Front Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "core"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Keep the elbows high and torso upright as you squat with the load racked on the front shoulders."
+  },
+  {
+    "name": "Dumbbell Front Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "core"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Keep the elbows high and torso upright as you squat with the load racked on the front shoulders."
+  },
+  {
+    "name": "Kettlebell Front Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "core"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "Keep the elbows high and torso upright as you squat with the load racked on the front shoulders."
+  },
+  {
+    "name": "Smith Machine Front Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "core"
+    ],
+    "equipment": "Smith Machine",
+    "instructions": "Keep the elbows high and torso upright as you squat with the load racked on the front shoulders."
+  },
+  {
+    "name": "Barbell Sumo Deadlift",
+    "category": "strength",
+    "muscleGroups": [
+      "glutes",
+      "hamstrings",
+      "back"
+    ],
+    "equipment": "Barbell",
+    "instructions": "With a wide stance, grip inside the knees and drive the floor away, keeping the chest tall."
+  },
+  {
+    "name": "Dumbbell Sumo Deadlift",
+    "category": "strength",
+    "muscleGroups": [
+      "glutes",
+      "hamstrings",
+      "back"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "With a wide stance, grip inside the knees and drive the floor away, keeping the chest tall."
+  },
+  {
+    "name": "Kettlebell Sumo Deadlift",
+    "category": "strength",
+    "muscleGroups": [
+      "glutes",
+      "hamstrings",
+      "back"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "With a wide stance, grip inside the knees and drive the floor away, keeping the chest tall."
+  },
+  {
+    "name": "Barbell Good Morning",
+    "category": "strength",
+    "muscleGroups": [
+      "hamstrings",
+      "glutes",
+      "back"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Hinge at the hips with a soft knee bend, keeping the bar path close to the body."
+  },
+  {
+    "name": "Band Good Morning",
+    "category": "strength",
+    "muscleGroups": [
+      "hamstrings",
+      "glutes",
+      "back"
+    ],
+    "equipment": "Band",
+    "instructions": "Hinge at the hips with a soft knee bend, keeping the bar path close to the body."
+  },
+  {
+    "name": "Bodyweight Push-Up",
+    "category": "strength",
+    "muscleGroups": [
+      "chest",
+      "shoulders",
+      "triceps",
+      "core"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Lower the chest to the floor with a straight body line, then press back up."
+  },
+  {
+    "name": "Weighted Push-Up",
+    "category": "strength",
+    "muscleGroups": [
+      "chest",
+      "shoulders",
+      "triceps",
+      "core"
+    ],
+    "equipment": "Weighted",
+    "instructions": "Lower the chest to the floor with a straight body line, then press back up."
+  },
+  {
+    "name": "Resistance Band Push-Up",
+    "category": "strength",
+    "muscleGroups": [
+      "chest",
+      "shoulders",
+      "triceps",
+      "core"
+    ],
+    "equipment": "Resistance Band",
+    "instructions": "Lower the chest to the floor with a straight body line, then press back up."
+  },
+  {
+    "name": "Bodyweight Dip",
+    "category": "strength",
+    "muscleGroups": [
+      "chest",
+      "triceps",
+      "shoulders"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Lower until the shoulders dip below the elbows, then press back to lockout."
+  },
+  {
+    "name": "Assisted Machine Dip",
+    "category": "strength",
+    "muscleGroups": [
+      "chest",
+      "triceps",
+      "shoulders"
+    ],
+    "equipment": "Assisted Machine",
+    "instructions": "Lower until the shoulders dip below the elbows, then press back to lockout."
+  },
+  {
+    "name": "Weighted Dip",
+    "category": "strength",
+    "muscleGroups": [
+      "chest",
+      "triceps",
+      "shoulders"
+    ],
+    "equipment": "Weighted",
+    "instructions": "Lower until the shoulders dip below the elbows, then press back to lockout."
+  },
+  {
+    "name": "Barbell Push Press",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders",
+      "triceps",
+      "legs"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Dip slightly at the knees and drive the weight overhead using leg drive."
+  },
+  {
+    "name": "Dumbbell Push Press",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders",
+      "triceps",
+      "legs"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Dip slightly at the knees and drive the weight overhead using leg drive."
+  },
+  {
+    "name": "Kettlebell Push Press",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders",
+      "triceps",
+      "legs"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "Dip slightly at the knees and drive the weight overhead using leg drive."
+  },
+  {
+    "name": "Barbell Landmine Press",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders",
+      "chest",
+      "triceps"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Press the landmine-anchored bar up and forward along its natural arc."
+  },
+  {
+    "name": "Single-Leg Barbell Landmine Press",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders",
+      "chest",
+      "triceps"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Unilateral variant: press the landmine-anchored bar up and forward along its natural arc."
+  },
+  {
+    "name": "Dumbbell Farmer's Carry",
+    "category": "strength",
+    "muscleGroups": [
+      "forearms",
+      "core",
+      "back"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Walk with a tall posture while carrying a heavy load in each hand."
+  },
+  {
+    "name": "Kettlebell Farmer's Carry",
+    "category": "strength",
+    "muscleGroups": [
+      "forearms",
+      "core",
+      "back"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "Walk with a tall posture while carrying a heavy load in each hand."
+  },
+  {
+    "name": "Trap Bar Farmer's Carry",
+    "category": "strength",
+    "muscleGroups": [
+      "forearms",
+      "core",
+      "back"
+    ],
+    "equipment": "Trap Bar",
+    "instructions": "Walk with a tall posture while carrying a heavy load in each hand."
+  },
+  {
+    "name": "Dumbbell Suitcase Carry",
+    "category": "strength",
+    "muscleGroups": [
+      "core",
+      "obliques",
+      "forearms"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Carry the load in one hand, resisting lateral lean through the core."
+  },
+  {
+    "name": "Single-Leg Dumbbell Suitcase Carry",
+    "category": "strength",
+    "muscleGroups": [
+      "core",
+      "obliques",
+      "forearms"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Unilateral variant: carry the load in one hand, resisting lateral lean through the core."
+  },
+  {
+    "name": "Kettlebell Suitcase Carry",
+    "category": "strength",
+    "muscleGroups": [
+      "core",
+      "obliques",
+      "forearms"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "Carry the load in one hand, resisting lateral lean through the core."
+  },
+  {
+    "name": "Single-Leg Kettlebell Suitcase Carry",
+    "category": "strength",
+    "muscleGroups": [
+      "core",
+      "obliques",
+      "forearms"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "Unilateral variant: carry the load in one hand, resisting lateral lean through the core."
+  },
+  {
+    "name": "Kettlebell Kettlebell Swing",
+    "category": "strength",
+    "muscleGroups": [
+      "glutes",
+      "hamstrings",
+      "core"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "Hinge and snap the hips forward to drive the kettlebell to chest height."
+  },
+  {
+    "name": "Kettlebell Turkish Get-Up",
+    "category": "strength",
+    "muscleGroups": [
+      "core",
+      "shoulders",
+      "full body"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "Move from lying to standing while keeping the loaded arm locked overhead throughout."
+  },
+  {
+    "name": "Single-Leg Kettlebell Turkish Get-Up",
+    "category": "strength",
+    "muscleGroups": [
+      "core",
+      "shoulders",
+      "full body"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "Unilateral variant: move from lying to standing while keeping the loaded arm locked overhead throughout."
+  },
+  {
+    "name": "Dumbbell Turkish Get-Up",
+    "category": "strength",
+    "muscleGroups": [
+      "core",
+      "shoulders",
+      "full body"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Move from lying to standing while keeping the loaded arm locked overhead throughout."
+  },
+  {
+    "name": "Single-Leg Dumbbell Turkish Get-Up",
+    "category": "strength",
+    "muscleGroups": [
+      "core",
+      "shoulders",
+      "full body"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Unilateral variant: move from lying to standing while keeping the loaded arm locked overhead throughout."
+  },
+  {
+    "name": "Barbell Clean",
+    "category": "strength",
+    "muscleGroups": [
+      "full body",
+      "legs",
+      "back"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Pull the weight explosively from the floor and receive it in a front-rack position."
+  },
+  {
+    "name": "Dumbbell Clean",
+    "category": "strength",
+    "muscleGroups": [
+      "full body",
+      "legs",
+      "back"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Pull the weight explosively from the floor and receive it in a front-rack position."
+  },
+  {
+    "name": "Kettlebell Clean",
+    "category": "strength",
+    "muscleGroups": [
+      "full body",
+      "legs",
+      "back"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "Pull the weight explosively from the floor and receive it in a front-rack position."
+  },
+  {
+    "name": "Barbell Snatch",
+    "category": "strength",
+    "muscleGroups": [
+      "full body",
+      "legs",
+      "shoulders"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Pull the weight explosively overhead in one continuous motion, receiving it in a squat."
+  },
+  {
+    "name": "Dumbbell Snatch",
+    "category": "strength",
+    "muscleGroups": [
+      "full body",
+      "legs",
+      "shoulders"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Pull the weight explosively overhead in one continuous motion, receiving it in a squat."
+  },
+  {
+    "name": "Kettlebell Snatch",
+    "category": "strength",
+    "muscleGroups": [
+      "full body",
+      "legs",
+      "shoulders"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "Pull the weight explosively overhead in one continuous motion, receiving it in a squat."
+  },
+  {
+    "name": "Barbell Thruster",
+    "category": "strength",
+    "muscleGroups": [
+      "legs",
+      "shoulders",
+      "full body"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Combine a front squat with a push press into one continuous, explosive movement."
+  },
+  {
+    "name": "Dumbbell Thruster",
+    "category": "strength",
+    "muscleGroups": [
+      "legs",
+      "shoulders",
+      "full body"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Combine a front squat with a push press into one continuous, explosive movement."
+  },
+  {
+    "name": "Kettlebell Thruster",
+    "category": "strength",
+    "muscleGroups": [
+      "legs",
+      "shoulders",
+      "full body"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "Combine a front squat with a push press into one continuous, explosive movement."
+  },
+  {
+    "name": "Sled Sled Push",
+    "category": "strength",
+    "muscleGroups": [
+      "legs",
+      "glutes",
+      "core"
+    ],
+    "equipment": "Sled",
+    "instructions": "Drive through the legs with a low, powerful stride to push the loaded sled forward."
+  },
+  {
+    "name": "Sled Sled Pull",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "legs",
+      "core"
+    ],
+    "equipment": "Sled",
+    "instructions": "Walk backward or forward pulling the sled via rope or harness attachment."
+  },
+  {
+    "name": "Bodyweight Box Jump",
+    "category": "strength",
+    "muscleGroups": [
+      "legs",
+      "glutes"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Swing the arms and explode upward, landing softly on the box in a stable position."
+  },
+  {
+    "name": "Bodyweight Broad Jump",
+    "category": "strength",
+    "muscleGroups": [
+      "legs",
+      "glutes"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Swing the arms and jump forward for maximum distance, sticking the landing."
+  },
+  {
+    "name": "Bodyweight Back Extension",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Hinge at the hips over the pad and extend back to a neutral spine position."
+  },
+  {
+    "name": "Weighted Back Extension",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Weighted",
+    "instructions": "Hinge at the hips over the pad and extend back to a neutral spine position."
+  },
+  {
+    "name": "Machine Back Extension",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Machine",
+    "instructions": "Hinge at the hips over the pad and extend back to a neutral spine position."
+  },
+  {
+    "name": "Bodyweight Nordic Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "hamstrings"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Anchored at the ankles, lower the torso forward under control using the hamstrings."
+  },
+  {
+    "name": "Bodyweight Sissy Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Lean back from the knees while keeping hips extended, then return to standing."
+  },
+  {
+    "name": "Weighted Sissy Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads"
+    ],
+    "equipment": "Weighted",
+    "instructions": "Lean back from the knees while keeping hips extended, then return to standing."
+  },
+  {
+    "name": "Bodyweight Wall Sit",
+    "category": "strength",
+    "muscleGroups": [
+      "quads"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Hold a seated position against the wall with thighs parallel to the floor."
+  },
+  {
+    "name": "Machine Hack Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes"
+    ],
+    "equipment": "Machine",
+    "instructions": "Lower under control on the fixed track, then press through the mid-foot to stand."
+  },
+  {
+    "name": "Barbell Hack Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Lower under control on the fixed track, then press through the mid-foot to stand."
+  },
+  {
+    "name": "Machine Belt Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes"
+    ],
+    "equipment": "Machine",
+    "instructions": "Squat against a belt-loaded resistance with the spine kept free of axial load."
+  },
+  {
+    "name": "Single-Leg Machine Belt Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes"
+    ],
+    "equipment": "Machine",
+    "instructions": "Unilateral variant: squat against a belt-loaded resistance with the spine kept free of axial load."
+  },
+  {
+    "name": "Barbell Zercher Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "core"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Cradle the bar in the elbow creases and squat while keeping the torso upright."
+  },
+  {
+    "name": "Barbell Overhead Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "shoulders",
+      "core"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Keep the arms locked overhead while squatting to full depth with an upright torso."
+  },
+  {
+    "name": "Dumbbell Overhead Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "shoulders",
+      "core"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Keep the arms locked overhead while squatting to full depth with an upright torso."
+  },
+  {
+    "name": "Barbell Pendlay Row",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "biceps"
+    ],
+    "equipment": "Barbell",
+    "instructions": "From a dead stop on the floor, explosively row the bar to the lower chest."
+  },
+  {
+    "name": "Barbell Seal Row",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "biceps"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Lying face-down on an elevated bench, row the weight up without any body English."
+  },
+  {
+    "name": "Dumbbell Seal Row",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "biceps"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Lying face-down on an elevated bench, row the weight up without any body English."
+  },
+  {
+    "name": "Barbell Meadows Row",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "biceps"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Using a landmine setup, row the bar up and back with a wide range of motion."
+  },
+  {
+    "name": "Single-Leg Barbell Meadows Row",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "biceps"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Unilateral variant: using a landmine setup, row the bar up and back with a wide range of motion."
+  },
+  {
+    "name": "Landmine Meadows Row",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "biceps"
+    ],
+    "equipment": "Landmine",
+    "instructions": "Using a landmine setup, row the bar up and back with a wide range of motion."
+  },
+  {
+    "name": "Single-Leg Landmine Meadows Row",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "biceps"
+    ],
+    "equipment": "Landmine",
+    "instructions": "Unilateral variant: using a landmine setup, row the bar up and back with a wide range of motion."
+  },
+  {
+    "name": "Machine Reverse Hyperextension",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Machine",
+    "instructions": "Swing the legs up and back using the glutes and hamstrings while the torso stays still."
+  },
+  {
+    "name": "Bench Reverse Hyperextension",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Bench",
+    "instructions": "Swing the legs up and back using the glutes and hamstrings while the torso stays still."
+  },
+  {
+    "name": "Barbell Split Jerk",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders",
+      "legs",
+      "full body"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Dip, drive, and split the feet to receive the bar overhead in a stable lunge position."
+  },
+  {
+    "name": "Bodyweight Bear Crawl",
+    "category": "strength",
+    "muscleGroups": [
+      "core",
+      "shoulders",
+      "full body"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Crawl forward on hands and feet with hips low and core braced."
+  },
+  {
+    "name": "Cable Pallof Press",
+    "category": "strength",
+    "muscleGroups": [
+      "core",
+      "obliques"
+    ],
+    "equipment": "Cable",
+    "instructions": "Press the handle straight out from the chest, resisting rotation from the core."
+  },
+  {
+    "name": "Band Pallof Press",
+    "category": "strength",
+    "muscleGroups": [
+      "core",
+      "obliques"
+    ],
+    "equipment": "Band",
+    "instructions": "Press the handle straight out from the chest, resisting rotation from the core."
+  },
+  {
+    "name": "Cable Cable Woodchopper",
+    "category": "strength",
+    "muscleGroups": [
+      "core",
+      "obliques"
+    ],
+    "equipment": "Cable",
+    "instructions": "Rotate through the torso, pulling the cable diagonally across the body."
+  },
+  {
+    "name": "Single-Leg Cable Cable Woodchopper",
+    "category": "strength",
+    "muscleGroups": [
+      "core",
+      "obliques"
+    ],
+    "equipment": "Cable",
+    "instructions": "Unilateral variant: rotate through the torso, pulling the cable diagonally across the body."
+  },
+  {
+    "name": "Band Cable Woodchopper",
+    "category": "strength",
+    "muscleGroups": [
+      "core",
+      "obliques"
+    ],
+    "equipment": "Band",
+    "instructions": "Rotate through the torso, pulling the cable diagonally across the body."
+  },
+  {
+    "name": "Single-Leg Band Cable Woodchopper",
+    "category": "strength",
+    "muscleGroups": [
+      "core",
+      "obliques"
+    ],
+    "equipment": "Band",
+    "instructions": "Unilateral variant: rotate through the torso, pulling the cable diagonally across the body."
+  },
+  {
+    "name": "Machine GHD Sit-Up",
+    "category": "strength",
+    "muscleGroups": [
+      "core"
+    ],
+    "equipment": "Machine",
+    "instructions": "Lower back beyond parallel on the GHD, then curl forward to full flexion."
+  },
+  {
+    "name": "Ab Wheel Ab Wheel Rollout",
+    "category": "strength",
+    "muscleGroups": [
+      "core"
+    ],
+    "equipment": "Ab Wheel",
+    "instructions": "Roll forward keeping the spine neutral, then pull back to the starting position."
+  },
+  {
+    "name": "Barbell Bicep Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Curl the weight up while keeping the elbows pinned to your sides."
+  },
+  {
+    "name": "Single-Arm Barbell Bicep Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Unilateral variant: curl the weight up while keeping the elbows pinned to your sides."
+  },
+  {
+    "name": "Dumbbell Bicep Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Curl the weight up while keeping the elbows pinned to your sides."
+  },
+  {
+    "name": "Single-Arm Dumbbell Bicep Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Unilateral variant: curl the weight up while keeping the elbows pinned to your sides."
+  },
+  {
+    "name": "Cable Bicep Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps"
+    ],
+    "equipment": "Cable",
+    "instructions": "Curl the weight up while keeping the elbows pinned to your sides."
+  },
+  {
+    "name": "Single-Arm Cable Bicep Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps"
+    ],
+    "equipment": "Cable",
+    "instructions": "Unilateral variant: curl the weight up while keeping the elbows pinned to your sides."
+  },
+  {
+    "name": "Machine Bicep Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps"
+    ],
+    "equipment": "Machine",
+    "instructions": "Curl the weight up while keeping the elbows pinned to your sides."
+  },
+  {
+    "name": "Single-Arm Machine Bicep Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps"
+    ],
+    "equipment": "Machine",
+    "instructions": "Unilateral variant: curl the weight up while keeping the elbows pinned to your sides."
+  },
+  {
+    "name": "EZ-Bar Bicep Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps"
+    ],
+    "equipment": "EZ-Bar",
+    "instructions": "Curl the weight up while keeping the elbows pinned to your sides."
+  },
+  {
+    "name": "Single-Arm EZ-Bar Bicep Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps"
+    ],
+    "equipment": "EZ-Bar",
+    "instructions": "Unilateral variant: curl the weight up while keeping the elbows pinned to your sides."
+  },
+  {
+    "name": "Band Bicep Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps"
+    ],
+    "equipment": "Band",
+    "instructions": "Curl the weight up while keeping the elbows pinned to your sides."
+  },
+  {
+    "name": "Single-Arm Band Bicep Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps"
+    ],
+    "equipment": "Band",
+    "instructions": "Unilateral variant: curl the weight up while keeping the elbows pinned to your sides."
+  },
+  {
+    "name": "Dumbbell Hammer Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps",
+      "forearms"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Curl with a neutral grip, keeping the wrist straight throughout."
+  },
+  {
+    "name": "Single-Arm Dumbbell Hammer Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps",
+      "forearms"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Unilateral variant: curl with a neutral grip, keeping the wrist straight throughout."
+  },
+  {
+    "name": "Cable Hammer Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps",
+      "forearms"
+    ],
+    "equipment": "Cable",
+    "instructions": "Curl with a neutral grip, keeping the wrist straight throughout."
+  },
+  {
+    "name": "Single-Arm Cable Hammer Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps",
+      "forearms"
+    ],
+    "equipment": "Cable",
+    "instructions": "Unilateral variant: curl with a neutral grip, keeping the wrist straight throughout."
+  },
+  {
+    "name": "Rope Hammer Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps",
+      "forearms"
+    ],
+    "equipment": "Rope",
+    "instructions": "Curl with a neutral grip, keeping the wrist straight throughout."
+  },
+  {
+    "name": "Single-Arm Rope Hammer Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps",
+      "forearms"
+    ],
+    "equipment": "Rope",
+    "instructions": "Unilateral variant: curl with a neutral grip, keeping the wrist straight throughout."
+  },
+  {
+    "name": "Cable Tricep Extension",
+    "category": "strength",
+    "muscleGroups": [
+      "triceps"
+    ],
+    "equipment": "Cable",
+    "instructions": "Extend the elbow fully while keeping the upper arm still."
+  },
+  {
+    "name": "Single-Arm Cable Tricep Extension",
+    "category": "strength",
+    "muscleGroups": [
+      "triceps"
+    ],
+    "equipment": "Cable",
+    "instructions": "Unilateral variant: extend the elbow fully while keeping the upper arm still."
+  },
+  {
+    "name": "Dumbbell Tricep Extension",
+    "category": "strength",
+    "muscleGroups": [
+      "triceps"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Extend the elbow fully while keeping the upper arm still."
+  },
+  {
+    "name": "Single-Arm Dumbbell Tricep Extension",
+    "category": "strength",
+    "muscleGroups": [
+      "triceps"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Unilateral variant: extend the elbow fully while keeping the upper arm still."
+  },
+  {
+    "name": "Barbell Tricep Extension",
+    "category": "strength",
+    "muscleGroups": [
+      "triceps"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Extend the elbow fully while keeping the upper arm still."
+  },
+  {
+    "name": "Single-Arm Barbell Tricep Extension",
+    "category": "strength",
+    "muscleGroups": [
+      "triceps"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Unilateral variant: extend the elbow fully while keeping the upper arm still."
+  },
+  {
+    "name": "Machine Tricep Extension",
+    "category": "strength",
+    "muscleGroups": [
+      "triceps"
+    ],
+    "equipment": "Machine",
+    "instructions": "Extend the elbow fully while keeping the upper arm still."
+  },
+  {
+    "name": "Single-Arm Machine Tricep Extension",
+    "category": "strength",
+    "muscleGroups": [
+      "triceps"
+    ],
+    "equipment": "Machine",
+    "instructions": "Unilateral variant: extend the elbow fully while keeping the upper arm still."
+  },
+  {
+    "name": "Rope Tricep Extension",
+    "category": "strength",
+    "muscleGroups": [
+      "triceps"
+    ],
+    "equipment": "Rope",
+    "instructions": "Extend the elbow fully while keeping the upper arm still."
+  },
+  {
+    "name": "Single-Arm Rope Tricep Extension",
+    "category": "strength",
+    "muscleGroups": [
+      "triceps"
+    ],
+    "equipment": "Rope",
+    "instructions": "Unilateral variant: extend the elbow fully while keeping the upper arm still."
+  },
+  {
+    "name": "Cable Tricep Pushdown",
+    "category": "strength",
+    "muscleGroups": [
+      "triceps"
+    ],
+    "equipment": "Cable",
+    "instructions": "Push the attachment down to full elbow extension, keeping elbows tucked."
+  },
+  {
+    "name": "Rope Tricep Pushdown",
+    "category": "strength",
+    "muscleGroups": [
+      "triceps"
+    ],
+    "equipment": "Rope",
+    "instructions": "Push the attachment down to full elbow extension, keeping elbows tucked."
+  },
+  {
+    "name": "Bar Tricep Pushdown",
+    "category": "strength",
+    "muscleGroups": [
+      "triceps"
+    ],
+    "equipment": "Bar",
+    "instructions": "Push the attachment down to full elbow extension, keeping elbows tucked."
+  },
+  {
+    "name": "Barbell Skull Crusher",
+    "category": "strength",
+    "muscleGroups": [
+      "triceps"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Lower the weight toward the forehead by bending only at the elbow."
+  },
+  {
+    "name": "Dumbbell Skull Crusher",
+    "category": "strength",
+    "muscleGroups": [
+      "triceps"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Lower the weight toward the forehead by bending only at the elbow."
+  },
+  {
+    "name": "EZ-Bar Skull Crusher",
+    "category": "strength",
+    "muscleGroups": [
+      "triceps"
+    ],
+    "equipment": "EZ-Bar",
+    "instructions": "Lower the weight toward the forehead by bending only at the elbow."
+  },
+  {
+    "name": "Dumbbell Lateral Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Raise the arms out to the sides to shoulder height with a slight elbow bend."
+  },
+  {
+    "name": "Single-Arm Dumbbell Lateral Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Unilateral variant: raise the arms out to the sides to shoulder height with a slight elbow bend."
+  },
+  {
+    "name": "Cable Lateral Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders"
+    ],
+    "equipment": "Cable",
+    "instructions": "Raise the arms out to the sides to shoulder height with a slight elbow bend."
+  },
+  {
+    "name": "Single-Arm Cable Lateral Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders"
+    ],
+    "equipment": "Cable",
+    "instructions": "Unilateral variant: raise the arms out to the sides to shoulder height with a slight elbow bend."
+  },
+  {
+    "name": "Machine Lateral Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders"
+    ],
+    "equipment": "Machine",
+    "instructions": "Raise the arms out to the sides to shoulder height with a slight elbow bend."
+  },
+  {
+    "name": "Single-Arm Machine Lateral Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders"
+    ],
+    "equipment": "Machine",
+    "instructions": "Unilateral variant: raise the arms out to the sides to shoulder height with a slight elbow bend."
+  },
+  {
+    "name": "Dumbbell Front Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Raise the weight forward to shoulder height, keeping the core braced."
+  },
+  {
+    "name": "Single-Arm Dumbbell Front Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Unilateral variant: raise the weight forward to shoulder height, keeping the core braced."
+  },
+  {
+    "name": "Cable Front Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders"
+    ],
+    "equipment": "Cable",
+    "instructions": "Raise the weight forward to shoulder height, keeping the core braced."
+  },
+  {
+    "name": "Single-Arm Cable Front Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders"
+    ],
+    "equipment": "Cable",
+    "instructions": "Unilateral variant: raise the weight forward to shoulder height, keeping the core braced."
+  },
+  {
+    "name": "Barbell Front Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Raise the weight forward to shoulder height, keeping the core braced."
+  },
+  {
+    "name": "Single-Arm Barbell Front Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Unilateral variant: raise the weight forward to shoulder height, keeping the core braced."
+  },
+  {
+    "name": "Plate Front Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders"
+    ],
+    "equipment": "Plate",
+    "instructions": "Raise the weight forward to shoulder height, keeping the core braced."
+  },
+  {
+    "name": "Single-Arm Plate Front Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders"
+    ],
+    "equipment": "Plate",
+    "instructions": "Unilateral variant: raise the weight forward to shoulder height, keeping the core braced."
+  },
+  {
+    "name": "Dumbbell Rear Delt Fly",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders",
+      "back"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Hinge forward and raise the arms out to the sides, squeezing the rear delts."
+  },
+  {
+    "name": "Cable Rear Delt Fly",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders",
+      "back"
+    ],
+    "equipment": "Cable",
+    "instructions": "Hinge forward and raise the arms out to the sides, squeezing the rear delts."
+  },
+  {
+    "name": "Machine Rear Delt Fly",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders",
+      "back"
+    ],
+    "equipment": "Machine",
+    "instructions": "Hinge forward and raise the arms out to the sides, squeezing the rear delts."
+  },
+  {
+    "name": "Dumbbell Chest Fly",
+    "category": "strength",
+    "muscleGroups": [
+      "chest"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "With a slight elbow bend, bring the arms together in a wide arc."
+  },
+  {
+    "name": "Cable Chest Fly",
+    "category": "strength",
+    "muscleGroups": [
+      "chest"
+    ],
+    "equipment": "Cable",
+    "instructions": "With a slight elbow bend, bring the arms together in a wide arc."
+  },
+  {
+    "name": "Machine Chest Fly",
+    "category": "strength",
+    "muscleGroups": [
+      "chest"
+    ],
+    "equipment": "Machine",
+    "instructions": "With a slight elbow bend, bring the arms together in a wide arc."
+  },
+  {
+    "name": "Cable Face Pull",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders",
+      "back"
+    ],
+    "equipment": "Cable",
+    "instructions": "Pull the rope toward the face, flaring the elbows out wide."
+  },
+  {
+    "name": "Band Face Pull",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders",
+      "back"
+    ],
+    "equipment": "Band",
+    "instructions": "Pull the rope toward the face, flaring the elbows out wide."
+  },
+  {
+    "name": "Barbell Shrug",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "shoulders"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Elevate the shoulders straight up toward the ears and lower under control."
+  },
+  {
+    "name": "Dumbbell Shrug",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "shoulders"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Elevate the shoulders straight up toward the ears and lower under control."
+  },
+  {
+    "name": "Trap Bar Shrug",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "shoulders"
+    ],
+    "equipment": "Trap Bar",
+    "instructions": "Elevate the shoulders straight up toward the ears and lower under control."
+  },
+  {
+    "name": "Machine Shrug",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "shoulders"
+    ],
+    "equipment": "Machine",
+    "instructions": "Elevate the shoulders straight up toward the ears and lower under control."
+  },
+  {
+    "name": "Machine Leg Extension",
+    "category": "strength",
+    "muscleGroups": [
+      "quads"
+    ],
+    "equipment": "Machine",
+    "instructions": "Extend the knees fully, pausing briefly at the top."
+  },
+  {
+    "name": "Single-Arm Machine Leg Extension",
+    "category": "strength",
+    "muscleGroups": [
+      "quads"
+    ],
+    "equipment": "Machine",
+    "instructions": "Unilateral variant: extend the knees fully, pausing briefly at the top."
+  },
+  {
+    "name": "Machine Leg Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "hamstrings"
+    ],
+    "equipment": "Machine",
+    "instructions": "Curl the heels toward the glutes, keeping the hips pressed down."
+  },
+  {
+    "name": "Single-Arm Machine Leg Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "hamstrings"
+    ],
+    "equipment": "Machine",
+    "instructions": "Unilateral variant: curl the heels toward the glutes, keeping the hips pressed down."
+  },
+  {
+    "name": "Stability Ball Leg Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "hamstrings"
+    ],
+    "equipment": "Stability Ball",
+    "instructions": "Curl the heels toward the glutes, keeping the hips pressed down."
+  },
+  {
+    "name": "Single-Arm Stability Ball Leg Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "hamstrings"
+    ],
+    "equipment": "Stability Ball",
+    "instructions": "Unilateral variant: curl the heels toward the glutes, keeping the hips pressed down."
+  },
+  {
+    "name": "Machine Calf Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "calves"
+    ],
+    "equipment": "Machine",
+    "instructions": "Rise onto the balls of the feet, pausing at the top, then lower with control."
+  },
+  {
+    "name": "Single-Arm Machine Calf Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "calves"
+    ],
+    "equipment": "Machine",
+    "instructions": "Unilateral variant: rise onto the balls of the feet, pausing at the top, then lower with control."
+  },
+  {
+    "name": "Dumbbell Calf Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "calves"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Rise onto the balls of the feet, pausing at the top, then lower with control."
+  },
+  {
+    "name": "Single-Arm Dumbbell Calf Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "calves"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Unilateral variant: rise onto the balls of the feet, pausing at the top, then lower with control."
+  },
+  {
+    "name": "Barbell Calf Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "calves"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Rise onto the balls of the feet, pausing at the top, then lower with control."
+  },
+  {
+    "name": "Single-Arm Barbell Calf Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "calves"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Unilateral variant: rise onto the balls of the feet, pausing at the top, then lower with control."
+  },
+  {
+    "name": "Bodyweight Calf Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "calves"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Rise onto the balls of the feet, pausing at the top, then lower with control."
+  },
+  {
+    "name": "Single-Arm Bodyweight Calf Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "calves"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Unilateral variant: rise onto the balls of the feet, pausing at the top, then lower with control."
+  },
+  {
+    "name": "Machine Hip Abduction",
+    "category": "strength",
+    "muscleGroups": [
+      "glutes"
+    ],
+    "equipment": "Machine",
+    "instructions": "Push the legs outward against resistance, focusing on the outer glutes."
+  },
+  {
+    "name": "Band Hip Abduction",
+    "category": "strength",
+    "muscleGroups": [
+      "glutes"
+    ],
+    "equipment": "Band",
+    "instructions": "Push the legs outward against resistance, focusing on the outer glutes."
+  },
+  {
+    "name": "Machine Hip Adduction",
+    "category": "strength",
+    "muscleGroups": [
+      "inner thigh"
+    ],
+    "equipment": "Machine",
+    "instructions": "Squeeze the legs together against resistance."
+  },
+  {
+    "name": "Band Hip Adduction",
+    "category": "strength",
+    "muscleGroups": [
+      "inner thigh"
+    ],
+    "equipment": "Band",
+    "instructions": "Squeeze the legs together against resistance."
+  },
+  {
+    "name": "Bodyweight Ab Crunch",
+    "category": "strength",
+    "muscleGroups": [
+      "core"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Curl the shoulders off the floor, contracting the abs, not pulling the neck."
+  },
+  {
+    "name": "Machine Ab Crunch",
+    "category": "strength",
+    "muscleGroups": [
+      "core"
+    ],
+    "equipment": "Machine",
+    "instructions": "Curl the shoulders off the floor, contracting the abs, not pulling the neck."
+  },
+  {
+    "name": "Cable Ab Crunch",
+    "category": "strength",
+    "muscleGroups": [
+      "core"
+    ],
+    "equipment": "Cable",
+    "instructions": "Curl the shoulders off the floor, contracting the abs, not pulling the neck."
+  },
+  {
+    "name": "Bodyweight Hanging Leg Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "core"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Hanging from a bar, raise the legs to hip height without swinging."
+  },
+  {
+    "name": "Bodyweight Russian Twist",
+    "category": "strength",
+    "muscleGroups": [
+      "core"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Rotate the torso side to side while keeping the feet off the floor."
+  },
+  {
+    "name": "Dumbbell Russian Twist",
+    "category": "strength",
+    "muscleGroups": [
+      "core"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Rotate the torso side to side while keeping the feet off the floor."
+  },
+  {
+    "name": "Medicine Ball Russian Twist",
+    "category": "strength",
+    "muscleGroups": [
+      "core"
+    ],
+    "equipment": "Medicine Ball",
+    "instructions": "Rotate the torso side to side while keeping the feet off the floor."
+  },
+  {
+    "name": "Bodyweight Plank",
+    "category": "strength",
+    "muscleGroups": [
+      "core"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Hold a straight line from head to heels, bracing the core throughout."
+  },
+  {
+    "name": "Bodyweight Side Plank",
+    "category": "strength",
+    "muscleGroups": [
+      "core",
+      "obliques"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Support the body on one forearm, keeping the hips lifted in a straight line."
+  },
+  {
+    "name": "Single-Arm Bodyweight Side Plank",
+    "category": "strength",
+    "muscleGroups": [
+      "core",
+      "obliques"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Unilateral variant: support the body on one forearm, keeping the hips lifted in a straight line."
+  },
+  {
+    "name": "Dumbbell Wrist Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "forearms"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Curl the wrist upward through a full range of motion."
+  },
+  {
+    "name": "Single-Arm Dumbbell Wrist Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "forearms"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Unilateral variant: curl the wrist upward through a full range of motion."
+  },
+  {
+    "name": "Barbell Wrist Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "forearms"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Curl the wrist upward through a full range of motion."
+  },
+  {
+    "name": "Single-Arm Barbell Wrist Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "forearms"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Unilateral variant: curl the wrist upward through a full range of motion."
+  },
+  {
+    "name": "Barbell Preacher Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps"
+    ],
+    "equipment": "Barbell",
+    "instructions": "With the arm braced on the pad, curl through a strict, controlled range of motion."
+  },
+  {
+    "name": "Single-Arm Barbell Preacher Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Unilateral variant: with the arm braced on the pad, curl through a strict, controlled range of motion."
+  },
+  {
+    "name": "Dumbbell Preacher Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "With the arm braced on the pad, curl through a strict, controlled range of motion."
+  },
+  {
+    "name": "Single-Arm Dumbbell Preacher Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Unilateral variant: with the arm braced on the pad, curl through a strict, controlled range of motion."
+  },
+  {
+    "name": "Machine Preacher Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps"
+    ],
+    "equipment": "Machine",
+    "instructions": "With the arm braced on the pad, curl through a strict, controlled range of motion."
+  },
+  {
+    "name": "Single-Arm Machine Preacher Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps"
+    ],
+    "equipment": "Machine",
+    "instructions": "Unilateral variant: with the arm braced on the pad, curl through a strict, controlled range of motion."
+  },
+  {
+    "name": "EZ-Bar Preacher Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps"
+    ],
+    "equipment": "EZ-Bar",
+    "instructions": "With the arm braced on the pad, curl through a strict, controlled range of motion."
+  },
+  {
+    "name": "Single-Arm EZ-Bar Preacher Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps"
+    ],
+    "equipment": "EZ-Bar",
+    "instructions": "Unilateral variant: with the arm braced on the pad, curl through a strict, controlled range of motion."
+  },
+  {
+    "name": "Dumbbell Concentration Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Brace the elbow against the inner thigh and curl with strict form."
+  },
+  {
+    "name": "Single-Arm Dumbbell Concentration Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Unilateral variant: brace the elbow against the inner thigh and curl with strict form."
+  },
+  {
+    "name": "Dumbbell Overhead Tricep Extension",
+    "category": "strength",
+    "muscleGroups": [
+      "triceps"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Keep the elbows close to the head while extending the forearm overhead."
+  },
+  {
+    "name": "Single-Arm Dumbbell Overhead Tricep Extension",
+    "category": "strength",
+    "muscleGroups": [
+      "triceps"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Unilateral variant: keep the elbows close to the head while extending the forearm overhead."
+  },
+  {
+    "name": "Cable Overhead Tricep Extension",
+    "category": "strength",
+    "muscleGroups": [
+      "triceps"
+    ],
+    "equipment": "Cable",
+    "instructions": "Keep the elbows close to the head while extending the forearm overhead."
+  },
+  {
+    "name": "Single-Arm Cable Overhead Tricep Extension",
+    "category": "strength",
+    "muscleGroups": [
+      "triceps"
+    ],
+    "equipment": "Cable",
+    "instructions": "Unilateral variant: keep the elbows close to the head while extending the forearm overhead."
+  },
+  {
+    "name": "Barbell Overhead Tricep Extension",
+    "category": "strength",
+    "muscleGroups": [
+      "triceps"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Keep the elbows close to the head while extending the forearm overhead."
+  },
+  {
+    "name": "Single-Arm Barbell Overhead Tricep Extension",
+    "category": "strength",
+    "muscleGroups": [
+      "triceps"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Unilateral variant: keep the elbows close to the head while extending the forearm overhead."
+  },
+  {
+    "name": "EZ-Bar Overhead Tricep Extension",
+    "category": "strength",
+    "muscleGroups": [
+      "triceps"
+    ],
+    "equipment": "EZ-Bar",
+    "instructions": "Keep the elbows close to the head while extending the forearm overhead."
+  },
+  {
+    "name": "Single-Arm EZ-Bar Overhead Tricep Extension",
+    "category": "strength",
+    "muscleGroups": [
+      "triceps"
+    ],
+    "equipment": "EZ-Bar",
+    "instructions": "Unilateral variant: keep the elbows close to the head while extending the forearm overhead."
+  },
+  {
+    "name": "Barbell Close-Grip Bench Press",
+    "category": "strength",
+    "muscleGroups": [
+      "triceps",
+      "chest"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Press with hands shoulder-width apart, keeping the elbows tucked."
+  },
+  {
+    "name": "Smith Machine Close-Grip Bench Press",
+    "category": "strength",
+    "muscleGroups": [
+      "triceps",
+      "chest"
+    ],
+    "equipment": "Smith Machine",
+    "instructions": "Press with hands shoulder-width apart, keeping the elbows tucked."
+  },
+  {
+    "name": "Machine Pec Deck Fly",
+    "category": "strength",
+    "muscleGroups": [
+      "chest"
+    ],
+    "equipment": "Machine",
+    "instructions": "Bring the pads together in front of the chest with a controlled squeeze."
+  },
+  {
+    "name": "Cable Cable Crossover",
+    "category": "strength",
+    "muscleGroups": [
+      "chest"
+    ],
+    "equipment": "Cable",
+    "instructions": "Pull the cables down and across the body in a wide arc, squeezing the chest."
+  },
+  {
+    "name": "Barbell Upright Row",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders",
+      "back"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Pull the weight up along the body to chest height, leading with the elbows."
+  },
+  {
+    "name": "Dumbbell Upright Row",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders",
+      "back"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Pull the weight up along the body to chest height, leading with the elbows."
+  },
+  {
+    "name": "Cable Upright Row",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders",
+      "back"
+    ],
+    "equipment": "Cable",
+    "instructions": "Pull the weight up along the body to chest height, leading with the elbows."
+  },
+  {
+    "name": "Dumbbell Reverse Fly",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders",
+      "back"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Raise the arms out to the sides while hinged forward, squeezing the shoulder blades."
+  },
+  {
+    "name": "Cable Reverse Fly",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders",
+      "back"
+    ],
+    "equipment": "Cable",
+    "instructions": "Raise the arms out to the sides while hinged forward, squeezing the shoulder blades."
+  },
+  {
+    "name": "Machine Reverse Fly",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders",
+      "back"
+    ],
+    "equipment": "Machine",
+    "instructions": "Raise the arms out to the sides while hinged forward, squeezing the shoulder blades."
+  },
+  {
+    "name": "Band Reverse Fly",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders",
+      "back"
+    ],
+    "equipment": "Band",
+    "instructions": "Raise the arms out to the sides while hinged forward, squeezing the shoulder blades."
+  },
+  {
+    "name": "Dumbbell Cuban Press",
+    "category": "strength",
+    "muscleGroups": [
+      "shoulders"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Combine an upright row, external rotation, and press into one controlled sequence."
+  },
+  {
+    "name": "Band Good Morning (Isolation)",
+    "category": "strength",
+    "muscleGroups": [
+      "hamstrings",
+      "back"
+    ],
+    "equipment": "Band",
+    "instructions": "Hinge forward against band resistance, keeping the spine neutral."
+  },
+  {
+    "name": "Machine Seated Calf Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "calves"
+    ],
+    "equipment": "Machine",
+    "instructions": "With knees bent, rise onto the toes and pause at the top of the range."
+  },
+  {
+    "name": "Single-Arm Machine Seated Calf Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "calves"
+    ],
+    "equipment": "Machine",
+    "instructions": "Unilateral variant: with knees bent, rise onto the toes and pause at the top of the range."
+  },
+  {
+    "name": "Dumbbell Seated Calf Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "calves"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "With knees bent, rise onto the toes and pause at the top of the range."
+  },
+  {
+    "name": "Single-Arm Dumbbell Seated Calf Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "calves"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Unilateral variant: with knees bent, rise onto the toes and pause at the top of the range."
+  },
+  {
+    "name": "Barbell Seated Calf Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "calves"
+    ],
+    "equipment": "Barbell",
+    "instructions": "With knees bent, rise onto the toes and pause at the top of the range."
+  },
+  {
+    "name": "Single-Arm Barbell Seated Calf Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "calves"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Unilateral variant: with knees bent, rise onto the toes and pause at the top of the range."
+  },
+  {
+    "name": "Machine Standing Calf Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "calves"
+    ],
+    "equipment": "Machine",
+    "instructions": "With legs straight, rise onto the toes through a full range of motion."
+  },
+  {
+    "name": "Single-Arm Machine Standing Calf Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "calves"
+    ],
+    "equipment": "Machine",
+    "instructions": "Unilateral variant: with legs straight, rise onto the toes through a full range of motion."
+  },
+  {
+    "name": "Dumbbell Standing Calf Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "calves"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "With legs straight, rise onto the toes through a full range of motion."
+  },
+  {
+    "name": "Single-Arm Dumbbell Standing Calf Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "calves"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Unilateral variant: with legs straight, rise onto the toes through a full range of motion."
+  },
+  {
+    "name": "Barbell Standing Calf Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "calves"
+    ],
+    "equipment": "Barbell",
+    "instructions": "With legs straight, rise onto the toes through a full range of motion."
+  },
+  {
+    "name": "Single-Arm Barbell Standing Calf Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "calves"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Unilateral variant: with legs straight, rise onto the toes through a full range of motion."
+  },
+  {
+    "name": "Bodyweight Standing Calf Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "calves"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "With legs straight, rise onto the toes through a full range of motion."
+  },
+  {
+    "name": "Single-Arm Bodyweight Standing Calf Raise",
+    "category": "strength",
+    "muscleGroups": [
+      "calves"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Unilateral variant: with legs straight, rise onto the toes through a full range of motion."
+  },
+  {
+    "name": "Cable Cable Kickback",
+    "category": "strength",
+    "muscleGroups": [
+      "glutes"
+    ],
+    "equipment": "Cable",
+    "instructions": "Kick the leg back and up against cable resistance, squeezing the glute at the top."
+  },
+  {
+    "name": "Single-Arm Cable Cable Kickback",
+    "category": "strength",
+    "muscleGroups": [
+      "glutes"
+    ],
+    "equipment": "Cable",
+    "instructions": "Unilateral variant: kick the leg back and up against cable resistance, squeezing the glute at the top."
+  },
+  {
+    "name": "Machine Glute Kickback",
+    "category": "strength",
+    "muscleGroups": [
+      "glutes"
+    ],
+    "equipment": "Machine",
+    "instructions": "Extend the hip back against resistance while keeping the core braced."
+  },
+  {
+    "name": "Single-Arm Machine Glute Kickback",
+    "category": "strength",
+    "muscleGroups": [
+      "glutes"
+    ],
+    "equipment": "Machine",
+    "instructions": "Unilateral variant: extend the hip back against resistance while keeping the core braced."
+  },
+  {
+    "name": "Band Glute Kickback",
+    "category": "strength",
+    "muscleGroups": [
+      "glutes"
+    ],
+    "equipment": "Band",
+    "instructions": "Extend the hip back against resistance while keeping the core braced."
+  },
+  {
+    "name": "Single-Arm Band Glute Kickback",
+    "category": "strength",
+    "muscleGroups": [
+      "glutes"
+    ],
+    "equipment": "Band",
+    "instructions": "Unilateral variant: extend the hip back against resistance while keeping the core braced."
+  },
+  {
+    "name": "Cable Cable Pull-Through",
+    "category": "strength",
+    "muscleGroups": [
+      "glutes",
+      "hamstrings"
+    ],
+    "equipment": "Cable",
+    "instructions": "Hinge at the hips to reach through and pull the cable forward with hip drive."
+  },
+  {
+    "name": "Dumbbell Curtsy Lunge",
+    "category": "strength",
+    "muscleGroups": [
+      "glutes",
+      "quads"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Step one leg diagonally behind the other and lower into a crossed lunge."
+  },
+  {
+    "name": "Single-Arm Dumbbell Curtsy Lunge",
+    "category": "strength",
+    "muscleGroups": [
+      "glutes",
+      "quads"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Unilateral variant: step one leg diagonally behind the other and lower into a crossed lunge."
+  },
+  {
+    "name": "Bodyweight Curtsy Lunge",
+    "category": "strength",
+    "muscleGroups": [
+      "glutes",
+      "quads"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Step one leg diagonally behind the other and lower into a crossed lunge."
+  },
+  {
+    "name": "Single-Arm Bodyweight Curtsy Lunge",
+    "category": "strength",
+    "muscleGroups": [
+      "glutes",
+      "quads"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Unilateral variant: step one leg diagonally behind the other and lower into a crossed lunge."
+  },
+  {
+    "name": "Kettlebell Curtsy Lunge",
+    "category": "strength",
+    "muscleGroups": [
+      "glutes",
+      "quads"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "Step one leg diagonally behind the other and lower into a crossed lunge."
+  },
+  {
+    "name": "Single-Arm Kettlebell Curtsy Lunge",
+    "category": "strength",
+    "muscleGroups": [
+      "glutes",
+      "quads"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "Unilateral variant: step one leg diagonally behind the other and lower into a crossed lunge."
+  },
+  {
+    "name": "Dumbbell Lateral Lunge",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "adductors"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Step wide to one side and sit back into that hip while the other leg stays straight."
+  },
+  {
+    "name": "Single-Arm Dumbbell Lateral Lunge",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "adductors"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Unilateral variant: step wide to one side and sit back into that hip while the other leg stays straight."
+  },
+  {
+    "name": "Bodyweight Lateral Lunge",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "adductors"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Step wide to one side and sit back into that hip while the other leg stays straight."
+  },
+  {
+    "name": "Single-Arm Bodyweight Lateral Lunge",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "adductors"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Unilateral variant: step wide to one side and sit back into that hip while the other leg stays straight."
+  },
+  {
+    "name": "Kettlebell Lateral Lunge",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "adductors"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "Step wide to one side and sit back into that hip while the other leg stays straight."
+  },
+  {
+    "name": "Single-Arm Kettlebell Lateral Lunge",
+    "category": "strength",
+    "muscleGroups": [
+      "quads",
+      "glutes",
+      "adductors"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "Unilateral variant: step wide to one side and sit back into that hip while the other leg stays straight."
+  },
+  {
+    "name": "Bodyweight Cossack Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "adductors",
+      "quads",
+      "glutes"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Shift weight fully to one side, sitting low while the opposite leg stays extended."
+  },
+  {
+    "name": "Single-Arm Bodyweight Cossack Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "adductors",
+      "quads",
+      "glutes"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Unilateral variant: shift weight fully to one side, sitting low while the opposite leg stays extended."
+  },
+  {
+    "name": "Kettlebell Cossack Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "adductors",
+      "quads",
+      "glutes"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "Shift weight fully to one side, sitting low while the opposite leg stays extended."
+  },
+  {
+    "name": "Single-Arm Kettlebell Cossack Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "adductors",
+      "quads",
+      "glutes"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "Unilateral variant: shift weight fully to one side, sitting low while the opposite leg stays extended."
+  },
+  {
+    "name": "Dumbbell Cossack Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "adductors",
+      "quads",
+      "glutes"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Shift weight fully to one side, sitting low while the opposite leg stays extended."
+  },
+  {
+    "name": "Single-Arm Dumbbell Cossack Squat",
+    "category": "strength",
+    "muscleGroups": [
+      "adductors",
+      "quads",
+      "glutes"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Unilateral variant: shift weight fully to one side, sitting low while the opposite leg stays extended."
+  },
+  {
+    "name": "Bench Copenhagen Plank",
+    "category": "strength",
+    "muscleGroups": [
+      "adductors",
+      "core"
+    ],
+    "equipment": "Bench",
+    "instructions": "Support the top leg on a bench and hold a side plank position for the adductors."
+  },
+  {
+    "name": "Single-Arm Bench Copenhagen Plank",
+    "category": "strength",
+    "muscleGroups": [
+      "adductors",
+      "core"
+    ],
+    "equipment": "Bench",
+    "instructions": "Unilateral variant: support the top leg on a bench and hold a side plank position for the adductors."
+  },
+  {
+    "name": "Bodyweight Copenhagen Plank",
+    "category": "strength",
+    "muscleGroups": [
+      "adductors",
+      "core"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Support the top leg on a bench and hold a side plank position for the adductors."
+  },
+  {
+    "name": "Single-Arm Bodyweight Copenhagen Plank",
+    "category": "strength",
+    "muscleGroups": [
+      "adductors",
+      "core"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "Unilateral variant: support the top leg on a bench and hold a side plank position for the adductors."
+  },
+  {
+    "name": "Cable Cable Rotation",
+    "category": "strength",
+    "muscleGroups": [
+      "core",
+      "obliques"
+    ],
+    "equipment": "Cable",
+    "instructions": "Rotate the torso against cable resistance while keeping the hips square."
+  },
+  {
+    "name": "Single-Arm Cable Cable Rotation",
+    "category": "strength",
+    "muscleGroups": [
+      "core",
+      "obliques"
+    ],
+    "equipment": "Cable",
+    "instructions": "Unilateral variant: rotate the torso against cable resistance while keeping the hips square."
+  },
+  {
+    "name": "Dumbbell Renegade Row",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "core",
+      "shoulders"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "From a plank, row one weight up while stabilizing the torso against rotation."
+  },
+  {
+    "name": "Single-Arm Dumbbell Renegade Row",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "core",
+      "shoulders"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Unilateral variant: from a plank, row one weight up while stabilizing the torso against rotation."
+  },
+  {
+    "name": "Kettlebell Renegade Row",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "core",
+      "shoulders"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "From a plank, row one weight up while stabilizing the torso against rotation."
+  },
+  {
+    "name": "Single-Arm Kettlebell Renegade Row",
+    "category": "strength",
+    "muscleGroups": [
+      "back",
+      "core",
+      "shoulders"
+    ],
+    "equipment": "Kettlebell",
+    "instructions": "Unilateral variant: from a plank, row one weight up while stabilizing the torso against rotation."
+  },
+  {
+    "name": "Barbell Landmine Rotation",
+    "category": "strength",
+    "muscleGroups": [
+      "core",
+      "obliques"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Rotate the landmine bar side to side while keeping the arms extended."
+  },
+  {
+    "name": "Dumbbell Zottman Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps",
+      "forearms"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Curl with palms up, then rotate and lower with palms down."
+  },
+  {
+    "name": "Single-Arm Dumbbell Zottman Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps",
+      "forearms"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Unilateral variant: curl with palms up, then rotate and lower with palms down."
+  },
+  {
+    "name": "Dumbbell Spider Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Curl while chest-supported on an incline bench for strict isolation."
+  },
+  {
+    "name": "Single-Arm Dumbbell Spider Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps"
+    ],
+    "equipment": "Dumbbell",
+    "instructions": "Unilateral variant: curl while chest-supported on an incline bench for strict isolation."
+  },
+  {
+    "name": "Barbell Spider Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Curl while chest-supported on an incline bench for strict isolation."
+  },
+  {
+    "name": "Single-Arm Barbell Spider Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps"
+    ],
+    "equipment": "Barbell",
+    "instructions": "Unilateral variant: curl while chest-supported on an incline bench for strict isolation."
+  },
+  {
+    "name": "EZ-Bar Spider Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps"
+    ],
+    "equipment": "EZ-Bar",
+    "instructions": "Curl while chest-supported on an incline bench for strict isolation."
+  },
+  {
+    "name": "Single-Arm EZ-Bar Spider Curl",
+    "category": "strength",
+    "muscleGroups": [
+      "biceps"
+    ],
+    "equipment": "EZ-Bar",
+    "instructions": "Unilateral variant: curl while chest-supported on an incline bench for strict isolation."
+  },
+  {
+    "name": "Barbell JM Press",
+    "category": "strength",
+    "muscleGroups": [
+      "triceps"
+    ],
+    "equipment": "Barbell",
+    "instructions": "A hybrid skull-crusher/close-grip press lowering the bar toward the upper chest."
+  },
+  {
+    "name": "EZ-Bar JM Press",
+    "category": "strength",
+    "muscleGroups": [
+      "triceps"
+    ],
+    "equipment": "EZ-Bar",
+    "instructions": "A hybrid skull-crusher/close-grip press lowering the bar toward the upper chest."
+  },
+  {
+    "name": "Bodyweight Diamond Push-Up",
+    "category": "strength",
+    "muscleGroups": [
+      "triceps",
+      "chest"
+    ],
+    "equipment": "Bodyweight",
+    "instructions": "With hands forming a diamond shape, lower the chest to the hands and press up."
+  },
+  {
+    "name": "Easy Recovery Run",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Conversational pace, low effort, focused on active recovery."
+  },
+  {
+    "name": "Long Run",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Steady, sustainable pace held for extended distance to build aerobic base."
+  },
+  {
+    "name": "Tempo Run",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Comfortably hard, sustained pace at or near lactate threshold."
+  },
+  {
+    "name": "Interval Repeats — 400m",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Hard 400m efforts with equal-distance jog recovery between reps."
+  },
+  {
+    "name": "Interval Repeats — 800m",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Hard 800m efforts with jog recovery, focused on race-pace speed."
+  },
+  {
+    "name": "Interval Repeats — 1 Mile",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Sustained hard efforts at 1-mile repeats with full recovery."
+  },
+  {
+    "name": "Hill Repeats",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Hard uphill efforts focused on power and running economy, jog down to recover."
+  },
+  {
+    "name": "Fartlek Run",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Unstructured speed play alternating hard and easy efforts by feel."
+  },
+  {
+    "name": "Progression Run",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Start easy and gradually increase pace through the run."
+  },
+  {
+    "name": "Track Speed Work — 200m",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Short, fast repeats focused on top-end speed and turnover."
+  },
+  {
+    "name": "Trail Run",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Off-road running at a controlled effort, adjusting pace for terrain."
+  },
+  {
+    "name": "Treadmill Run",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Controlled-pace run on the treadmill at a set incline and speed."
+  },
+  {
+    "name": "Race Pace Run",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Sustained running at goal race pace to build pacing familiarity."
+  },
+  {
+    "name": "Shakeout Run",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Very short, easy jog the day before a race to stay loose."
+  },
+  {
+    "name": "Strides",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Short, relaxed accelerations to near-sprint speed, focused on form."
+  },
+  {
+    "name": "Interval Repeats — 200m",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Short, fast repeats with full recovery, focused on speed and form."
+  },
+  {
+    "name": "Interval Repeats — 2 Mile",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Longer threshold-pace repeats with short recovery between reps."
+  },
+  {
+    "name": "Yasso 800s",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "800m repeats at a pace matching your marathon goal time in minutes:seconds."
+  },
+  {
+    "name": "Negative Split Run",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Run the second half of the distance faster than the first half."
+  },
+  {
+    "name": "Cross-Country Run",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Off-road distance run over varied natural terrain and footing."
+  },
+  {
+    "name": "Track Time Trial",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "All-out effort over a set track distance to assess current fitness."
+  },
+  {
+    "name": "Marathon Pace Run",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Extended run held at goal marathon race pace."
+  },
+  {
+    "name": "Half Marathon Pace Run",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Extended run held at goal half marathon race pace."
+  },
+  {
+    "name": "5K Time Trial",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "All-out 5K effort run for time to benchmark fitness."
+  },
+  {
+    "name": "10K Time Trial",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "All-out 10K effort run for time to benchmark fitness."
+  },
+  {
+    "name": "Treadmill Incline Walk",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Brisk walk at a steep incline for low-impact aerobic work."
+  },
+  {
+    "name": "Barefoot Strides",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Short barefoot accelerations on grass to build foot strength and form."
+  },
+  {
+    "name": "Ladder Repeats — 200m to 800m",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Ascending or descending distance repeats with recovery between each rep."
+  },
+  {
+    "name": "Threshold Run",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Sustained effort right at lactate threshold pace for an extended block."
+  },
+  {
+    "name": "Fun Run / Social Jog",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Relaxed, easy-paced group run with no specific pace target."
+  },
+  {
+    "name": "Trail Hill Repeats",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Repeated hard efforts up a trail incline with an easy jog or walk back down."
+  },
+  {
+    "name": "Beach/Sand Run",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Run on sand for a low-impact, higher-resistance aerobic workout."
+  },
+  {
+    "name": "Parkrun / 5K Group Event",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Timed 5K community run event at race effort."
+  },
+  {
+    "name": "Warm-Up Jog",
+    "category": "running",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Very easy short jog to raise heart rate before a workout or race."
+  },
+  {
+    "name": "Road Ride — Endurance",
+    "category": "cycling",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": "Bike",
+    "instructions": "Steady aerobic-pace ride at a conversational effort."
+  },
+  {
+    "name": "Indoor Trainer — Steady State",
+    "category": "cycling",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": "Bike",
+    "instructions": "Controlled, sustained wattage/effort on the indoor trainer."
+  },
+  {
+    "name": "Indoor Trainer — Intervals",
+    "category": "cycling",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": "Bike",
+    "instructions": "Structured hard/easy interval sets on the indoor trainer."
+  },
+  {
+    "name": "Hill Climb Ride",
+    "category": "cycling",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": "Bike",
+    "instructions": "Sustained climbing effort focused on power output on grades."
+  },
+  {
+    "name": "Recovery Ride",
+    "category": "cycling",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": "Bike",
+    "instructions": "Very easy spin to promote blood flow and recovery."
+  },
+  {
+    "name": "Group Ride",
+    "category": "cycling",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": "Bike",
+    "instructions": "Variable-effort ride in a group, often with surges and pacelines."
+  },
+  {
+    "name": "Time Trial Effort",
+    "category": "cycling",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": "Bike",
+    "instructions": "Sustained maximal-sustainable effort simulating a time trial."
+  },
+  {
+    "name": "Sprint Intervals",
+    "category": "cycling",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": "Bike",
+    "instructions": "Short, maximal-effort sprints with full recovery between reps."
+  },
+  {
+    "name": "Tempo Ride",
+    "category": "cycling",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": "Bike",
+    "instructions": "Comfortably hard, sustained effort just below threshold."
+  },
+  {
+    "name": "Mountain Bike Ride",
+    "category": "cycling",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": "Bike",
+    "instructions": "Off-road ride with variable terrain and technical sections."
+  },
+  {
+    "name": "Gravel Ride",
+    "category": "cycling",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": "Bike",
+    "instructions": "Mixed-surface ride at an endurance-to-tempo effort."
+  },
+  {
+    "name": "Spin Class",
+    "category": "cycling",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": "Bike",
+    "instructions": "Instructor-led interval and cadence work on a stationary bike."
+  },
+  {
+    "name": "Cyclocross Ride",
+    "category": "cycling",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": "Bike",
+    "instructions": "Off-road ride mixing pavement, grass, and obstacles at a hard effort."
+  },
+  {
+    "name": "Century Ride",
+    "category": "cycling",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": "Bike",
+    "instructions": "Long-distance endurance ride, typically 100 miles, at a steady pace."
+  },
+  {
+    "name": "Cadence Drills",
+    "category": "cycling",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": "Bike",
+    "instructions": "Ride at a fixed high cadence with light resistance to build pedaling efficiency."
+  },
+  {
+    "name": "Threshold Intervals",
+    "category": "cycling",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": "Bike",
+    "instructions": "Sustained intervals at functional threshold power with short recovery."
+  },
+  {
+    "name": "VO2 Max Intervals",
+    "category": "cycling",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": "Bike",
+    "instructions": "Very hard, short intervals designed to push aerobic capacity limits."
+  },
+  {
+    "name": "Commuter Ride",
+    "category": "cycling",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": "Bike",
+    "instructions": "Point-to-point ride at a moderate, sustainable effort."
+  },
+  {
+    "name": "Fixed Gear / Track Ride",
+    "category": "cycling",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": "Bike",
+    "instructions": "Steady-cadence ride on a fixed-gear or track bike."
+  },
+  {
+    "name": "Bikepacking Ride",
+    "category": "cycling",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": "Bike",
+    "instructions": "Long-duration loaded touring ride at a sustainable endurance pace."
+  },
+  {
+    "name": "Zwift / Virtual Group Ride",
+    "category": "cycling",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": "Bike",
+    "instructions": "Structured or social ride on a virtual cycling platform."
+  },
+  {
+    "name": "Criterium Race Simulation",
+    "category": "cycling",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": "Bike",
+    "instructions": "Short, high-intensity looped-course ride simulating criterium racing."
+  },
+  {
+    "name": "Spot-Up Shooting",
+    "category": "basketball",
+    "muscleGroups": [
+      "shooting"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Catch and shoot from a fixed spot, focusing on consistent footwork and release."
+  },
+  {
+    "name": "Catch-and-Shoot Shooting",
+    "category": "basketball",
+    "muscleGroups": [
+      "shooting"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Shoot immediately off a pass with quick footwork into the shot."
+  },
+  {
+    "name": "Off-the-Dribble Pull-Up Jumper",
+    "category": "basketball",
+    "muscleGroups": [
+      "shooting"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Attack off the dribble and rise into a balanced pull-up jump shot."
+  },
+  {
+    "name": "Free Throw Practice",
+    "category": "basketball",
+    "muscleGroups": [
+      "shooting"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Repeat a consistent pre-shot routine at the free throw line."
+  },
+  {
+    "name": "Three-Point Shooting — Corner",
+    "category": "basketball",
+    "muscleGroups": [
+      "shooting"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Shoot from the corner spots, focusing on a quick, repeatable release."
+  },
+  {
+    "name": "Three-Point Shooting — Wing",
+    "category": "basketball",
+    "muscleGroups": [
+      "shooting"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Shoot from the wing, working on balance off movement."
+  },
+  {
+    "name": "Mid-Range Shooting",
+    "category": "basketball",
+    "muscleGroups": [
+      "shooting"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Work shots from the elbow and baseline mid-range areas."
+  },
+  {
+    "name": "Floater / Runner Practice",
+    "category": "basketball",
+    "muscleGroups": [
+      "shooting"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Practice one- and two-foot floaters through traffic near the rim."
+  },
+  {
+    "name": "Layup Package — Finishing",
+    "category": "basketball",
+    "muscleGroups": [
+      "shooting"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Work both-hand finishes, reverse layups, and euro-steps at full speed."
+  },
+  {
+    "name": "Ballhandling — Two-Ball Dribbling",
+    "category": "basketball",
+    "muscleGroups": [
+      "ballhandling"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Dribble two balls simultaneously to build coordination and control."
+  },
+  {
+    "name": "Ballhandling — Crossover Series",
+    "category": "basketball",
+    "muscleGroups": [
+      "ballhandling"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Chain crossover, between-the-legs, and behind-the-back moves at speed."
+  },
+  {
+    "name": "Ballhandling — Cone Weave",
+    "category": "basketball",
+    "muscleGroups": [
+      "ballhandling"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Dribble through a line of cones using change-of-direction moves."
+  },
+  {
+    "name": "Ballhandling — Full-Court Dribbling",
+    "category": "basketball",
+    "muscleGroups": [
+      "ballhandling"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Push the ball up the floor at speed while maintaining control."
+  },
+  {
+    "name": "Passing — Chest and Bounce Pass Accuracy",
+    "category": "basketball",
+    "muscleGroups": [
+      "passing"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Repeat crisp chest and bounce passes at a target for accuracy."
+  },
+  {
+    "name": "Defensive Slides",
+    "category": "basketball",
+    "muscleGroups": [
+      "conditioning"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Stay low in a defensive stance while sliding laterally without crossing feet."
+  },
+  {
+    "name": "Closeout Drill",
+    "category": "basketball",
+    "muscleGroups": [
+      "conditioning"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Sprint out and break down into a balanced defensive closeout stance."
+  },
+  {
+    "name": "Suicides / Line Sprints",
+    "category": "basketball",
+    "muscleGroups": [
+      "conditioning"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Sprint to each line on the court and back, focused on max effort and turns."
+  },
+  {
+    "name": "Full-Court Conditioning Sprints",
+    "category": "basketball",
+    "muscleGroups": [
+      "conditioning"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Repeated full-court sprints with short recovery to build game conditioning."
+  },
+  {
+    "name": "Agility Ladder — Basketball Footwork",
+    "category": "basketball",
+    "muscleGroups": [
+      "agility"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Move through an agility ladder pattern focused on quick, precise foot contacts."
+  },
+  {
+    "name": "Cone Agility — Shuttle Run",
+    "category": "basketball",
+    "muscleGroups": [
+      "agility"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Sprint and change direction sharply between cones set at varying distances."
+  },
+  {
+    "name": "Reactive Agility — Mirror Drill",
+    "category": "basketball",
+    "muscleGroups": [
+      "agility"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Mirror a partner's lateral movements to build reactive quickness."
+  },
+  {
+    "name": "Vertical Jump Training",
+    "category": "basketball",
+    "muscleGroups": [
+      "athleticism"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Explosive jump work focused on takeoff mechanics and landing control."
+  },
+  {
+    "name": "Rebounding — Box Out Drill",
+    "category": "basketball",
+    "muscleGroups": [
+      "rebounding"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Establish position and box out a live opponent before attacking the rebound."
+  },
+  {
+    "name": "Post Moves — Drop Step and Up-and-Under",
+    "category": "basketball",
+    "muscleGroups": [
+      "post play"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Work footwork-based finishing moves from the post against light resistance."
+  },
+  {
+    "name": "5-on-5 Scrimmage",
+    "category": "basketball",
+    "muscleGroups": [
+      "team play"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Full team live play applying game concepts under realistic conditions."
+  },
+  {
+    "name": "3-on-3 Half-Court Scrimmage",
+    "category": "basketball",
+    "muscleGroups": [
+      "team play"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Small-sided live play emphasizing spacing and decision-making."
+  },
+  {
+    "name": "Pick-and-Roll Reps",
+    "category": "basketball",
+    "muscleGroups": [
+      "team play"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Repeat ball-handler/screener pick-and-roll reads against live or shell defense."
+  },
+  {
+    "name": "One-on-One Live Play",
+    "category": "basketball",
+    "muscleGroups": [
+      "team play"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Live isolation reps working attacking and defensive moves against a matched opponent."
+  },
+  {
+    "name": "2-on-2 Shell Drill",
+    "category": "basketball",
+    "muscleGroups": [
+      "team play"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Small-sided defensive shell work emphasizing help-side positioning."
+  },
+  {
+    "name": "Transition Fast Break Drill",
+    "category": "basketball",
+    "muscleGroups": [
+      "team play"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Push the ball up the floor in numbers advantage situations for quick scores."
+  },
+  {
+    "name": "Shooting Off Screens",
+    "category": "basketball",
+    "muscleGroups": [
+      "shooting"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Curl or fade off a screen into a balanced catch-and-shoot jumper."
+  },
+  {
+    "name": "Step-Back Jumper",
+    "category": "basketball",
+    "muscleGroups": [
+      "shooting"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Create separation with a hard step-back before rising into the shot."
+  },
+  {
+    "name": "And-1 Finishing Drill",
+    "category": "basketball",
+    "muscleGroups": [
+      "shooting"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Finish through contact at the rim while drawing and absorbing a foul."
+  },
+  {
+    "name": "Full-Speed Layup Drill",
+    "category": "basketball",
+    "muscleGroups": [
+      "shooting"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Finish layups at game speed off a live dribble approach."
+  },
+  {
+    "name": "Change-of-Pace Ballhandling",
+    "category": "basketball",
+    "muscleGroups": [
+      "ballhandling"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Mix hesitations and speed bursts to beat on-ball defensive pressure."
+  },
+  {
+    "name": "Wall Dribbling Drill",
+    "category": "basketball",
+    "muscleGroups": [
+      "ballhandling"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Dribble rapidly against a wall or defender's pressure to build hand speed."
+  },
+  {
+    "name": "T-Drill Agility",
+    "category": "basketball",
+    "muscleGroups": [
+      "agility"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Sprint, shuffle, and backpedal through a T-shaped cone pattern for time."
+  },
+  {
+    "name": "Lane Agility Drill",
+    "category": "basketball",
+    "muscleGroups": [
+      "agility"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Shuffle and sprint around the free-throw lane boundary for time."
+  },
+  {
+    "name": "Box-Out and Chase Drill",
+    "category": "basketball",
+    "muscleGroups": [
+      "rebounding"
+    ],
+    "equipment": "Basketball",
+    "instructions": "Box out a live opponent, then release to chase down a long rebound."
+  },
+  {
+    "name": "Foam Rolling — Quads",
+    "category": "mobility",
+    "muscleGroups": [
+      "quads"
+    ],
+    "equipment": null,
+    "instructions": "Roll slowly over the quads, pausing on tender spots for 20-30 seconds."
+  },
+  {
+    "name": "Foam Rolling — IT Band",
+    "category": "mobility",
+    "muscleGroups": [
+      "legs"
+    ],
+    "equipment": null,
+    "instructions": "Roll along the outside of the thigh, easing pressure as needed."
+  },
+  {
+    "name": "Foam Rolling — Upper Back",
+    "category": "mobility",
+    "muscleGroups": [
+      "back"
+    ],
+    "equipment": null,
+    "instructions": "Roll across the upper back, supporting the head and keeping hips lifted."
+  },
+  {
+    "name": "Hip Flexor Stretch",
+    "category": "mobility",
+    "muscleGroups": [
+      "hips"
+    ],
+    "equipment": null,
+    "instructions": "In a half-kneeling position, shift weight forward to stretch the front hip."
+  },
+  {
+    "name": "Hamstring Stretch",
+    "category": "mobility",
+    "muscleGroups": [
+      "hamstrings"
+    ],
+    "equipment": null,
+    "instructions": "With a straight leg extended, hinge forward until a stretch is felt."
+  },
+  {
+    "name": "Couch Stretch",
+    "category": "mobility",
+    "muscleGroups": [
+      "quads",
+      "hips"
+    ],
+    "equipment": null,
+    "instructions": "With the rear foot elevated behind you, sink the hips forward and down."
+  },
+  {
+    "name": "90/90 Hip Stretch",
+    "category": "mobility",
+    "muscleGroups": [
+      "hips"
+    ],
+    "equipment": null,
+    "instructions": "Sit with both legs bent at 90 degrees and rotate through the hips."
+  },
+  {
+    "name": "World's Greatest Stretch",
+    "category": "mobility",
+    "muscleGroups": [
+      "full body"
+    ],
+    "equipment": null,
+    "instructions": "Flow through a lunge, rotation, and hamstring stretch in one sequence."
+  },
+  {
+    "name": "Cat-Cow Mobility",
+    "category": "mobility",
+    "muscleGroups": [
+      "spine"
+    ],
+    "equipment": null,
+    "instructions": "Alternate arching and rounding the spine on hands and knees."
+  },
+  {
+    "name": "Thoracic Spine Rotation",
+    "category": "mobility",
+    "muscleGroups": [
+      "spine",
+      "back"
+    ],
+    "equipment": null,
+    "instructions": "From all fours, rotate one arm up and through, following with the eyes."
+  },
+  {
+    "name": "Ankle Mobility Drill",
+    "category": "mobility",
+    "muscleGroups": [
+      "ankles"
+    ],
+    "equipment": null,
+    "instructions": "Drive the knee over the toe while keeping the heel down to open the ankle."
+  },
+  {
+    "name": "Shoulder Dislocates",
+    "category": "mobility",
+    "muscleGroups": [
+      "shoulders"
+    ],
+    "equipment": null,
+    "instructions": "Using a band or stick, rotate the arms overhead and behind the back."
+  },
+  {
+    "name": "Yoga Flow — Sun Salutation",
+    "category": "mobility",
+    "muscleGroups": [
+      "full body"
+    ],
+    "equipment": null,
+    "instructions": "Move through a linked sequence of standing and forward-fold yoga poses."
+  },
+  {
+    "name": "Static Stretch — Full Body Cooldown",
+    "category": "mobility",
+    "muscleGroups": [
+      "full body"
+    ],
+    "equipment": null,
+    "instructions": "Hold gentle stretches for major muscle groups after training."
+  },
+  {
+    "name": "Jump Rope",
+    "category": "cardio",
+    "muscleGroups": [
+      "calves",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Maintain a steady rhythm with light, quick bounces off the balls of the feet."
+  },
+  {
+    "name": "Elliptical",
+    "category": "cardio",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Maintain a steady cadence and resistance for continuous low-impact cardio."
+  },
+  {
+    "name": "Rowing Machine",
+    "category": "cardio",
+    "muscleGroups": [
+      "back",
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Drive with the legs, then lean back and pull, reversing the sequence to recover."
+  },
+  {
+    "name": "Stair Climber",
+    "category": "cardio",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Maintain a steady step cadence without leaning heavily on the rails."
+  },
+  {
+    "name": "Battle Ropes",
+    "category": "cardio",
+    "muscleGroups": [
+      "shoulders",
+      "core",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Alternate or double-wave the ropes with quick, powerful arm movements."
+  },
+  {
+    "name": "Assault Bike / Air Bike Intervals",
+    "category": "cardio",
+    "muscleGroups": [
+      "full body",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Alternate hard sprint efforts with easy recovery pedaling on the air bike."
+  },
+  {
+    "name": "Swimming — Freestyle Laps",
+    "category": "cardio",
+    "muscleGroups": [
+      "full body",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Maintain steady stroke technique and breathing rhythm across laps."
+  },
+  {
+    "name": "Stair Sprints",
+    "category": "cardio",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Sprint up a flight of stairs, walking down to recover between reps."
+  },
+  {
+    "name": "Swimming — Interval Sets",
+    "category": "cardio",
+    "muscleGroups": [
+      "full body",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Alternate hard and easy swim intervals on a set rest period."
+  },
+  {
+    "name": "Brisk Walking",
+    "category": "cardio",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Maintain a brisk, purposeful walking pace for continuous low-impact cardio."
+  },
+  {
+    "name": "Hiking",
+    "category": "cardio",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Sustained walking effort over varied outdoor terrain and elevation."
+  },
+  {
+    "name": "Jump Rope — Double Unders",
+    "category": "cardio",
+    "muscleGroups": [
+      "calves",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Spin the rope twice per jump, maintaining a quick, consistent rhythm."
+  },
+  {
+    "name": "Boxing — Heavy Bag Rounds",
+    "category": "cardio",
+    "muscleGroups": [
+      "full body",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Work timed rounds on the heavy bag combining combinations and footwork."
+  },
+  {
+    "name": "Boxing — Shadowboxing",
+    "category": "cardio",
+    "muscleGroups": [
+      "full body",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Throw combinations against an imaginary opponent, focusing on form and movement."
+  },
+  {
+    "name": "Circuit Training — Full Body",
+    "category": "cardio",
+    "muscleGroups": [
+      "full body",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Move through a timed circuit of exercises with minimal rest between stations."
+  },
+  {
+    "name": "HIIT Bodyweight Circuit",
+    "category": "cardio",
+    "muscleGroups": [
+      "full body",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Alternate short, maximal-effort bodyweight exercises with brief recovery."
+  },
+  {
+    "name": "Foam Rolling — Calves",
+    "category": "mobility",
+    "muscleGroups": [
+      "calves"
+    ],
+    "equipment": null,
+    "instructions": "Roll slowly along the calf, pausing on tight or tender spots."
+  },
+  {
+    "name": "Foam Rolling — Glutes",
+    "category": "mobility",
+    "muscleGroups": [
+      "glutes"
+    ],
+    "equipment": null,
+    "instructions": "Sit on the roller and shift weight to target tight areas of the glutes."
+  },
+  {
+    "name": "Pigeon Pose Stretch",
+    "category": "mobility",
+    "muscleGroups": [
+      "hips",
+      "glutes"
+    ],
+    "equipment": null,
+    "instructions": "From a forward-fold hip position, sink into the stretch while keeping the spine tall."
+  },
+  {
+    "name": "Doorway Chest Stretch",
+    "category": "mobility",
+    "muscleGroups": [
+      "chest",
+      "shoulders"
+    ],
+    "equipment": null,
+    "instructions": "Press the forearm against a doorframe and step through to stretch the chest."
+  },
+  {
+    "name": "Cross-Body Shoulder Stretch",
+    "category": "mobility",
+    "muscleGroups": [
+      "shoulders"
+    ],
+    "equipment": null,
+    "instructions": "Pull one arm across the chest, holding gently with the opposite arm."
+  },
+  {
+    "name": "Seated Spinal Twist",
+    "category": "mobility",
+    "muscleGroups": [
+      "spine",
+      "obliques"
+    ],
+    "equipment": null,
+    "instructions": "Seated with legs extended or crossed, rotate the torso and look over the shoulder."
+  },
+  {
+    "name": "Deep Squat Hold",
+    "category": "mobility",
+    "muscleGroups": [
+      "hips",
+      "ankles"
+    ],
+    "equipment": null,
+    "instructions": "Hold a relaxed deep squat position to open the hips and ankles."
+  },
+  {
+    "name": "Band Pull-Apart",
+    "category": "mobility",
+    "muscleGroups": [
+      "shoulders",
+      "back"
+    ],
+    "equipment": null,
+    "instructions": "Pull a light band apart at chest height, squeezing the shoulder blades together."
+  },
+  {
+    "name": "Foam Rolling — Lats",
+    "category": "mobility",
+    "muscleGroups": [
+      "back"
+    ],
+    "equipment": null,
+    "instructions": "Roll along the side of the ribcage to release the lats."
+  },
+  {
+    "name": "Wrist Mobility Drill",
+    "category": "mobility",
+    "muscleGroups": [
+      "forearms"
+    ],
+    "equipment": null,
+    "instructions": "Circle and flex the wrists through their full range to prep for pressing work."
+  },
+  {
+    "name": "Neck Mobility Drill",
+    "category": "mobility",
+    "muscleGroups": [
+      "neck"
+    ],
+    "equipment": null,
+    "instructions": "Gently move the head through flexion, extension, and rotation."
+  },
+  {
+    "name": "Standing Quad Stretch",
+    "category": "mobility",
+    "muscleGroups": [
+      "quads"
+    ],
+    "equipment": null,
+    "instructions": "Pull one heel toward the glutes while keeping the knees close together."
+  },
+  {
+    "name": "Calf Stretch on Wall",
+    "category": "mobility",
+    "muscleGroups": [
+      "calves"
+    ],
+    "equipment": null,
+    "instructions": "Lean into a wall with the back heel down to stretch the calf."
+  },
+  {
+    "name": "Child's Pose Stretch",
+    "category": "mobility",
+    "muscleGroups": [
+      "back",
+      "hips"
+    ],
+    "equipment": null,
+    "instructions": "Sit back onto the heels with arms extended forward to stretch the back."
+  },
+  {
+    "name": "Downward Dog Stretch",
+    "category": "mobility",
+    "muscleGroups": [
+      "hamstrings",
+      "calves",
+      "shoulders"
+    ],
+    "equipment": null,
+    "instructions": "Form an inverted V, pressing the heels toward the floor and chest toward the thighs."
+  },
+  {
+    "name": "Kettlebell Complex — Conditioning",
+    "category": "cardio",
+    "muscleGroups": [
+      "full body",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Chain multiple kettlebell movements together without setting the bell down."
+  },
+  {
+    "name": "Sled Sprint Conditioning",
+    "category": "cardio",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Sprint-push a lightly loaded sled for short, high-effort intervals."
+  },
+  {
+    "name": "Medicine Ball Slams",
+    "category": "cardio",
+    "muscleGroups": [
+      "full body",
+      "core"
+    ],
+    "equipment": null,
+    "instructions": "Slam the ball to the floor explosively using the whole body, then reset and repeat."
+  },
+  {
+    "name": "Tabata Bodyweight Intervals",
+    "category": "cardio",
+    "muscleGroups": [
+      "full body",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "20 seconds max effort, 10 seconds rest, repeated for 8 rounds."
+  },
+  {
+    "name": "Farmer's Carry Conditioning",
+    "category": "cardio",
+    "muscleGroups": [
+      "full body",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Carry heavy loads for distance or time as a conditioning finisher."
+  },
+  {
+    "name": "Prowler Push Conditioning",
+    "category": "cardio",
+    "muscleGroups": [
+      "legs",
+      "cardiovascular"
+    ],
+    "equipment": null,
+    "instructions": "Push a loaded prowler sled for short, high-effort distances."
+  }
+]
