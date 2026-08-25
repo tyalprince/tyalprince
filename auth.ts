@@ -14,7 +14,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     sessionsTable: sessions,
     verificationTokensTable: verificationTokens,
   }),
-  session: { strategy: "database" },
+  // Database sessions aren't supported alongside the Credentials provider
+  // (Auth.js requires JWT for it — see errors.authjs.dev#unsupportedstrategy).
+  // User accounts still live in Neon via the Drizzle adapter/lib/users.ts;
+  // only the session token itself is a signed JWT rather than a DB row.
+  session: { strategy: "jwt" },
   pages: {
     signIn: "/login",
   },
@@ -44,9 +48,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    session: ({ session, user }) => {
-      if (session.user) {
-        session.user.id = user.id;
+    jwt: ({ token, user }) => {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+    session: ({ session, token }) => {
+      if (session.user && typeof token.id === "string") {
+        session.user.id = token.id;
       }
       return session;
     },

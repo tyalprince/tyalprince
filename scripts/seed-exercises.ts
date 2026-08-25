@@ -9,8 +9,7 @@
 import "dotenv/config";
 import { readFileSync } from "node:fs";
 import { isNull } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/neon-http";
-import { neon } from "@neondatabase/serverless";
+import { db } from "../lib/db";
 import * as schema from "../lib/db/schema";
 
 type SeedExercise = {
@@ -22,13 +21,6 @@ type SeedExercise = {
 };
 
 async function main() {
-  if (!process.env.DATABASE_URL) {
-    throw new Error("DATABASE_URL is not set. See .env.example.");
-  }
-
-  const sql = neon(process.env.DATABASE_URL);
-  const db = drizzle(sql, { schema });
-
   const raw = readFileSync(new URL("../data/exercises.json", import.meta.url), "utf-8");
   const seedExercises: SeedExercise[] = JSON.parse(raw);
 

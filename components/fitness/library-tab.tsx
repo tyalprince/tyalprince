@@ -8,11 +8,14 @@ import { Dialog } from "@/components/ui/dialog";
 import { apiFetch } from "@/lib/api-client";
 import type { ExerciseCategory, ExerciseRow } from "@/lib/fitness/types";
 
+const PAGE_SIZE = 40;
+
 export function LibraryTab() {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("");
   const [muscleGroup, setMuscleGroup] = useState("");
   const [results, setResults] = useState<ExerciseRow[]>([]);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [newOpen, setNewOpen] = useState(false);
 
   function load() {
@@ -21,7 +24,10 @@ export function LibraryTab() {
     if (category) params.set("category", category);
     if (muscleGroup) params.set("muscleGroup", muscleGroup);
     apiFetch<{ exercises: ExerciseRow[] }>(`/api/fitness/exercises?${params}`)
-      .then((res) => setResults(res.exercises))
+      .then((res) => {
+        setResults(res.exercises);
+        setVisibleCount(PAGE_SIZE);
+      })
       .catch(() => setResults([]));
   }
 
@@ -30,6 +36,8 @@ export function LibraryTab() {
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query, category, muscleGroup]);
+
+  const visibleResults = results.slice(0, visibleCount);
 
   return (
     <div className="space-y-4">
@@ -68,10 +76,12 @@ export function LibraryTab() {
         </Button>
       </div>
 
-      <p className="text-xs text-neutral-500">{results.length} exercises</p>
+      <p className="text-xs text-neutral-500">
+        {results.length} exercises{visibleResults.length < results.length ? ` (showing ${visibleResults.length})` : ""}
+      </p>
 
-      <div className="overflow-hidden rounded-lg border border-neutral-200 dark:border-neutral-800">
-        {results.map((ex) => (
+      <div className="max-h-[70vh] overflow-y-auto rounded-lg border border-neutral-200 dark:border-neutral-800">
+        {visibleResults.map((ex) => (
           <div
             key={ex.id}
             className="border-b border-neutral-100 px-4 py-3 last:border-b-0 dark:border-neutral-900"
@@ -100,6 +110,14 @@ export function LibraryTab() {
           </div>
         ))}
       </div>
+
+      {visibleCount < results.length && (
+        <div className="flex justify-center">
+          <Button variant="secondary" onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}>
+            Show more
+          </Button>
+        </div>
+      )}
 
       <NewExerciseDialog
         open={newOpen}
