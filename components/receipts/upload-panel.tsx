@@ -55,7 +55,6 @@ export function UploadPanel({
         type="file"
         accept={ACCEPTED_TYPES.join(",")}
         multiple
-        capture="environment"
         className="hidden"
         onChange={(e) => {
           pick(e.target.files);
