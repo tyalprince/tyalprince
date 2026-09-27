@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, gte, ilike, isNull, lte, or } from "drizzle-orm";
+import { and, asc, desc, eq, gte, ilike, inArray, isNull, lte, or } from "drizzle-orm";
 import { db } from "@/lib/db";
 import {
   exercises,
@@ -81,11 +81,18 @@ export async function getUserPlan(userId: string, planId: string) {
 
   const dayIds = days.map((d) => d.id);
   const dayExercises = dayIds.length
-    ? await db
-        .select()
-        .from(planDayExercises)
-        .where(or(...dayIds.map((id) => eq(planDayExercises.planDayId, id))))
-        .orderBy(asc(planDayExercises.orderIndex))
+    ? (
+        await db
+          .select({
+            row: planDayExercises,
+            exerciseName: exercises.name,
+            exerciseCategory: exercises.category,
+          })
+          .from(planDayExercises)
+          .innerJoin(exercises, eq(exercises.id, planDayExercises.exerciseId))
+          .where(inArray(planDayExercises.planDayId, dayIds))
+          .orderBy(asc(planDayExercises.orderIndex))
+      ).map((r) => ({ ...r.row, exerciseName: r.exerciseName, exerciseCategory: r.exerciseCategory }))
     : [];
 
   return {
@@ -108,10 +115,11 @@ export async function assertUserOwnsPlanDay(userId: string, planDayId: string) {
   return Boolean(row);
 }
 
-export type WorkoutFilters = { from?: string; to?: string };
+export type WorkoutFilters = { from?: string; to?: string; planId?: string };
 
 export async function getUserWorkoutLogs(userId: string, filters: WorkoutFilters = {}) {
   const conditions = [eq(workoutLogs.userId, userId)];
+  if (filters.planId) conditions.push(eq(workoutLogs.planId, filters.planId));
   if (filters.from) conditions.push(gte(workoutLogs.date, new Date(filters.from)));
   if (filters.to) conditions.push(lte(workoutLogs.date, new Date(filters.to)));
   return db
@@ -129,18 +137,25 @@ export async function getUserWorkoutLog(userId: string, workoutLogId: string) {
     .limit(1);
   if (!log) return null;
 
-  const loggedEx = await db
-    .select()
-    .from(loggedExercises)
-    .where(eq(loggedExercises.workoutLogId, workoutLogId))
-    .orderBy(asc(loggedExercises.orderIndex));
+  const loggedEx = (
+    await db
+      .select({
+        row: loggedExercises,
+        exerciseName: exercises.name,
+        exerciseCategory: exercises.category,
+      })
+      .from(loggedExercises)
+      .innerJoin(exercises, eq(exercises.id, loggedExercises.exerciseId))
+      .where(eq(loggedExercises.workoutLogId, workoutLogId))
+      .orderBy(asc(loggedExercises.orderIndex))
+  ).map((r) => ({ ...r.row, exerciseName: r.exerciseName, exerciseCategory: r.exerciseCategory }));
 
   const exIds = loggedEx.map((e) => e.id);
   const sets = exIds.length
     ? await db
         .select()
         .from(loggedSets)
-        .where(or(...exIds.map((id) => eq(loggedSets.loggedExerciseId, id))))
+        .where(inArray(loggedSets.loggedExerciseId, exIds))
         .orderBy(asc(loggedSets.setNumber))
     : [];
 
@@ -194,6 +209,7 @@ export async function getUserSetHistoryForExercise(userId: string, exerciseId: s
   const rows = await db
     .select({
       setId: loggedSets.id,
+      workoutLogId: workoutLogs.id,
       reps: loggedSets.reps,
       weight: loggedSets.weight,
       weightUnit: loggedSets.weightUnit,
@@ -232,4 +248,70 @@ export async function getAllUserSetsWithExercise(userId: string) {
     .innerJoin(exercises, eq(exercises.id, loggedExercises.exerciseId))
     .where(eq(workoutLogs.userId, userId))
     .orderBy(asc(workoutLogs.date));
+}
+
+/** Returns the subset of `ids` the user may use: global library entries plus
+ *  their own custom exercises. */
+export async function getVisibleExerciseIds(userId: string, ids: string[]) {
+  if (ids.length === 0) return new Set<string>();
+  const rows = await db
+    .select({ id: exercises.id })
+    .from(exercises)
+    .where(
+      and(inArray(exercises.id, ids), or(isNull(exercises.userId), eq(exercises.userId, userId))),
+    );
+  return new Set(rows.map((r) => r.id));
+}
+
+/** Every logged set for the user with its workout + exercise context — the
+ *  raw material for workout summaries, plan reviews and the history tab. */
+export async function getUserSetRows(userId: string, filters: { planId?: string } = {}) {
+  const conditions = [eq(workoutLogs.userId, userId)];
+  if (filters.planId) conditions.push(eq(workoutLogs.planId, filters.planId));
+  return db
+    .select({
+      workoutLogId: workoutLogs.id,
+      date: workoutLogs.date,
+      loggedExerciseId: loggedExercises.id,
+      exerciseId: loggedExercises.exerciseId,
+      exerciseName: exercises.name,
+      category: exercises.category,
+      reps: loggedSets.reps,
+      weight: loggedSets.weight,
+      durationSeconds: loggedSets.durationSeconds,
+      distance: loggedSets.distance,
+    })
+    .from(loggedSets)
+    .innerJoin(loggedExercises, eq(loggedExercises.id, loggedSets.loggedExerciseId))
+    .innerJoin(workoutLogs, eq(workoutLogs.id, loggedExercises.workoutLogId))
+    .innerJoin(exercises, eq(exercises.id, loggedExercises.exerciseId))
+    .where(and(...conditions))
+    .orderBy(asc(workoutLogs.date), asc(loggedSets.completedAt));
+}
+
+/** Workout logs joined with their plan title and plan-day info. */
+export async function getUserWorkoutLogsWithPlan(userId: string, filters: { planId?: string } = {}) {
+  const conditions = [eq(workoutLogs.userId, userId)];
+  if (filters.planId) conditions.push(eq(workoutLogs.planId, filters.planId));
+  return db
+    .select({
+      log: workoutLogs,
+      planTitle: fitnessPlans.title,
+      dayTitle: planDays.title,
+      dayType: planDays.dayType,
+    })
+    .from(workoutLogs)
+    .leftJoin(fitnessPlans, eq(fitnessPlans.id, workoutLogs.planId))
+    .leftJoin(planDays, eq(planDays.id, workoutLogs.planDayId))
+    .where(and(...conditions))
+    .orderBy(desc(workoutLogs.date), desc(workoutLogs.createdAt));
+}
+
+/** A plan day's target exercises, in order. */
+export async function getPlanDayTargets(planDayId: string) {
+  return db
+    .select()
+    .from(planDayExercises)
+    .where(eq(planDayExercises.planDayId, planDayId))
+    .orderBy(asc(planDayExercises.orderIndex));
 }

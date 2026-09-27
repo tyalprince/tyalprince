@@ -277,6 +277,16 @@ export const fitnessPlans = pgTable(
     })
       .notNull()
       .default("draft"),
+    // Wizard inputs for generated plans (null for hand-built plans): focus
+    // scores 1-10, days-per-week mix, and how weeks vary across the block.
+    focus: jsonb("focus").$type<Record<string, number>>(),
+    weeklyMix: jsonb("weekly_mix").$type<Record<string, number>>(),
+    splitType: text("split_type", {
+      enum: ["weekly", "biweekly", "randomized"],
+    }),
+    progressive: boolean("progressive").notNull().default(false),
+    durationWeeks: integer("duration_weeks"),
+    completedAt: timestamp("completed_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [index("fitness_plans_user_id_idx").on(t.userId)],
@@ -291,6 +301,14 @@ export const planDays = pgTable(
       .references(() => fitnessPlans.id, { onDelete: "cascade" }),
     sequenceNumber: integer("sequence_number").notNull(),
     title: text("title").notNull(),
+    // Calendar placement for generated plans; null on hand-built templates.
+    weekNumber: integer("week_number"),
+    dayOfWeek: integer("day_of_week"), // 0 = Monday … 6 = Sunday
+    scheduledDate: timestamp("scheduled_date", { mode: "date" }),
+    dayType: text("day_type", {
+      enum: ["gym", "home", "cardio", "recovery", "rest"],
+    }),
+    notes: text("notes"),
   },
   (t) => [index("plan_days_plan_id_idx").on(t.planId)],
 );
@@ -311,6 +329,8 @@ export const planDayExercises = pgTable(
     targetWeight: numeric("target_weight", { precision: 8, scale: 2 }),
     targetDurationSeconds: integer("target_duration_seconds"),
     targetDistance: numeric("target_distance", { precision: 10, scale: 3 }),
+    targetRestSeconds: integer("target_rest_seconds"),
+    notes: text("notes"),
   },
   (t) => [index("plan_day_exercises_plan_day_id_idx").on(t.planDayId)],
 );

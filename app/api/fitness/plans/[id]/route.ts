@@ -36,7 +36,9 @@ export const PATCH = withApiErrors(async (req: Request, { params }: Params) => {
       ...(body.endDate !== undefined
         ? { endDate: body.endDate ? new Date(body.endDate) : null }
         : {}),
-      ...(body.status !== undefined ? { status: body.status } : {}),
+      ...(body.status !== undefined
+        ? { status: body.status, completedAt: body.status === "completed" ? new Date() : null }
+        : {}),
     })
     .where(and(eq(fitnessPlans.id, id), eq(fitnessPlans.userId, userId)))
     .returning();

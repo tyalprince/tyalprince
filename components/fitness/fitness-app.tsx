@@ -7,12 +7,14 @@ import { GoalsTab } from "./goals-tab";
 import { PlansTab } from "./plans-tab";
 import { ProgressTab } from "./progress-tab";
 import { LibraryTab } from "./library-tab";
+import { HistoryTab } from "./history-tab";
 
 const TABS = [
   { key: "today", label: "Today", Component: TodayTab },
-  { key: "goals", label: "Goals", Component: GoalsTab },
   { key: "plans", label: "Plans", Component: PlansTab },
+  { key: "history", label: "History", Component: HistoryTab },
   { key: "progress", label: "Progress", Component: ProgressTab },
+  { key: "goals", label: "Goals", Component: GoalsTab },
   { key: "library", label: "Library", Component: LibraryTab },
 ] as const;
 

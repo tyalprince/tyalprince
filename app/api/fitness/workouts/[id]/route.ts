@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { workoutLogs } from "@/lib/db/schema";
 import { requireUserId } from "@/lib/session";
 import { withApiErrors } from "@/lib/api-utils";
-import { getUserWorkoutLog } from "@/lib/fitness/queries";
+import { getPlanDayTargets, getUserWorkoutLog } from "@/lib/fitness/queries";
 import { updateWorkoutLogSchema } from "@/lib/validation/fitness";
 
 type Params = { params: Promise<{ id: string }> };
@@ -15,7 +15,8 @@ export const GET = withApiErrors(async (_req: Request, { params }: Params) => {
 
   const detail = await getUserWorkoutLog(userId, id);
   if (!detail) return NextResponse.json({ error: "Not found" }, { status: 404 });
-  return NextResponse.json(detail);
+  const targets = detail.log.planDayId ? await getPlanDayTargets(detail.log.planDayId) : [];
+  return NextResponse.json({ ...detail, targets });
 });
 
 export const PATCH = withApiErrors(async (req: Request, { params }: Params) => {
