@@ -2,6 +2,10 @@ import { describe, expect, it } from "vitest";
 import library from "@/data/exercises.json";
 import {
   addDays,
+  convertToHome,
+  homeAlternative,
+  isHomeFriendly,
+  similarExercises,
   generatePlan,
   layoutWeek,
   progressExercise,
@@ -154,5 +158,43 @@ describe("progressExercise", () => {
     expect(progressExercise(ex, 1).targetReps).toBe(9);
     expect(progressExercise(ex, 2)).toMatchObject({ targetReps: 10, targetSets: 5 });
     expect(progressExercise(ex, 3)).toMatchObject({ targetReps: 8, targetSets: 3 });
+  });
+});
+
+describe("on-the-fly home swaps", () => {
+  const find = (name: string) => LIB.find((e) => e.name === name)!;
+
+  it("treats cardio/mobility as home-friendly and barbell work as gym-only", () => {
+    expect(isHomeFriendly(find("Barbell Squat"))).toBe(false);
+    expect(isHomeFriendly(find("Dumbbell Squat"))).toBe(true);
+    expect(isHomeFriendly(find("Jump Rope"))).toBe(true);
+  });
+
+  it("prefers the same movement with home equipment", () => {
+    const alt = homeAlternative(find("Barbell Squat"), LIB)!;
+    expect(alt.name).toMatch(/Squat$/);
+    expect(isHomeFriendly(alt)).toBe(true);
+  });
+
+  it("converts a gym day to home, keeping sets/reps and dropping the old load", () => {
+    const gymDay = generatePlan(base, LIB).days.find((d) => d.dayType === "gym")!;
+    const withWeight = gymDay.exercises.map((e) => ({ ...e, targetWeight: 135 }));
+    const home = convertToHome(withWeight, LIB);
+    const byId = new Map(LIB.map((e) => [e.id, e]));
+    expect(home).toHaveLength(withWeight.length);
+    home.forEach((ex, i) => {
+      expect(ex.targetSets).toBe(withWeight[i].targetSets);
+      expect(ex.targetReps).toBe(withWeight[i].targetReps);
+      if (ex.exerciseId !== withWeight[i].exerciseId) expect(ex.targetWeight).toBeNull();
+    });
+    expect(home.every((e) => isHomeFriendly(byId.get(e.exerciseId)!))).toBe(true);
+    expect(new Set(home.map((e) => e.exerciseId)).size).toBe(home.length);
+  });
+
+  it("suggests same-muscle alternatives", () => {
+    const bench = find("Barbell Bench Press");
+    const similar = similarExercises(bench, LIB);
+    expect(similar.length).toBeGreaterThan(3);
+    expect(similar.every((e) => e.muscleGroups[0] === "chest")).toBe(true);
   });
 });

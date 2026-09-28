@@ -23,7 +23,7 @@ export function FitnessApp() {
   const ActiveComponent = TABS.find((t) => t.key === active)?.Component ?? TodayTab;
 
   return (
-    <div className="mx-auto max-w-3xl p-4 sm:p-6">
+    <div className="mx-auto w-full min-w-0 max-w-3xl p-4 sm:p-6">
       <h1 className="mb-4 text-xl font-semibold">Fitness</h1>
       <div className="mb-4 flex gap-1 overflow-x-auto rounded-md bg-neutral-100 p-1 dark:bg-neutral-800">
         {TABS.map((tab) => (

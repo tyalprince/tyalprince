@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { apiFetch } from "@/lib/api-client";
 import { PlanScheduleEditor } from "./plan-schedule-editor";
-import { DayTypeBadge, cardClass, localToday, useExerciseLibrary } from "./shared";
+import { DayTypeBadge, cardClass, draftsToPayload, localToday, useExerciseLibrary } from "./shared";
 import {
   WEEKDAY_LABELS,
   addDays,
@@ -102,18 +102,7 @@ export function PlanWizard({
         body: JSON.stringify({
           ...draft,
           title: title.trim(),
-          days: draft.days.map((d) => ({
-            ...d,
-            exercises: d.exercises.map((e) => ({
-              exerciseId: e.exerciseId,
-              targetSets: e.targetSets,
-              targetReps: e.targetReps,
-              targetWeight: e.targetWeight,
-              targetDurationSeconds: e.targetDurationSeconds,
-              targetRestSeconds: e.targetRestSeconds,
-              notes: e.notes,
-            })),
-          })),
+          days: draftsToPayload(draft.days),
         }),
       });
       onCreated(plan);

@@ -9,6 +9,7 @@ import { PlanWizard } from "./plan-wizard";
 import { PlanReviewView } from "./plan-review";
 import { WorkoutSession } from "./workout-session";
 import { WorkoutSummaryView } from "./workout-summary";
+import { DayAdjuster } from "./day-adjuster";
 import { DayTypeBadge, ProgressBar, cardClass, describeTarget, formatDay, localToday, selectClass } from "./shared";
 import type { PlanDayRow, PlanDetail, PlanRow, WorkoutLogRow } from "@/lib/fitness/types";
 
@@ -222,6 +223,7 @@ export function TodayTab() {
           onOpenSummary={(log, title) => setView({ kind: "summary", id: log.id, title })}
           onReview={() => setView({ kind: "review", planId })}
           onComplete={completePlan}
+          onPlanUpdated={setDetail}
         />
       )}
 
@@ -279,6 +281,7 @@ function ScheduledPlan({
   onOpenSummary,
   onReview,
   onComplete,
+  onPlanUpdated,
 }: {
   detail: PlanDetail;
   today: string;
@@ -291,6 +294,7 @@ function ScheduledPlan({
   onOpenSummary: (log: WorkoutLogRow, title: string) => void;
   onReview: () => void;
   onComplete: () => void;
+  onPlanUpdated: (detail: PlanDetail) => void;
 }) {
   const { plan, days } = detail;
   const training = days.filter((d) => d.dayType !== "rest");
@@ -418,7 +422,7 @@ function ScheduledPlan({
 
           {selected.dayType === "rest" ? (
             <p className="text-sm text-neutral-500">
-              Rest day — let your body recover. Feeling good? Log a quick session below.
+              Rest day — let your body recover. Want to train anyway? Change it below or swap it with another day.
             </p>
           ) : (
             <>
@@ -446,6 +450,16 @@ function ScheduledPlan({
                 )}
               </div>
             </>
+          )}
+
+          {status === "none" && (
+            <DayAdjuster
+              key={selected.id}
+              detail={detail}
+              day={selected}
+              swappableDays={weekDays.filter((d) => d.id !== selected.id && dayStatus(d) === "none")}
+              onSaved={onPlanUpdated}
+            />
           )}
         </div>
       )}

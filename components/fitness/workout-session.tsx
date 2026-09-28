@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CheckCircle2, History, Plus, Trash2, Trophy, X } from "lucide-react";
+import { CheckCircle2, History, Home, Plus, Replace, Trash2, Trophy, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { apiFetch } from "@/lib/api-client";
 import { ExercisePicker } from "./exercise-picker";
 import { RestTimer } from "./rest-timer";
-import { cardClass, describeTarget, formatDay } from "./shared";
+import { cardClass, describeTarget, formatDay, useExerciseLibrary } from "./shared";
+import { homeAlternative, isHomeFriendly } from "@/lib/fitness/generator";
 import { formatDuration } from "@/lib/fitness/stats";
 import type {
   ExerciseRow,
@@ -52,6 +53,11 @@ export function WorkoutSession({
   const [restTimer, setRestTimer] = useState<{ key: string; seconds: number } | null>(null);
   const [lastPr, setLastPr] = useState<{ exerciseName: string; pr: PrCheckResult } | null>(null);
   const [finishing, setFinishing] = useState(false);
+  const [swapping, setSwapping] = useState<LoggedExerciseRow | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
+  // Plan targets follow a swapped exercise (keyed by logged exercise, not exercise id).
+  const [targetOverrides, setTargetOverrides] = useState<Record<string, Target>>({});
+  const library = useExerciseLibrary();
 
   useEffect(() => {
     apiFetch<WorkoutDetail>(`/api/fitness/workouts/${workoutLogId}`)
@@ -68,6 +74,51 @@ export function WorkoutSession({
   if (!detail) return <p className="text-sm text-neutral-500">Loading workout…</p>;
 
   const targetsByExercise = new Map(detail.targets.map((t) => [t.exerciseId, t]));
+  const targetFor = (e: LoggedExerciseRow) => targetOverrides[e.id] ?? targetsByExercise.get(e.exerciseId);
+  const libraryById = new Map((library ?? []).map((e) => [e.id, e]));
+  const gymOnlyPending = detail.exercises.filter((e) => {
+    const lib = libraryById.get(e.exerciseId);
+    return e.sets.length === 0 && lib && !isHomeFriendly(lib);
+  });
+
+  /** Replaces an exercise that has no sets yet, keeping its slot and plan target. */
+  async function swapExercise(entry: LoggedExerciseRow, exercise: ExerciseRow) {
+    await apiFetch(`/api/fitness/logged-exercises/${entry.id}`, {
+      method: "PATCH",
+      body: JSON.stringify({ exerciseId: exercise.id }),
+    });
+    const target = targetFor(entry);
+    if (target) {
+      setTargetOverrides((prev) => ({
+        ...prev,
+        [entry.id]: { ...target, exerciseId: exercise.id, targetWeight: null },
+      }));
+    }
+    updateExercise(entry.id, (e) => ({
+      ...e,
+      exerciseId: exercise.id,
+      exerciseName: exercise.name,
+      exerciseCategory: exercise.category,
+    }));
+  }
+
+  async function switchToHome() {
+    if (!library) return;
+    const used = new Set(detail!.exercises.map((e) => e.exerciseId));
+    let swapped = 0;
+    for (const [i, entry] of gymOnlyPending.entries()) {
+      const alt = homeAlternative(libraryById.get(entry.exerciseId)!, library, used, i + 1);
+      if (!alt) continue;
+      used.add(alt.id);
+      await swapExercise(entry, alt);
+      swapped += 1;
+    }
+    setNotice(
+      swapped
+        ? `Swapped ${swapped} exercise${swapped > 1 ? "s" : ""} for home versions. Tap Swap on any to pick something else.`
+        : "No home alternatives found — use Swap to pick your own.",
+    );
+  }
 
   function updateExercise(id: string, fn: (e: LoggedExerciseRow) => LoggedExerciseRow) {
     setDetail((d) => d && { ...d, exercises: d.exercises.map((e) => (e.id === id ? fn(e) : e)) });
@@ -101,7 +152,7 @@ export function WorkoutSession({
 
   function handleSetLogged(entry: LoggedExerciseRow, set: LoggedSetRow, pr: PrCheckResult | null) {
     updateExercise(entry.id, (e) => ({ ...e, sets: [...e.sets, set] }));
-    const target = targetsByExercise.get(entry.exerciseId);
+    const target = targetFor(entry);
     const restSeconds =
       set.restSeconds ?? target?.targetRestSeconds ?? (CARDIO_CATEGORIES.has(entry.exerciseCategory) ? 60 : 90);
     if (restSeconds > 0) setRestTimer({ key: set.id, seconds: restSeconds });
@@ -156,6 +207,17 @@ export function WorkoutSession({
         </button>
       </div>
 
+      {gymOnlyPending.length > 0 && (
+        <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-sky-200 bg-sky-50 px-3 py-2 text-sm dark:border-sky-900 dark:bg-sky-950/40">
+          <span>Not at the gym? {gymOnlyPending.length} exercise{gymOnlyPending.length > 1 ? "s need" : " needs"} gym equipment.</span>
+          <Button variant="secondary" onClick={switchToHome}>
+            <Home className="h-4 w-4" />
+            Switch to home
+          </Button>
+        </div>
+      )}
+      {notice && <p className="text-xs text-neutral-500">{notice}</p>}
+
       {lastPr && (
         <div className="flex items-center gap-2 rounded-lg border border-amber-300 bg-amber-50 px-4 py-2 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-200">
           <Trophy className="h-4 w-4 shrink-0" />
@@ -173,10 +235,11 @@ export function WorkoutSession({
 
       {detail.exercises.map((entry) => (
         <ExerciseCard
-          key={entry.id}
+          key={`${entry.id}-${entry.exerciseId}`}
           workoutLogId={workoutLogId}
           entry={entry}
-          target={targetsByExercise.get(entry.exerciseId)}
+          target={targetFor(entry)}
+          onSwap={() => setSwapping(entry)}
           onSetLogged={(set, pr) => handleSetLogged(entry, set, pr)}
           onDeleteSet={(set) => deleteSet(entry, set)}
           onRemove={() => removeExercise(entry)}
@@ -200,6 +263,12 @@ export function WorkoutSession({
       </div>
 
       <ExercisePicker open={pickerOpen} onClose={() => setPickerOpen(false)} onSelect={addExercise} />
+      <ExercisePicker
+        open={swapping !== null}
+        onClose={() => setSwapping(null)}
+        swapFor={swapping ? (libraryById.get(swapping.exerciseId) ?? null) : null}
+        onSelect={(ex) => swapping && swapExercise(swapping, ex)}
+      />
     </div>
   );
 }
@@ -208,6 +277,7 @@ function ExerciseCard({
   workoutLogId,
   entry,
   target,
+  onSwap,
   onSetLogged,
   onDeleteSet,
   onRemove,
@@ -215,6 +285,7 @@ function ExerciseCard({
   workoutLogId: string;
   entry: LoggedExerciseRow;
   target?: Target;
+  onSwap: () => void;
   onSetLogged: (set: LoggedSetRow, pr: PrCheckResult | null) => void;
   onDeleteSet: (set: LoggedSetRow) => void;
   onRemove: () => void;
@@ -304,6 +375,16 @@ function ExerciseCard({
             <span className={done ? "text-xs font-medium text-emerald-600" : "text-xs text-neutral-500"}>
               {entry.sets.length}/{targetSets}
             </span>
+          )}
+          {entry.sets.length === 0 && (
+            <button
+              onClick={onSwap}
+              className="flex items-center gap-1 rounded px-1.5 py-1 text-xs text-neutral-500 hover:bg-neutral-100 hover:text-neutral-800 dark:hover:bg-neutral-800"
+              aria-label={`Swap ${entry.exerciseName}`}
+            >
+              <Replace className="h-3.5 w-3.5" />
+              Swap
+            </button>
           )}
           <button
             onClick={onRemove}
