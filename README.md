@@ -75,6 +75,21 @@ Safe to re-run — it matches existing entries by name and only inserts new
 ones. To add more exercises, edit the generator script and re-run
 `node scripts/generate-exercises-json.mjs` before seeding.
 
+### Workout plan builder
+
+The Fitness tab's Today screen starts with a plan wizard: name → focus scores
+(strength, hypertrophy, endurance, flexibility, stability, athleticism, 1–10)
+→ weekly mix of gym / home / cardio / recover-and-stretch days → split style
+(weekly, bi-weekly A/B, randomized) with optional progressive overload. The
+generator (`lib/fitness/generator.ts`) runs in the browser against the
+exercise library, is seeded (so "Regenerate" is deterministic), and produces
+a 4-week calendar the user reviews and edits before saving. Workout summaries,
+plan reviews and the History tab are computed by the pure builders in
+`lib/fitness/reports.ts`.
+
+Migration `drizzle/0001_plan_wizard.sql` adds the plan/day columns this needs
+(additive only — run `npm run db:migrate`).
+
 ## Authorization model
 
 Neon is plain Postgres — there's no built-in `auth.uid()`-based row-level

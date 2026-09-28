@@ -49,9 +49,11 @@ export const createWorkoutLogSchema = z.object({
   overallRpe: z.number().int().min(1).max(10).optional().nullable(),
   status: z.enum(["planned", "completed", "skipped"]).default("completed"),
   activityType: z.string().max(100).optional().nullable(),
+  // Pre-populate the workout with the plan day's exercises.
+  fromPlanDay: z.boolean().optional(),
 });
 
-export const updateWorkoutLogSchema = createWorkoutLogSchema.partial().extend({
+export const updateWorkoutLogSchema = createWorkoutLogSchema.omit({ fromPlanDay: true }).partial().extend({
   endTime: z.iso.datetime().optional().nullable(),
 });
 
@@ -81,4 +83,63 @@ export const createCustomExerciseSchema = z.object({
   muscleGroups: z.array(z.string().max(50)).default([]),
   equipment: z.string().max(100).optional().nullable(),
   instructions: z.string().max(2000).optional().nullable(),
+});
+
+// ---------------------------------------------------------------------------
+// Generated plans (wizard → reviewed draft → saved schedule)
+// ---------------------------------------------------------------------------
+
+const score = z.number().int().min(1).max(10);
+const dayCount = z.number().int().min(0).max(7);
+
+export const focusSchema = z.object({
+  strength: score,
+  hypertrophy: score,
+  endurance: score,
+  flexibility: score,
+  stability: score,
+  athleticism: score,
+});
+
+export const weeklyMixSchema = z
+  .object({ gym: dayCount, home: dayCount, cardio: dayCount, recovery: dayCount })
+  .refine((m) => m.gym + m.home + m.cardio + m.recovery <= 7, {
+    message: "At most 7 training days per week",
+  });
+
+export const draftExerciseSchema = z.object({
+  exerciseId: z.uuid(),
+  targetSets: z.number().int().min(1).max(20).nullable(),
+  targetReps: z.number().int().min(1).max(200).nullable(),
+  targetWeight: z.number().min(0).nullable(),
+  targetDurationSeconds: z.number().int().min(1).max(24 * 3600).nullable(),
+  targetRestSeconds: z.number().int().min(0).max(3600).nullable(),
+  notes: z.string().max(500).nullable(),
+});
+
+export const draftDaySchema = z.object({
+  id: z.uuid().optional(),
+  weekNumber: z.number().int().min(1).max(52),
+  dayOfWeek: z.number().int().min(0).max(6),
+  scheduledDate: z.iso.date(),
+  dayType: z.enum(["gym", "home", "cardio", "recovery", "rest"]),
+  title: z.string().trim().min(1).max(200),
+  notes: z.string().max(1000).nullable(),
+  exercises: z.array(draftExerciseSchema).max(30),
+});
+
+export const buildPlanSchema = z.object({
+  title: z.string().trim().min(1).max(200),
+  focus: focusSchema,
+  weeklyMix: weeklyMixSchema,
+  splitType: z.enum(["weekly", "biweekly", "randomized"]),
+  progressive: z.boolean(),
+  startDate: z.iso.date(),
+  weeks: z.number().int().min(1).max(12),
+  days: z.array(draftDaySchema).min(1).max(12 * 7),
+});
+
+export const updateScheduleSchema = z.object({
+  title: z.string().trim().min(1).max(200).optional(),
+  days: z.array(draftDaySchema).min(1).max(12 * 7),
 });

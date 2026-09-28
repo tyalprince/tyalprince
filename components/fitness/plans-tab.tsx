@@ -1,19 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Plus, Settings2 } from "lucide-react";
+import { BarChart3, Pencil, Plus, Settings2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog } from "@/components/ui/dialog";
 import { apiFetch } from "@/lib/api-client";
 import { ExercisePicker } from "./exercise-picker";
-import type { ExerciseRow, GoalRow, PlanDayRow, PlanDetail, PlanRow } from "@/lib/fitness/types";
+import { PlanWizard } from "./plan-wizard";
+import { PlanReviewView } from "./plan-review";
+import { PlanScheduleEditor } from "./plan-schedule-editor";
+import { cardClass, formatDay, useExerciseLibrary } from "./shared";
+import type { DraftDay, ExerciseRow, FocusScores, PlanDayRow, PlanDetail, PlanRow } from "@/lib/fitness/types";
+
+type View = { kind: "list" } | { kind: "wizard" } | { kind: "review"; id: string } | { kind: "edit"; id: string };
 
 export function PlansTab() {
   const [plans, setPlans] = useState<PlanRow[]>([]);
-  const [goals, setGoals] = useState<GoalRow[]>([]);
-  const [newOpen, setNewOpen] = useState(false);
-  const [managingId, setManagingId] = useState<string | null>(null);
+  const [view, setView] = useState<View>({ kind: "list" });
+  const [legacyId, setLegacyId] = useState<string | null>(null);
 
   function load() {
     apiFetch<{ plans: PlanRow[] }>("/api/fitness/plans")
@@ -21,12 +26,7 @@ export function PlansTab() {
       .catch(() => {});
   }
 
-  useEffect(() => {
-    load();
-    apiFetch<{ goals: GoalRow[] }>("/api/fitness/goals")
-      .then((res) => setGoals(res.goals))
-      .catch(() => {});
-  }, []);
+  useEffect(load, []);
 
   async function updateStatus(plan: PlanRow, status: PlanRow["status"]) {
     await apiFetch(`/api/fitness/plans/${plan.id}`, {
@@ -37,15 +37,24 @@ export function PlansTab() {
   }
 
   async function remove(plan: PlanRow) {
-    if (!confirm(`Delete plan "${plan.title}"? This removes its days and exercises too.`)) return;
+    if (!confirm(`Delete plan "${plan.title}"? Its schedule is removed; logged workouts stay in your history.`)) return;
     await apiFetch(`/api/fitness/plans/${plan.id}`, { method: "DELETE" });
     load();
   }
 
+  const backToList = () => {
+    setView({ kind: "list" });
+    load();
+  };
+
+  if (view.kind === "wizard") return <PlanWizard onCancel={backToList} onCreated={backToList} />;
+  if (view.kind === "review") return <PlanReviewView planId={view.id} onBack={backToList} />;
+  if (view.kind === "edit") return <ScheduleEditorScreen planId={view.id} onDone={backToList} />;
+
   return (
     <div className="space-y-4">
       <div className="flex justify-end">
-        <Button onClick={() => setNewOpen(true)}>
+        <Button onClick={() => setView({ kind: "wizard" })}>
           <Plus className="h-4 w-4" />
           New plan
         </Button>
@@ -53,20 +62,22 @@ export function PlansTab() {
 
       {plans.length === 0 ? (
         <p className="text-center text-sm text-neutral-500">
-          No plans yet — build one to structure your training week.
+          No plans yet — build one to structure your training weeks.
         </p>
       ) : (
         <div className="space-y-3">
           {plans.map((p) => (
-            <div
-              key={p.id}
-              className="flex items-center justify-between rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900"
-            >
-              <div>
-                <p className="font-medium">{p.title}</p>
-                <p className="text-xs capitalize text-neutral-500">{p.sportFocus}</p>
-              </div>
-              <div className="flex items-center gap-2">
+            <div key={p.id} className={cardClass}>
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="font-medium">{p.title}</p>
+                  <p className="text-xs text-neutral-500">
+                    {p.startDate && p.endDate
+                      ? `${formatDay(p.startDate)} – ${formatDay(p.endDate)}`
+                      : <span className="capitalize">{p.sportFocus}</span>}
+                    {p.splitType ? ` · ${p.splitType} split` : ""}
+                  </p>
+                </div>
                 <select
                   value={p.status}
                   onChange={(e) => updateStatus(p, e.target.value as PlanRow["status"])}
@@ -77,12 +88,26 @@ export function PlansTab() {
                   <option value="completed">Completed</option>
                   <option value="archived">Archived</option>
                 </select>
-                <Button variant="ghost" className="px-2" onClick={() => setManagingId(p.id)}>
-                  <Settings2 className="h-4 w-4" />
+              </div>
+              <div className="mt-2 flex flex-wrap items-center gap-1">
+                <Button variant="ghost" className="px-2 text-xs" onClick={() => setView({ kind: "review", id: p.id })}>
+                  <BarChart3 className="h-3.5 w-3.5" />
+                  Review
                 </Button>
+                {p.durationWeeks ? (
+                  <Button variant="ghost" className="px-2 text-xs" onClick={() => setView({ kind: "edit", id: p.id })}>
+                    <Pencil className="h-3.5 w-3.5" />
+                    Edit schedule
+                  </Button>
+                ) : (
+                  <Button variant="ghost" className="px-2 text-xs" onClick={() => setLegacyId(p.id)}>
+                    <Settings2 className="h-3.5 w-3.5" />
+                    Edit days
+                  </Button>
+                )}
                 <button
                   onClick={() => remove(p)}
-                  className="text-xs text-neutral-400 underline hover:text-red-500"
+                  className="ml-auto text-xs text-neutral-400 underline hover:text-red-500"
                 >
                   Delete
                 </button>
@@ -92,105 +117,116 @@ export function PlansTab() {
         </div>
       )}
 
-      <NewPlanDialog
-        open={newOpen}
-        goals={goals}
-        onClose={() => setNewOpen(false)}
-        onCreated={(plan) => {
-          setNewOpen(false);
-          load();
-          setManagingId(plan.id);
-        }}
-      />
-
-      {managingId && (
-        <PlanBuilder planId={managingId} onClose={() => setManagingId(null)} />
-      )}
+      {legacyId && <PlanBuilder planId={legacyId} onClose={() => setLegacyId(null)} />}
     </div>
   );
 }
 
-function NewPlanDialog({
-  open,
-  goals,
-  onClose,
-  onCreated,
-}: {
-  open: boolean;
-  goals: GoalRow[];
-  onClose: () => void;
-  onCreated: (plan: PlanRow) => void;
-}) {
+const NEUTRAL_FOCUS: FocusScores = {
+  strength: 5,
+  hypertrophy: 5,
+  endurance: 5,
+  flexibility: 5,
+  stability: 5,
+  athleticism: 5,
+};
+
+/** Loads a saved generated plan into the schedule editor and saves it back. */
+function ScheduleEditorScreen({ planId, onDone }: { planId: string; onDone: () => void }) {
+  const library = useExerciseLibrary();
+  const [detail, setDetail] = useState<PlanDetail | null>(null);
   const [title, setTitle] = useState("");
-  const [sportFocus, setSportFocus] = useState<PlanRow["sportFocus"]>("mixed");
-  const [goalId, setGoalId] = useState("");
-  const [busy, setBusy] = useState(false);
+  const [days, setDays] = useState<DraftDay[]>([]);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  if (!open) return null;
+  useEffect(() => {
+    apiFetch<PlanDetail>(`/api/fitness/plans/${planId}`)
+      .then((d) => {
+        setDetail(d);
+        setTitle(d.plan.title);
+        setDays(
+          d.days.map((day) => ({
+            id: day.id,
+            weekNumber: day.weekNumber ?? 1,
+            dayOfWeek: day.dayOfWeek ?? 0,
+            scheduledDate: day.scheduledDate?.slice(0, 10) ?? "",
+            dayType: day.dayType ?? "gym",
+            title: day.title,
+            notes: day.notes,
+            exercises: day.exercises.map((e) => ({
+              exerciseId: e.exerciseId,
+              name: e.exerciseName,
+              category: e.exerciseCategory,
+              targetSets: e.targetSets,
+              targetReps: e.targetReps,
+              targetWeight: e.targetWeight === null ? null : Number(e.targetWeight),
+              targetDurationSeconds: e.targetDurationSeconds,
+              targetRestSeconds: e.targetRestSeconds,
+              notes: e.notes,
+            })),
+          })),
+        );
+      })
+      .catch(() => {});
+  }, [planId]);
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setBusy(true);
+  async function save() {
+    setSaving(true);
+    setError(null);
     try {
-      const { plan } = await apiFetch<{ plan: PlanRow }>("/api/fitness/plans", {
-        method: "POST",
-        body: JSON.stringify({ title, sportFocus, goalId: goalId || null }),
+      await apiFetch(`/api/fitness/plans/${planId}/schedule`, {
+        method: "PUT",
+        body: JSON.stringify({
+          title: title.trim() || undefined,
+          days: days.map((d) => ({
+            ...d,
+            exercises: d.exercises.map((e) => ({
+              exerciseId: e.exerciseId,
+              targetSets: e.targetSets,
+              targetReps: e.targetReps,
+              targetWeight: e.targetWeight,
+              targetDurationSeconds: e.targetDurationSeconds,
+              targetRestSeconds: e.targetRestSeconds,
+              notes: e.notes,
+            })),
+          })),
+        }),
       });
-      setTitle("");
-      onCreated(plan);
+      onDone();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not save");
     } finally {
-      setBusy(false);
+      setSaving(false);
     }
   }
 
+  if (!detail || !library) return <p className="text-sm text-neutral-500">Loading plan…</p>;
+
   return (
-    <Dialog open={open} onClose={onClose} title="New training plan">
-      <form onSubmit={handleSubmit} className="space-y-3">
-        <div className="space-y-1">
-          <label className="text-sm font-medium">Title</label>
-          <Input value={title} onChange={(e) => setTitle(e.target.value)} required autoFocus />
-        </div>
-        <div className="space-y-1">
-          <label className="text-sm font-medium">Sport focus</label>
-          <select
-            value={sportFocus}
-            onChange={(e) => setSportFocus(e.target.value as PlanRow["sportFocus"])}
-            className="w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
-          >
-            <option value="basketball">Basketball</option>
-            <option value="lifting">Lifting</option>
-            <option value="running">Running</option>
-            <option value="biking">Biking</option>
-            <option value="mixed">Mixed</option>
-          </select>
-        </div>
-        {goals.length > 0 && (
-          <div className="space-y-1">
-            <label className="text-sm font-medium">Linked goal (optional)</label>
-            <select
-              value={goalId}
-              onChange={(e) => setGoalId(e.target.value)}
-              className="w-full rounded-md border border-neutral-300 bg-white px-3 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-900"
-            >
-              <option value="">None</option>
-              {goals.map((g) => (
-                <option key={g.id} value={g.id}>
-                  {g.title}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
-        <div className="flex justify-end gap-2 pt-1">
-          <Button type="button" variant="ghost" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button type="submit" disabled={busy}>
-            {busy ? "Creating..." : "Create & add days"}
-          </Button>
-        </div>
-      </form>
-    </Dialog>
+    <div className="space-y-4">
+      <div className={cardClass}>
+        <label className="block space-y-1">
+          <span className="text-sm font-medium">Plan name</span>
+          <Input value={title} onChange={(e) => setTitle(e.target.value)} />
+        </label>
+      </div>
+      <PlanScheduleEditor
+        days={days}
+        onChange={setDays}
+        library={library}
+        focus={detail.plan.focus ?? NEUTRAL_FOCUS}
+      />
+      {error && <p className="text-sm text-red-600">{error}</p>}
+      <div className="flex justify-end gap-2">
+        <Button variant="ghost" onClick={onDone}>
+          Cancel
+        </Button>
+        <Button onClick={save} disabled={saving}>
+          {saving ? "Saving…" : "Save changes"}
+        </Button>
+      </div>
+    </div>
   );
 }
 
@@ -198,27 +234,11 @@ function PlanBuilder({ planId, onClose }: { planId: string; onClose: () => void 
   const [detail, setDetail] = useState<PlanDetail | null>(null);
   const [newDayTitle, setNewDayTitle] = useState("");
   const [pickerForDay, setPickerForDay] = useState<string | null>(null);
-  const [exerciseNames, setExerciseNames] = useState<Record<string, string>>({});
-
   function load() {
     apiFetch<PlanDetail>(`/api/fitness/plans/${planId}`).then(setDetail).catch(() => {});
   }
 
   useEffect(load, [planId]);
-
-  useEffect(() => {
-    if (!detail) return;
-    const ids = new Set<string>();
-    detail.days.forEach((d) => d.exercises.forEach((e) => ids.add(e.exerciseId)));
-    const missing = [...ids].filter((id) => !exerciseNames[id]);
-    if (missing.length === 0) return;
-    Promise.all(
-      missing.map((id) =>
-        apiFetch<{ exercise: ExerciseRow }>(`/api/fitness/exercises/${id}`).then((r) => [id, r.exercise.name] as const),
-      ),
-    ).then((pairs) => setExerciseNames((prev) => ({ ...prev, ...Object.fromEntries(pairs) })));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [detail]);
 
   async function addDay() {
     if (!newDayTitle.trim() || !detail) return;
@@ -275,7 +295,7 @@ function PlanBuilder({ planId, onClose }: { planId: string; onClose: () => void 
             <div className="space-y-1.5">
               {day.exercises.map((ex) => (
                 <div key={ex.id} className="flex flex-wrap items-center gap-2 text-sm">
-                  <span className="min-w-32 flex-1">{exerciseNames[ex.exerciseId] ?? "..."}</span>
+                  <span className="min-w-32 flex-1">{ex.exerciseName}</span>
                   <input
                     defaultValue={ex.targetSets ?? ""}
                     onBlur={(e) => updateTarget(ex.id, "targetSets", e.target.value)}
