@@ -5,8 +5,18 @@ import { format } from "date-fns";
 import { Bike, BedDouble, Dumbbell, Home, StretchHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { apiFetch } from "@/lib/api-client";
-import { DAY_TYPE_LABELS, type LibraryExercise } from "@/lib/fitness/generator";
-import type { DayType, DraftExercise, ExerciseRow } from "@/lib/fitness/types";
+import { DAY_TYPE_LABELS } from "@/lib/fitness/generator";
+import type { DayType, DraftDay, DraftExercise, ExerciseRow, FocusScores, PlanDayRow } from "@/lib/fitness/types";
+
+/** Focus used for plans built before the wizard existed. */
+export const NEUTRAL_FOCUS: FocusScores = {
+  strength: 5,
+  hypertrophy: 5,
+  endurance: 5,
+  flexibility: 5,
+  stability: 5,
+  athleticism: 5,
+};
 
 /** Today's date in the user's timezone, as YYYY-MM-DD. */
 export function localToday(): string {
@@ -89,7 +99,7 @@ export function ProgressBar({ value }: { value: number }) {
 
 /** The whole exercise library (global + the user's custom), for the plan generator. */
 export function useExerciseLibrary() {
-  const [library, setLibrary] = useState<LibraryExercise[] | null>(null);
+  const [library, setLibrary] = useState<ExerciseRow[] | null>(null);
   useEffect(() => {
     apiFetch<{ exercises: ExerciseRow[] }>("/api/fitness/exercises")
       .then((res) => setLibrary(res.exercises))
@@ -128,4 +138,44 @@ export function defaultTargets(category: ExerciseRow["category"]): Omit<DraftExe
     default:
       return { ...blank, targetSets: 1, targetReps: null, targetDurationSeconds: 20 * 60, targetRestSeconds: null };
   }
+}
+
+/** Saved plan days → editable drafts (keeping ids so logged workouts stay linked). */
+export function planDaysToDrafts(days: PlanDayRow[]): DraftDay[] {
+  return days.map((day) => ({
+    id: day.id,
+    weekNumber: day.weekNumber ?? 1,
+    dayOfWeek: day.dayOfWeek ?? 0,
+    scheduledDate: day.scheduledDate?.slice(0, 10) ?? "",
+    dayType: day.dayType ?? "gym",
+    title: day.title,
+    notes: day.notes,
+    exercises: day.exercises.map((e) => ({
+      exerciseId: e.exerciseId,
+      name: e.exerciseName,
+      category: e.exerciseCategory,
+      targetSets: e.targetSets,
+      targetReps: e.targetReps,
+      targetWeight: e.targetWeight === null ? null : Number(e.targetWeight),
+      targetDurationSeconds: e.targetDurationSeconds,
+      targetRestSeconds: e.targetRestSeconds,
+      notes: e.notes,
+    })),
+  }));
+}
+
+/** Drafts → the API's schedule payload (drops display-only fields). */
+export function draftsToPayload(days: DraftDay[]) {
+  return days.map((d) => ({
+    ...d,
+    exercises: d.exercises.map((e) => ({
+      exerciseId: e.exerciseId,
+      targetSets: e.targetSets,
+      targetReps: e.targetReps,
+      targetWeight: e.targetWeight,
+      targetDurationSeconds: e.targetDurationSeconds,
+      targetRestSeconds: e.targetRestSeconds,
+      notes: e.notes,
+    })),
+  }));
 }

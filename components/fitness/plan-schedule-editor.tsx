@@ -7,12 +7,17 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ExercisePicker } from "./exercise-picker";
 import { DayTypeBadge, cardClass, defaultTargets, describeTarget, formatDay, selectClass } from "./shared";
-import { DAY_TYPE_LABELS, buildDayContent, type LibraryExercise } from "@/lib/fitness/generator";
+import {
+  DAY_TYPE_LABELS,
+  STRENGTH_TEMPLATES,
+  buildDayContent,
+  templateFromTitle,
+  type LibraryExercise,
+} from "@/lib/fitness/generator";
 import type { DayType, DraftDay, DraftExercise, ExerciseRow, FocusScores } from "@/lib/fitness/types";
 
 const DAY_TYPES: DayType[] = ["gym", "home", "cardio", "recovery", "rest"];
 const CARDIO = new Set(["cardio", "running", "cycling", "basketball"]);
-const STRENGTH_TEMPLATES = ["Push", "Pull", "Legs", "Upper", "Lower", "Full Body"];
 
 type NumericField = "targetSets" | "targetReps" | "targetWeight" | "targetDurationSeconds";
 
@@ -67,9 +72,8 @@ export function PlanScheduleEditor({
 
   function changeType(idx: number, dayType: DayType) {
     const current = days[idx];
-    const template = STRENGTH_TEMPLATES.find((t) => current.title.startsWith(t)) ?? "Full Body";
     const content = buildDayContent(dayType, library, focus, ++seedRef.current, {
-      strengthTemplate: template,
+      strengthTemplate: templateFromTitle(current.title),
     });
     edit(idx, (d) => ({ ...d, dayType, title: content.title, exercises: content.exercises }));
   }

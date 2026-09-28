@@ -43,7 +43,7 @@ export const DAY_TYPE_LABELS: Record<DayType, string> = {
 
 export const WEEKDAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
-const HOME_EQUIPMENT = new Set([
+export const HOME_EQUIPMENT = new Set<string | null>([
   null,
   "Bodyweight",
   "Dumbbell",
@@ -134,6 +134,13 @@ const TEMPLATES: Record<string, Slot[]> = {
     { muscle: "core" },
   ],
 };
+
+export const STRENGTH_TEMPLATES = Object.keys(TEMPLATES);
+
+/** "Legs (Home)" → "Legs"; falls back to Full Body for custom titles. */
+export function templateFromTitle(title: string): string {
+  return STRENGTH_TEMPLATES.find((t) => title.startsWith(t)) ?? "Full Body";
+}
 
 const SPLITS: Record<number, string[]> = {
   1: ["Full Body"],
@@ -296,7 +303,7 @@ class Picker {
     return this.library.filter(
       (ex) =>
         !this.used.has(ex.id) &&
-        (!this.home || HOME_EQUIPMENT.has(ex.equipment as never)) &&
+        (!this.home || isHomeFriendly(ex)) &&
         filter(ex),
     );
   }
@@ -561,4 +568,65 @@ export function generatePlan(input: GeneratorInput, library: LibraryExercise[]):
     weeks,
     days,
   };
+}
+
+// ---------------------------------------------------------------------------
+// On-the-fly changes (Today view / mid-workout)
+// ---------------------------------------------------------------------------
+
+/** Cardio, mobility and sport work need no gym; strength needs home-friendly equipment. */
+export function isHomeFriendly(ex: Pick<LibraryExercise, "category" | "equipment">): boolean {
+  if (ex.category !== "strength") return true;
+  return HOME_EQUIPMENT.has(ex.equipment);
+}
+
+/**
+ * Closest home-friendly replacement for an exercise: same category and
+ * primary muscle, preferring the same movement name with different
+ * equipment ("Barbell Squat" → "Dumbbell Squat"). Null when nothing fits.
+ */
+export function homeAlternative<T extends LibraryExercise>(
+  ex: T,
+  library: T[],
+  excludeIds: Set<string> = new Set(),
+  seed = 1,
+): T | null {
+  if (isHomeFriendly(ex)) return ex;
+  let movement = ex.name.replace(/^single-(leg|arm) /i, "");
+  const prefix = ex.equipment ? `${ex.equipment.toLowerCase()} ` : null;
+  if (prefix && movement.toLowerCase().startsWith(prefix)) movement = movement.slice(prefix.length);
+  const candidates = library.filter(
+    (c) =>
+      c.id !== ex.id &&
+      !excludeIds.has(c.id) &&
+      c.category === ex.category &&
+      c.muscleGroups[0] === ex.muscleGroups[0] &&
+      isHomeFriendly(c),
+  );
+  const clean = candidates.filter(isClean);
+  const sameMovement = clean.filter((c) => c.name.toLowerCase().endsWith(movement.toLowerCase()));
+  const rng = createRng(seed);
+  return pick(rng, sameMovement) ?? pick(rng, clean) ?? pick(rng, candidates) ?? null;
+}
+
+/** Swaps any gym-only exercise in a workout for a home alternative, keeping the targets. */
+export function convertToHome(exercises: DraftExercise[], library: LibraryExercise[], seed = 1): DraftExercise[] {
+  const byId = new Map(library.map((e) => [e.id, e]));
+  const used = new Set(exercises.map((e) => e.exerciseId));
+  return exercises.map((ex, i) => {
+    const lib = byId.get(ex.exerciseId);
+    if (!lib || isHomeFriendly(lib)) return ex;
+    const alt = homeAlternative(lib, library, used, seed + i);
+    if (!alt) return ex;
+    used.add(alt.id);
+    // The old load doesn't transfer to different equipment.
+    return { ...ex, exerciseId: alt.id, name: alt.name, category: alt.category, targetWeight: null };
+  });
+}
+
+/** Exercises that could stand in for `ex`: same primary muscle (and category), best matches first. */
+export function similarExercises<T extends LibraryExercise>(ex: LibraryExercise, library: T[]): T[] {
+  return library
+    .filter((c) => c.id !== ex.id && c.category === ex.category && c.muscleGroups[0] === ex.muscleGroups[0])
+    .sort((a, b) => Number(isClean(b)) - Number(isClean(a)) || a.name.localeCompare(b.name));
 }

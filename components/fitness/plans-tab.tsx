@@ -10,8 +10,8 @@ import { ExercisePicker } from "./exercise-picker";
 import { PlanWizard } from "./plan-wizard";
 import { PlanReviewView } from "./plan-review";
 import { PlanScheduleEditor } from "./plan-schedule-editor";
-import { cardClass, formatDay, useExerciseLibrary } from "./shared";
-import type { DraftDay, ExerciseRow, FocusScores, PlanDayRow, PlanDetail, PlanRow } from "@/lib/fitness/types";
+import { NEUTRAL_FOCUS, cardClass, draftsToPayload, formatDay, planDaysToDrafts, useExerciseLibrary } from "./shared";
+import type { DraftDay, ExerciseRow, PlanDayRow, PlanDetail, PlanRow } from "@/lib/fitness/types";
 
 type View = { kind: "list" } | { kind: "wizard" } | { kind: "review"; id: string } | { kind: "edit"; id: string };
 
@@ -122,15 +122,6 @@ export function PlansTab() {
   );
 }
 
-const NEUTRAL_FOCUS: FocusScores = {
-  strength: 5,
-  hypertrophy: 5,
-  endurance: 5,
-  flexibility: 5,
-  stability: 5,
-  athleticism: 5,
-};
-
 /** Loads a saved generated plan into the schedule editor and saves it back. */
 function ScheduleEditorScreen({ planId, onDone }: { planId: string; onDone: () => void }) {
   const library = useExerciseLibrary();
@@ -145,28 +136,7 @@ function ScheduleEditorScreen({ planId, onDone }: { planId: string; onDone: () =
       .then((d) => {
         setDetail(d);
         setTitle(d.plan.title);
-        setDays(
-          d.days.map((day) => ({
-            id: day.id,
-            weekNumber: day.weekNumber ?? 1,
-            dayOfWeek: day.dayOfWeek ?? 0,
-            scheduledDate: day.scheduledDate?.slice(0, 10) ?? "",
-            dayType: day.dayType ?? "gym",
-            title: day.title,
-            notes: day.notes,
-            exercises: day.exercises.map((e) => ({
-              exerciseId: e.exerciseId,
-              name: e.exerciseName,
-              category: e.exerciseCategory,
-              targetSets: e.targetSets,
-              targetReps: e.targetReps,
-              targetWeight: e.targetWeight === null ? null : Number(e.targetWeight),
-              targetDurationSeconds: e.targetDurationSeconds,
-              targetRestSeconds: e.targetRestSeconds,
-              notes: e.notes,
-            })),
-          })),
-        );
+        setDays(planDaysToDrafts(d.days));
       })
       .catch(() => {});
   }, [planId]);
@@ -179,18 +149,7 @@ function ScheduleEditorScreen({ planId, onDone }: { planId: string; onDone: () =
         method: "PUT",
         body: JSON.stringify({
           title: title.trim() || undefined,
-          days: days.map((d) => ({
-            ...d,
-            exercises: d.exercises.map((e) => ({
-              exerciseId: e.exerciseId,
-              targetSets: e.targetSets,
-              targetReps: e.targetReps,
-              targetWeight: e.targetWeight,
-              targetDurationSeconds: e.targetDurationSeconds,
-              targetRestSeconds: e.targetRestSeconds,
-              notes: e.notes,
-            })),
-          })),
+          days: draftsToPayload(days),
         }),
       });
       onDone();
