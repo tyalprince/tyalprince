@@ -14,30 +14,34 @@ import {
   templateFromTitle,
   type LibraryExercise,
 } from "@/lib/fitness/generator";
+import { applyDayEdit, applyTargetEdit, progressFor, type TargetField } from "@/lib/fitness/schedule-edits";
 import type { DayType, DraftDay, DraftExercise, ExerciseRow, FocusScores } from "@/lib/fitness/types";
 
 const DAY_TYPES: DayType[] = ["gym", "home", "cardio", "recovery", "rest"];
 const CARDIO = new Set(["cardio", "running", "cycling", "basketball"]);
 
-type NumericField = "targetSets" | "targetReps" | "targetWeight" | "targetDurationSeconds";
+type NumericField = TargetField;
 
 /**
  * Week-by-week editor for a plan's schedule: change each day's type (which
  * rebuilds that day's workout), rename it, and add / swap / reorder / remove
- * exercises or tweak their targets. Structural edits also apply to the same
- * weekday in other weeks when that day currently has the identical workout,
- * so a "weekly" split stays consistent without editing four times.
+ * exercises or tweak their targets. With syncing on, every edit also lands
+ * on the same weekday in other weeks that currently has the identical
+ * workout (see lib/fitness/schedule-edits.ts), so weekly and bi-weekly
+ * splits stay consistent without editing each week.
  */
 export function PlanScheduleEditor({
   days,
   onChange,
   library,
   focus,
+  progressive = false,
 }: {
   days: DraftDay[];
   onChange: (days: DraftDay[]) => void;
   library: LibraryExercise[];
   focus: FocusScores;
+  progressive?: boolean;
 }) {
   const weeks = [...new Set(days.map((d) => d.weekNumber))].sort((a, b) => a - b);
   const [week, setWeek] = useState(weeks[0] ?? 1);
@@ -47,27 +51,8 @@ export function PlanScheduleEditor({
   // Each rebuild uses a fresh seed so "Rebuild as…" gives new exercises.
   const seedRef = useRef(1000);
 
-  const signature = (d: DraftDay) => `${d.dayType}|${d.exercises.map((e) => e.exerciseId).join(",")}`;
-
-  /** Applies `fn` to day `idx`, plus matching days in other weeks when syncing. */
-  function edit(idx: number, fn: (day: DraftDay) => DraftDay, structural = true) {
-    const source = days[idx];
-    const sig = signature(source);
-    onChange(
-      days.map((d, i) => {
-        if (i === idx) return fn(d);
-        if (
-          structural &&
-          syncWeeks &&
-          d.weekNumber !== source.weekNumber &&
-          d.dayOfWeek === source.dayOfWeek &&
-          signature(d) === sig
-        ) {
-          return fn(d);
-        }
-        return d;
-      }),
-    );
+  function edit(idx: number, fn: (day: DraftDay) => DraftDay) {
+    onChange(applyDayEdit(days, idx, fn, syncWeeks));
   }
 
   function changeType(idx: number, dayType: DayType) {
@@ -75,7 +60,12 @@ export function PlanScheduleEditor({
     const content = buildDayContent(dayType, library, focus, ++seedRef.current, {
       strengthTemplate: templateFromTitle(current.title),
     });
-    edit(idx, (d) => ({ ...d, dayType, title: content.title, exercises: content.exercises }));
+    edit(idx, (d) => ({
+      ...d,
+      dayType,
+      title: content.title,
+      exercises: progressFor(content.exercises, d.weekNumber, progressive),
+    }));
   }
 
   function changeTemplate(idx: number, template: string) {
@@ -83,7 +73,11 @@ export function PlanScheduleEditor({
     const content = buildDayContent(current.dayType, library, focus, ++seedRef.current, {
       strengthTemplate: template,
     });
-    edit(idx, (d) => ({ ...d, title: content.title, exercises: content.exercises }));
+    edit(idx, (d) => ({
+      ...d,
+      title: content.title,
+      exercises: progressFor(content.exercises, d.weekNumber, progressive),
+    }));
   }
 
   function toDraft(ex: ExerciseRow): DraftExercise {
@@ -97,7 +91,7 @@ export function PlanScheduleEditor({
       ...d,
       exercises:
         exIdx === null
-          ? [...d.exercises, toDraft(ex)]
+          ? [...d.exercises, ...progressFor([toDraft(ex)], d.weekNumber, progressive)]
           : d.exercises.map((e, i) =>
               i === exIdx ? { ...e, exerciseId: ex.id, name: ex.name, category: ex.category } : e,
             ),
@@ -118,14 +112,7 @@ export function PlanScheduleEditor({
     const value = raw.trim() === "" ? null : Number(raw);
     if (value !== null && (Number.isNaN(value) || value < 0)) return;
     const stored = field === "targetDurationSeconds" && value !== null ? Math.round(value) : value;
-    edit(
-      dayIdx,
-      (d) => ({
-        ...d,
-        exercises: d.exercises.map((e, i) => (i === exIdx ? { ...e, [field]: stored } : e)),
-      }),
-      false,
-    );
+    onChange(applyTargetEdit(days, dayIdx, exIdx, field, stored, syncWeeks));
   }
 
   function toggleEditing(idx: number) {
@@ -165,6 +152,12 @@ export function PlanScheduleEditor({
             <input type="checkbox" checked={syncWeeks} onChange={(e) => setSyncWeeks(e.target.checked)} />
             Apply changes to the same day in other weeks
           </label>
+        )}
+        {weeks.length > 1 && progressive && (
+          <p className="w-full text-xs text-neutral-500">
+            Progressive overload is on: repeated weeks use the same exercises, with sets/reps stepping up in weeks 2–3
+            and easing off in week 4.
+          </p>
         )}
       </div>
 
@@ -206,7 +199,7 @@ export function PlanScheduleEditor({
               {editing.has(idx) ? (
                 <Input
                   value={d.title}
-                  onChange={(e) => edit(idx, (day) => ({ ...day, title: e.target.value }), false)}
+                  onChange={(e) => edit(idx, (day) => ({ ...day, title: e.target.value }))}
                   aria-label="Workout name"
                   className="font-medium"
                 />

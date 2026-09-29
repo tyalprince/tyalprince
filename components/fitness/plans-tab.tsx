@@ -175,6 +175,7 @@ function ScheduleEditorScreen({ planId, onDone }: { planId: string; onDone: () =
         onChange={setDays}
         library={library}
         focus={detail.plan.focus ?? NEUTRAL_FOCUS}
+        progressive={detail.plan.progressive}
       />
       {error && <p className="text-sm text-red-600">{error}</p>}
       <div className="flex justify-end gap-2">

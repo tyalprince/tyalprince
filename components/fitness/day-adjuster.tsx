@@ -19,6 +19,7 @@ import {
   convertToHome,
   templateFromTitle,
 } from "@/lib/fitness/generator";
+import { progressFor } from "@/lib/fitness/schedule-edits";
 import type { DayType, DraftDay, PlanDayRow, PlanDetail } from "@/lib/fitness/types";
 
 const DAY_TYPES: DayType[] = ["gym", "home", "cardio", "recovery", "rest"];
@@ -86,7 +87,16 @@ export function DayAdjuster({
     const content = buildDayContent(dayType, library, focus, ++seedRef.current, {
       strengthTemplate: templateFromTitle(current.title),
     });
-    save([{ ...current, dayType, title: content.title, exercises: content.exercises, notes: null }]);
+    save([
+      {
+        ...current,
+        dayType,
+        title: content.title,
+        exercises: progressFor(content.exercises, current.weekNumber, detail.plan.progressive),
+        // Keep week notes (e.g. deload) unless the day becomes a rest day.
+        notes: dayType === "rest" ? null : current.notes,
+      },
+    ]);
   }
 
   function swapWith(otherId: string) {
@@ -107,6 +117,7 @@ export function DayAdjuster({
           onChange={(days) => setEditing(days[0])}
           library={library ?? []}
           focus={focus}
+          progressive={detail.plan.progressive}
         />
         {error && <p className="text-sm text-red-600">{error}</p>}
         <div className="flex justify-end gap-2">
