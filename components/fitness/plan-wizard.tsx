@@ -301,6 +301,7 @@ export function PlanWizard({
             onChange={(days) => setDraft({ ...draft, days })}
             library={library}
             focus={focus}
+            progressive={progressive}
           />
         </div>
       )}
