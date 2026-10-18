@@ -13,6 +13,7 @@ type Library = {
   reload: () => void;
   reloadPlaylists: () => void;
   addTracks: (tracks: Track[]) => void;
+  replaceTrack: (track: Track) => void;
   updateTrack: (id: string, changes: Partial<Track>) => Promise<void>;
   removeTrack: (id: string) => Promise<void>;
   toggleLike: (track: Track) => Promise<void>;
@@ -55,9 +56,16 @@ export function LibraryProvider({ children }: { children: React.ReactNode }) {
       .catch(() => setStorageConfigured(false));
   }, [reload, reloadPlaylists]);
 
-  const { updateTrack: updatePlayingTrack } = player;
+  const { updateTrack: updatePlayingTrack, current: playing } = player;
+
+  // The player enriches songs as they play (art, release date, credits);
+  // overlay the playing song's fresher copy onto the library list.
+  const merged = useMemo(() => {
+    if (!tracks || !playing?.enrichedAt) return tracks;
+    return tracks.map((t) => (t.id === playing.id && t.enrichedAt !== playing.enrichedAt ? { ...t, ...playing } : t));
+  }, [tracks, playing]);
   const value = useMemo<Library>(() => {
-    const byId = new Map((tracks ?? []).map((t) => [t.id, t]));
+    const byId = new Map((merged ?? []).map((t) => [t.id, t]));
     const updateTrack = async (id: string, changes: Partial<Track>) => {
       const { track } = await apiFetch<{ track: Track }>(`/api/music/tracks/${id}`, {
         method: "PATCH",
@@ -67,13 +75,17 @@ export function LibraryProvider({ children }: { children: React.ReactNode }) {
       updatePlayingTrack(track);
     };
     return {
-      tracks,
+      tracks: merged,
       playlists,
       storageConfigured,
       byId,
       reload,
       reloadPlaylists,
       addTracks: (added) => setTracks((prev) => [...(prev ?? []), ...added]),
+      replaceTrack: (track) => {
+        setTracks((prev) => prev?.map((t) => (t.id === track.id ? { ...t, ...track } : t)) ?? prev);
+        updatePlayingTrack(track);
+      },
       updateTrack,
       removeTrack: async (id) => {
         await apiFetch(`/api/music/tracks/${id}`, { method: "DELETE" });
@@ -100,7 +112,7 @@ export function LibraryProvider({ children }: { children: React.ReactNode }) {
         reloadPlaylists();
       },
     };
-  }, [tracks, playlists, storageConfigured, reload, reloadPlaylists, updatePlayingTrack]);
+  }, [merged, playlists, storageConfigured, reload, reloadPlaylists, updatePlayingTrack]);
 
   return <LibraryContext.Provider value={value}>{children}</LibraryContext.Provider>;
 }

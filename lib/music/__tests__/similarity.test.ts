@@ -135,3 +135,19 @@ describe("mix recipes", async () => {
     expect(recipeName({ type: "mood", mood: "chill", count: 5, decades: [1990] }, lib)).toBe("Chill mix · 1990s");
   });
 });
+
+describe("import selection", async () => {
+  const { fileFingerprint, sortSelection } = await import("@/lib/music/importer");
+  const file = (name: string, size: number) => new File([new Uint8Array(size)], name);
+
+  it("skips files already in the library by name + size without reading them", () => {
+    const files = [file("01 Song.mp3", 10), file("02 Other.mp3", 20), file("03 Same Name.mp3", 30), file("x.m4p", 5), file("cover.jpg", 5)];
+    const known = new Set([fileFingerprint("01 song.MP3", 10), fileFingerprint("03 Same Name.mp3", 999)]);
+    const sel = sortSelection(files, known);
+    expect(sel.alreadyImported).toBe(1);
+    expect(sel.audio.map((f) => f.name)).toEqual(["02 Other.mp3", "03 Same Name.mp3"]); // size differs → not a match
+    expect(sel.protectedFiles).toHaveLength(1);
+    expect(sel.ignored).toBe(1);
+    expect(sel.totalBytes).toBe(50);
+  });
+});

@@ -20,9 +20,10 @@ export function groupAlbums(tracks: Track[]): Album[] {
     const artist = albumArtistOf(t);
     const name = t.album || "Unknown album";
     const key = `${artist.toLowerCase()}\u0000${name.toLowerCase()}`;
-    const album = map.get(key) ?? { key, name, artist, year: t.year, tracks: [] };
+    const year = t.releaseDate ? Number(t.releaseDate.slice(0, 4)) : t.year;
+    const album = map.get(key) ?? { key, name, artist, year, tracks: [] };
     album.tracks.push(t);
-    album.year = album.year ?? t.year;
+    album.year = album.year ?? year;
     map.set(key, album);
   }
   for (const a of map.values()) {

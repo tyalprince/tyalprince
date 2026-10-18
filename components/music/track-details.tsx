@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Heart, ListEnd, ListPlus, Pencil, Play, Sparkles, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronRight, Heart, ListEnd, ListPlus, Pencil, Play, RefreshCw, Sparkles, Trash2 } from "lucide-react";
 import { Dialog } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,7 +10,9 @@ import { useLibrary } from "./library-context";
 import { Artwork } from "./player-bar";
 import { keyLabel } from "@/lib/music/analysis";
 import { similarTo } from "@/lib/music/similarity";
-import { displayArtist, formatTime, type Track } from "@/lib/music/types";
+import { displayArtist, formatReleaseDate, formatTime, type Track } from "@/lib/music/types";
+import { apiFetch } from "@/lib/api-client";
+import { CreditsList, LyricsView } from "./song-info";
 
 function Meter({ label, value, text }: { label: string; value: number; text?: string }) {
   return (
@@ -46,6 +48,8 @@ export function TrackDetails({
     year: track.year?.toString() ?? "",
   });
   const [notice, setNotice] = useState<string | null>(null);
+  const [showLyrics, setShowLyrics] = useState(false);
+  const [lookingUp, setLookingUp] = useState(false);
   const live = library.byId.get(track.id) ?? track;
 
   const similar = useMemo(
@@ -75,6 +79,22 @@ export function TrackDetails({
     setNotice(`Added to ${library.playlists.find((p) => p.id === playlistId)?.name ?? "playlist"}`);
   }
 
+  /** Fetches album art, release date and songwriter credits (forced, so it can also refresh). */
+  async function lookUp() {
+    setLookingUp(true);
+    try {
+      const { track } = await apiFetch<{ track: Track }>(`/api/music/tracks/${live.id}/enrich`, {
+        method: "POST",
+        body: JSON.stringify({ force: true }),
+      });
+      library.replaceTrack({ ...live, ...track });
+    } catch {
+      setNotice("Couldn't look up details right now.");
+    } finally {
+      setLookingUp(false);
+    }
+  }
+
   const f = live.features;
 
   return (
@@ -86,7 +106,7 @@ export function TrackDetails({
             <p className="font-semibold">{live.title}</p>
             <p className="truncate text-sm text-neutral-500">{displayArtist(live)}</p>
             <p className="truncate text-sm text-neutral-500">
-              {[live.album, live.year].filter(Boolean).join(" · ")}
+              {[live.album, formatReleaseDate(live.releaseDate) ?? live.year].filter(Boolean).join(" · ")}
             </p>
             <p className="text-xs text-neutral-400">
               {[live.genre, formatTime(live.durationSeconds), `${live.playCount} plays`].filter(Boolean).join(" · ")}
@@ -145,6 +165,29 @@ export function TrackDetails({
             No audio analysis for this song (its format couldn&apos;t be decoded in the browser) — similar songs use its tags.
           </p>
         )}
+
+        <section className="space-y-2">
+          <div className="flex items-center justify-between">
+            <p className="text-sm font-semibold">Credits</p>
+            <Button variant="ghost" className="px-2 text-xs" onClick={lookUp} disabled={lookingUp}>
+              <RefreshCw className={lookingUp ? "h-3.5 w-3.5 animate-spin" : "h-3.5 w-3.5"} />
+              {live.enrichedAt ? "Refresh details" : "Look up details"}
+            </Button>
+          </div>
+          <CreditsList track={live} />
+        </section>
+
+        <section>
+          <button onClick={() => setShowLyrics((v) => !v)} className="flex items-center gap-1 text-sm font-semibold">
+            {showLyrics ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+            Lyrics
+          </button>
+          {showLyrics && (
+            <div className="mt-2 max-h-80 overflow-y-auto rounded-lg bg-neutral-50 p-3 dark:bg-neutral-800/50">
+              <LyricsView track={live} />
+            </div>
+          )}
+        </section>
 
         <div>
           <div className="mb-1 flex items-center justify-between">

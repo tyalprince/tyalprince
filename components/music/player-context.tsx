@@ -183,6 +183,17 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
   );
   const progress = useMemo(() => ({ position, duration }), [position, duration]);
 
+  // First play of a song that hasn't been looked up yet: fetch its album art,
+  // release date and credits in the background, then refresh it everywhere.
+  const enrichingRef = useRef(new Set<string>());
+  useEffect(() => {
+    if (!current || current.enrichedAt || enrichingRef.current.has(current.id)) return;
+    enrichingRef.current.add(current.id);
+    apiFetch<{ track: Track }>(`/api/music/tracks/${current.id}/enrich`, { method: "POST", body: "{}" })
+      .then(({ track }) => updateTrack({ ...current, ...track }))
+      .catch(() => {});
+  }, [current, updateTrack]);
+
   // Lock-screen / headphone controls and metadata.
   useEffect(() => {
     if (!("mediaSession" in navigator) || !current) return;

@@ -4,6 +4,7 @@ import type { AudioFeatures } from "@/lib/music/analysis";
 export type Track = {
   id: string;
   title: string;
+  fileName: string;
   artist: string | null;
   albumArtist: string | null;
   album: string | null;
@@ -18,6 +19,14 @@ export type Track = {
   artworkKey: string | null;
   features: AudioFeatures | null;
   featureVector: number[] | null;
+  releaseDate: string | null;
+  composer: string | null;
+  lyricist: string | null;
+  producer: string | null;
+  label: string | null;
+  copyright: string | null;
+  enrichedAt: string | null;
+  external: Record<string, string> | null;
   liked: boolean;
   playCount: number;
   lastPlayedAt: string | null;
@@ -61,4 +70,12 @@ export function formatBytes(bytes: number): string {
   if (bytes >= 1e9) return `${(bytes / 1e9).toFixed(1)} GB`;
   if (bytes >= 1e6) return `${Math.round(bytes / 1e6)} MB`;
   return `${Math.max(1, Math.round(bytes / 1e3))} KB`;
+}
+
+/** "1998-03-24" → "Mar 24, 1998"; "1998" stays "1998". */
+export function formatReleaseDate(value: string | null): string | null {
+  if (!value) return null;
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(value);
+  if (!m) return value.slice(0, 4);
+  return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3])).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 }

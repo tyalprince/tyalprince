@@ -121,6 +121,15 @@ browser uploads will fail.
 
 Migration `drizzle/0002_music_library.sql` adds the music tables.
 
+**Artwork, release dates, credits and lyrics** (`lib/music/enrich.ts`): tags
+in the file are used first; gaps are filled from free public catalogs —
+the iTunes Search API (album art, saved into the bucket, and release dates;
+shared across an album), MusicBrainz (songwriter / lyricist / producer
+credits, rate-limited to ~1 request/second) and LRCLIB (plain and
+time-synced lyrics, fetched on demand and cached). Songs are looked up the
+first time they're played, or in bulk from Music → Import. Migration
+`drizzle/0003_music_details.sql` adds the columns.
+
 ## Authorization model
 
 Neon is plain Postgres — there's no built-in `auth.uid()`-based row-level

@@ -56,6 +56,13 @@ export const createTrackSchema = z.object({
   artworkKey: z.string().max(300).nullable().optional(),
   features: features.nullable().optional(),
   featureVector: z.array(z.number().min(0).max(1)).max(32).nullable().optional(),
+  releaseDate: z.string().regex(/^\d{4}(-\d{2}-\d{2})?$/).nullable().optional(),
+  composer: optText(500),
+  lyricist: optText(500),
+  producer: optText(500),
+  label: optText(500),
+  copyright: optText(500),
+  lyrics: z.string().max(20000).nullable().optional(),
 });
 
 export const updateTrackSchema = z.object({
