@@ -33,6 +33,9 @@ export const trackColumns = {
   liked: musicTracks.liked,
   playCount: musicTracks.playCount,
   lastPlayedAt: musicTracks.lastPlayedAt,
+  rating: musicTracks.rating,
+  skipCount: musicTracks.skipCount,
+  addedAt: musicTracks.addedAt,
   createdAt: musicTracks.createdAt,
 };
 

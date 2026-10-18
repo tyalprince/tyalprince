@@ -72,6 +72,7 @@ export const updateTrackSchema = z.object({
   album: optText(500),
   genre: optText(200),
   year: optInt(1000, 3000),
+  rating: z.number().int().min(0).max(100).multipleOf(20).nullable().optional(),
 });
 
 export const playlistSchema = z.object({
@@ -83,6 +84,24 @@ export const playlistSchema = z.object({
 });
 
 export const updatePlaylistSchema = playlistSchema.partial().omit({ kind: true });
+
+/** Ratings, plays etc. carried over from an iTunes library export, matched to tracks by the client. */
+export const itunesStatsSchema = z.object({
+  stats: z
+    .array(
+      z.object({
+        id: z.uuid(),
+        rating: z.number().int().min(0).max(100).nullable(),
+        playCount: z.number().int().min(0).max(1_000_000),
+        skipCount: z.number().int().min(0).max(1_000_000),
+        lastPlayedAt: z.iso.datetime({ offset: true }).nullable(),
+        addedAt: z.iso.datetime({ offset: true }).nullable(),
+        loved: z.boolean(),
+      }),
+    )
+    .min(1)
+    .max(500),
+});
 
 export const mergeDuplicatesSchema = z.object({
   groups: z

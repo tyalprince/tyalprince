@@ -457,6 +457,13 @@ export const musicTracks = pgTable(
     liked: boolean("liked").notNull().default(false),
     playCount: integer("play_count").notNull().default(0),
     lastPlayedAt: timestamp("last_played_at", { withTimezone: true }),
+    // 0–100 like iTunes (20 per star); null = unrated.
+    rating: integer("rating"),
+    skipCount: integer("skip_count").notNull().default(0),
+    // When the song first entered the user's library (from iTunes), vs createdAt = uploaded here.
+    addedAt: timestamp("added_at", { withTimezone: true }),
+    // Plays carried over from iTunes at the last sync, so re-syncing replaces rather than adds them.
+    importedPlayCount: integer("imported_play_count").notNull().default(0),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [

@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button";
 import { usePlayer } from "./player-context";
 import { Artwork } from "./player-bar";
 import { TrackList } from "./track-list";
-import { formatTime, type Track } from "@/lib/music/types";
+import { formatTime, plural, type Track } from "@/lib/music/types";
 import { totalDurationSeconds } from "@/lib/music/similarity";
+import { decadeLabel, type DecadeGroup, type YearGroup } from "@/lib/music/facets";
 
 export type Album = { key: string; name: string; artist: string; year: number | null; tracks: Track[] };
 export type Artist = { name: string; tracks: Track[]; albums: Album[] };
@@ -155,6 +156,72 @@ export function ArtistView({
         <h3 className="mb-2 text-sm font-semibold">Albums</h3>
         <AlbumGrid albums={artist.albums} onOpen={onOpenAlbum} />
       </section>
+    </div>
+  );
+}
+
+/** Up to four different album covers from a set of songs. */
+function coversOf(tracks: Track[]): Track[] {
+  const seen = new Set<string>();
+  const out: Track[] = [];
+  for (const t of tracks) {
+    if (!t.artworkKey || seen.has(t.artworkKey)) continue;
+    seen.add(t.artworkKey);
+    out.push(t);
+    if (out.length === 4) break;
+  }
+  return out;
+}
+
+export function YearList({ decades, onOpen }: { decades: DecadeGroup[]; onOpen: (year: YearGroup) => void }) {
+  if (!decades.length) return <p className="py-8 text-center text-sm text-neutral-500">No release years yet.</p>;
+  return (
+    <div className="space-y-6">
+      {decades.map((d) => (
+        <section key={d.decade}>
+          <h3 className="mb-2 flex items-baseline gap-2 text-lg font-semibold">
+            {decadeLabel(d.decade)}
+            <span className="text-xs font-normal text-neutral-500">{plural(d.count, "song")}</span>
+          </h3>
+          <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-6">
+            {d.years.map((y) => {
+              const covers = coversOf(y.tracks);
+              return (
+                <button key={y.year} onClick={() => onOpen(y)} className="min-w-0 text-left">
+                  <div className="grid aspect-square w-full grid-cols-2 overflow-hidden rounded-lg bg-neutral-100 dark:bg-neutral-800">
+                    {covers.length >= 4 ? (
+                      covers.map((t) => <Artwork key={t.id} track={t} className="h-full w-full rounded-none" />)
+                    ) : (
+                      <Artwork track={covers[0] ?? y.tracks[0]} className="col-span-2 row-span-2 h-full w-full rounded-none" />
+                    )}
+                  </div>
+                  <p className="mt-1 text-sm font-semibold">{y.year}</p>
+                  <p className="text-xs text-neutral-500">{plural(y.tracks.length, "song")}</p>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      ))}
+    </div>
+  );
+}
+
+export function YearView({ year, onBack, onDetails }: { year: YearGroup; onBack: () => void; onDetails: (t: Track) => void }) {
+  const albums = useMemo(() => groupAlbums(year.tracks).length, [year.tracks]);
+  return (
+    <div>
+      <BackLink onClick={onBack} label="Years" />
+      <div className="mb-4 space-y-2">
+        <div>
+          <h2 className="text-2xl font-semibold">{year.year}</h2>
+          <p className="text-xs text-neutral-400">
+            {plural(year.tracks.length, "song")} · {plural(albums, "album")} · {formatTime(totalDurationSeconds(year.tracks))}
+          </p>
+        </div>
+        <PlayButtons tracks={year.tracks} />
+      </div>
+      <TrackList tracks={year.tracks} onDetails={onDetails} />
     </div>
   );
 }

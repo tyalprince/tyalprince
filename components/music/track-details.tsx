@@ -6,6 +6,7 @@ import { Dialog } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { usePlayer } from "./player-context";
+import { Stars } from "./stars";
 import { useLibrary } from "./library-context";
 import { Artwork } from "./player-bar";
 import { keyLabel } from "@/lib/music/analysis";
@@ -109,8 +110,20 @@ export function TrackDetails({
               {[live.album, formatReleaseDate(live.releaseDate) ?? live.year].filter(Boolean).join(" · ")}
             </p>
             <p className="text-xs text-neutral-400">
-              {[live.genre, formatTime(live.durationSeconds), `${live.playCount} plays`].filter(Boolean).join(" · ")}
+              {[
+                live.genre,
+                formatTime(live.durationSeconds),
+                `${live.playCount} plays`,
+                live.skipCount ? `${live.skipCount} skips` : null,
+                live.lastPlayedAt ? `last played ${new Date(live.lastPlayedAt).toLocaleDateString()}` : null,
+                live.addedAt ? `added ${new Date(live.addedAt).toLocaleDateString()}` : null,
+              ]
+                .filter(Boolean)
+                .join(" · ")}
             </p>
+            <div className="mt-1">
+              <Stars rating={live.rating} onChange={(rating) => library.updateTrack(live.id, { rating })} />
+            </div>
           </div>
         </div>
 
