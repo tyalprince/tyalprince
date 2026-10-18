@@ -132,6 +132,14 @@ tab is open, cover art is also filled in the background, one song per album
 that has none, paced for Apple's ~20 searches/minute. Migration
 `drizzle/0003_music_details.sql` adds the columns.
 
+**Duplicates** (`lib/music/duplicates.ts`): besides exact-file matches, the
+importer skips likely duplicates by default — same title and main artist
+(ignoring case, punctuation, "Remastered"/"Explicit"/"feat." tags) with a
+length within 3 seconds; live, remix and acoustic versions stay distinct. The
+Import tab lists duplicates already in the library and removes the extra
+copies in one go, moving playlist entries, likes and play counts to the copy
+that's kept (`POST /api/music/tracks/merge`).
+
 ## Authorization model
 
 Neon is plain Postgres — there's no built-in `auth.uid()`-based row-level

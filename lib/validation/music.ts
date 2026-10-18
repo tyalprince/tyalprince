@@ -83,3 +83,10 @@ export const playlistSchema = z.object({
 });
 
 export const updatePlaylistSchema = playlistSchema.partial().omit({ kind: true });
+
+export const mergeDuplicatesSchema = z.object({
+  groups: z
+    .array(z.object({ keepId: z.string().uuid(), removeIds: z.array(z.string().uuid()).min(1).max(20) }))
+    .min(1)
+    .max(100),
+});

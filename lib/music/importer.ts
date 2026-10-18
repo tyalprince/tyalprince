@@ -5,6 +5,7 @@ import { apiFetch } from "@/lib/api-client";
 import { analyzeSamples, type AudioFeatures } from "@/lib/music/analysis";
 import { buildFeatureVector } from "@/lib/music/similarity";
 import { parseReleaseDate } from "@/lib/music/metadata-sources";
+import type { DuplicateIndex } from "@/lib/music/duplicates";
 import { PROTECTED_EXTENSIONS, audioExtension, audioMimeType, extensionOf } from "@/lib/music/formats";
 import type { Track } from "@/lib/music/types";
 
@@ -13,11 +14,11 @@ import type { Track } from "@/lib/music/types";
 // the audio for similarity, upload it straight to storage with a presigned
 // URL, then record it. Nothing large ever goes through the app server.
 
-export type ImportOutcome = "added" | "exists" | "failed" | "unsupported";
+export type ImportOutcome = "added" | "exists" | "duplicate" | "failed" | "unsupported";
 
 export type ImportEvent =
   | { type: "start"; file: File }
-  | { type: "done"; file: File; outcome: ImportOutcome; track?: Track; error?: string };
+  | { type: "done"; file: File; outcome: ImportOutcome; track?: Track; error?: string; duplicateOf?: string };
 
 export type SortedSelection = {
   audio: File[]; // still to import
@@ -147,6 +148,8 @@ export class LibraryImporter {
 
   constructor(
     private onEvent: (e: ImportEvent) => void,
+    /** When set, songs matching one already in the library (same title, artist and length) are skipped. */
+    private duplicates: DuplicateIndex | null = null,
     // Two at a time keeps uploads flowing without overloading the PC.
     private concurrency = 2,
   ) {}
@@ -189,7 +192,34 @@ export class LibraryImporter {
     await Promise.all(Array.from({ length: this.concurrency }, worker));
   }
 
-  private async importOne(file: File): Promise<{ outcome: ImportOutcome; track?: Track }> {
+  private async importOne(file: File): Promise<{ outcome: ImportOutcome; track?: Track; duplicateOf?: string }> {
+    // Tags first (cheap): a likely duplicate is skipped before reading the whole file.
+    const tags = await parseBlob(file, { duration: true }).catch(() => null);
+    const common = tags?.common;
+    const fallbackTitle = file.name.replace(/\.[^.]+$/, "").replace(/^\d+[\s.-]+/, "");
+    const title = (common?.title || fallbackTitle).slice(0, 500);
+    const artist = common?.artist || common?.albumartist || null;
+    const duration = tags?.format.duration ? Math.round(tags.format.duration * 100) / 100 : null;
+    if (this.duplicates) {
+      const duplicateOf = this.duplicates.find(title, artist, duration);
+      if (duplicateOf) return { outcome: "duplicate", duplicateOf };
+      // Claim it now so a second copy later in this folder is caught too.
+      this.duplicates.add(title, artist, duration);
+    }
+    try {
+      return await this.upload(file, tags, title, duration);
+    } catch (err) {
+      this.duplicates?.remove(title, artist, duration);
+      throw err;
+    }
+  }
+
+  private async upload(
+    file: File,
+    tags: Awaited<ReturnType<typeof parseBlob>> | null,
+    title: string,
+    duration: number | null,
+  ): Promise<{ outcome: ImportOutcome; track?: Track }> {
     const buffer = await file.arrayBuffer();
     const contentHash = await sha256Hex(buffer);
     const mimeType = audioMimeType(file.name, file.type);
@@ -203,16 +233,12 @@ export class LibraryImporter {
     if (decision.status === "unsupported") return { outcome: "unsupported" };
 
     // The hash is taken, so the buffer can be handed to the decoder (no copy).
-    const [tags, features] = await Promise.all([
-      parseBlob(file, { duration: true }).catch(() => null),
-      file.size <= ANALYSIS_MAX_BYTES ? analyzeOneAtATime(buffer) : Promise.resolve(null),
-    ]);
+    const features = file.size <= ANALYSIS_MAX_BYTES ? await analyzeOneAtATime(buffer) : null;
     const common = tags?.common;
     const artworkKey = await this.uploadArtwork(selectCover(common?.picture));
 
     await putWithRetry(decision.uploadUrl, file, decision.contentType);
 
-    const fallbackTitle = file.name.replace(/\.[^.]+$/, "").replace(/^\d+[\s.-]+/, "");
     const { track } = await apiFetch<{ track: Track | null }>("/api/music/tracks", {
       method: "POST",
       body: JSON.stringify({
@@ -220,7 +246,7 @@ export class LibraryImporter {
         fileName: file.name,
         fileSize: file.size,
         mimeType,
-        title: (common?.title || fallbackTitle).slice(0, 500),
+        title,
         artist: common?.artist?.slice(0, 500) ?? null,
         albumArtist: common?.albumartist?.slice(0, 500) ?? null,
         album: common?.album?.slice(0, 500) ?? null,
@@ -228,7 +254,7 @@ export class LibraryImporter {
         year: common?.year && common.year >= 1000 && common.year <= 3000 ? common.year : null,
         trackNumber: firstNumber(common?.track?.no),
         discNumber: firstNumber(common?.disk?.no),
-        durationSeconds: tags?.format.duration ? Math.round(tags.format.duration * 100) / 100 : null,
+        durationSeconds: duration,
         bitrate: firstNumber(tags?.format.bitrate),
         artworkKey,
         features,

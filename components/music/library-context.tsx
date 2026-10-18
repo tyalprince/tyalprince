@@ -22,6 +22,8 @@ type Library = {
   replaceTrack: (track: Track) => void;
   updateTrack: (id: string, changes: Partial<Track>) => Promise<void>;
   removeTrack: (id: string) => Promise<void>;
+  /** Keeps one copy of each song and removes the others; returns how many were removed. */
+  mergeDuplicates: (groups: { keepId: string; removeIds: string[] }[]) => Promise<number>;
   toggleLike: (track: Track) => Promise<void>;
   createPlaylist: (input: { name: string; trackIds: string[]; kind?: "manual" | "generated"; recipe?: Record<string, unknown>; description?: string }) => Promise<PlaylistSummary>;
   addToPlaylist: (playlistId: string, trackIds: string[]) => Promise<void>;
@@ -141,6 +143,19 @@ export function LibraryProvider({ children }: { children: React.ReactNode }) {
         await apiFetch(`/api/music/tracks/${id}`, { method: "DELETE" });
         setTracks((prev) => prev?.filter((t) => t.id !== id) ?? prev);
         reloadPlaylists();
+      },
+      mergeDuplicates: async (groups) => {
+        let removed = 0;
+        for (let i = 0; i < groups.length; i += 50) {
+          const res = await apiFetch<{ removed: number }>("/api/music/tracks/merge", {
+            method: "POST",
+            body: JSON.stringify({ groups: groups.slice(i, i + 50) }),
+          });
+          removed += res.removed;
+        }
+        reload();
+        reloadPlaylists();
+        return removed;
       },
       toggleLike: async (track) => {
         await updateTrack(track.id, { liked: !track.liked });
