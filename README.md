@@ -146,7 +146,16 @@ that's kept (`POST /api/music/tracks/merge`).
 with the library on the device (nothing is uploaded): songs already here, and
 missing ones grouped by why — on the PC but not imported, in iCloud but not
 downloaded, old protected purchases (re-download to get them unlocked), and
-Apple Music subscription songs (locked; can't be imported). Exports as CSV.
+Apple Music subscription songs (locked; can't be imported). Exports as CSV. The same export
+also carries ratings, play counts, skips, last-played and date-added, loved
+songs (→ liked) and playlists over to the matching songs (`POST
+/api/music/itunes-sync`); re-running replaces the previously imported plays
+(tracked in `imported_play_count`) and updates playlists it created.
+Migration `drizzle/0004_itunes_stats.sql` adds the columns.
+
+**Browsing**: a Years tab (decades → years), and multi-select filters on
+Songs for decade, year, genre, artist and minimum rating
+(`lib/music/facets.ts`).
 
 ## Authorization model
 

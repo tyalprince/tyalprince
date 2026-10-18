@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Heart, MoreHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { usePlayer } from "./player-context";
+import { Stars } from "./stars";
 import { Artwork } from "./player-bar";
 import { displayArtist, formatTime, type Track } from "@/lib/music/types";
 
@@ -65,6 +66,14 @@ export function TrackList({
               </span>
             </button>
             {t.liked && <Heart className="h-3.5 w-3.5 shrink-0 fill-rose-500 text-rose-500" aria-label="Liked" />}
+            {t.rating ? (
+              <span className="hidden shrink-0 sm:block">
+                <Stars rating={t.rating} size="h-3 w-3" />
+              </span>
+            ) : null}
+            <span className="hidden w-10 shrink-0 text-right text-xs tabular-nums text-neutral-400 md:block" title={`${t.playCount} plays`}>
+              {t.playCount > 0 ? t.playCount.toLocaleString() : ""}
+            </span>
             <span className="hidden shrink-0 text-xs tabular-nums text-neutral-400 sm:block">{formatTime(t.durationSeconds)}</span>
             <button
               onClick={() => onDetails(t)}

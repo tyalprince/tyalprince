@@ -7,7 +7,20 @@ import { Input } from "@/components/ui/input";
 import { LibraryProvider, useLibrary } from "./library-context";
 import { TrackList } from "./track-list";
 import { TrackDetails } from "./track-details";
-import { AlbumGrid, AlbumView, ArtistList, ArtistView, groupAlbums, groupArtists, type Album, type Artist } from "./browse";
+import {
+  AlbumGrid,
+  AlbumView,
+  ArtistList,
+  ArtistView,
+  YearList,
+  YearView,
+  groupAlbums,
+  groupArtists,
+  type Album,
+  type Artist,
+} from "./browse";
+import { FilterBar } from "./filter-bar";
+import { applyFilters, groupByYear, NO_FILTERS, trackYear, type SongFilters, type YearGroup } from "@/lib/music/facets";
 import { PlaylistList, PlaylistView } from "./playlists";
 import { Mixes } from "./mixes";
 import { ImportPanel } from "./import-panel";
@@ -16,11 +29,16 @@ import { DuplicatesPanel } from "./duplicates-panel";
 import { MissingReportPanel } from "./missing-report";
 import { formatBytes, type PlaylistSummary, type Track } from "@/lib/music/types";
 
-const TABS = ["songs", "albums", "artists", "playlists", "mixes", "import"] as const;
+const TABS = ["songs", "albums", "artists", "years", "playlists", "mixes", "import"] as const;
 type Tab = (typeof TABS)[number];
-type Sort = "title" | "artist" | "recent" | "plays";
+type Sort = "title" | "artist" | "recent" | "plays" | "rating" | "year";
 
-type Drill = { kind: "album"; album: Album } | { kind: "artist"; artist: Artist } | { kind: "playlist"; playlist: PlaylistSummary } | null;
+type Drill =
+  | { kind: "album"; album: Album }
+  | { kind: "artist"; artist: Artist }
+  | { kind: "year"; year: YearGroup }
+  | { kind: "playlist"; playlist: PlaylistSummary }
+  | null;
 
 export function MusicApp() {
   return (
@@ -36,6 +54,7 @@ function MusicInner() {
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<Sort>("artist");
   const [likedOnly, setLikedOnly] = useState(false);
+  const [filters, setFilters] = useState<SongFilters>(NO_FILTERS);
   const [drill, setDrill] = useState<Drill>(null);
   const [details, setDetails] = useState<Track | null>(null);
   const [mixSeed, setMixSeed] = useState<Track | null>(null);
@@ -53,17 +72,27 @@ function MusicInner() {
       ? tracks.filter((t) => `${t.title} ${t.artist ?? ""} ${t.albumArtist ?? ""} ${t.album ?? ""} ${t.genre ?? ""}`.toLowerCase().includes(q))
       : tracks;
     if (likedOnly) list = list.filter((t) => t.liked);
+    return list;
+  }, [tracks, query, likedOnly]);
+
+  // The Songs tab adds the multi-select filters and sorting on top of search.
+  const songs = useMemo(() => {
+    const list = applyFilters(filtered, filters);
+    const added = (t: Track) => t.addedAt ?? t.createdAt;
     const by: Record<Sort, (a: Track, b: Track) => number> = {
       title: (a, b) => a.title.localeCompare(b.title),
       artist: () => 0, // API already returns artist → album → track order
-      recent: (a, b) => b.createdAt.localeCompare(a.createdAt),
+      recent: (a, b) => added(b).localeCompare(added(a)),
       plays: (a, b) => b.playCount - a.playCount,
+      rating: (a, b) => (b.rating ?? 0) - (a.rating ?? 0) || b.playCount - a.playCount,
+      year: (a, b) => (trackYear(b) ?? 0) - (trackYear(a) ?? 0),
     };
     return sort === "artist" ? list : [...list].sort(by[sort]);
-  }, [tracks, query, likedOnly, sort]);
+  }, [filtered, filters, sort]);
 
   const albums = useMemo(() => groupAlbums(filtered), [filtered]);
   const artists = useMemo(() => groupArtists(filtered), [filtered]);
+  const years = useMemo(() => groupByYear(filtered), [filtered]);
   const totalBytes = useMemo(() => tracks.reduce((s, t) => s + t.fileSize, 0), [tracks]);
 
   function go(t: Tab) {
@@ -89,6 +118,8 @@ function MusicInner() {
         onDetails={setDetails}
       />
     );
+  } else if (drill?.kind === "year") {
+    body = <YearView year={drill.year} onBack={() => setDrill(null)} onDetails={setDetails} />;
   } else if (drill?.kind === "playlist") {
     body = <PlaylistView playlist={drill.playlist} onBack={() => setDrill(null)} onDetails={setDetails} />;
   } else if (library.tracks === null) {
@@ -96,13 +127,24 @@ function MusicInner() {
   } else {
     switch (activeTab) {
       case "songs":
-        body = <TrackList tracks={filtered} onDetails={setDetails} empty={tracks.length ? "No matches." : "No songs yet — use Import."} />;
+        body = (
+          <>
+            <FilterBar tracks={filtered} filters={filters} onChange={setFilters} />
+            {songs.length !== tracks.length && songs.length > 0 && (
+              <p className="mb-2 text-xs text-neutral-500">{songs.length.toLocaleString()} songs</p>
+            )}
+            <TrackList tracks={songs} onDetails={setDetails} empty={tracks.length ? "No matches." : "No songs yet — use Import."} />
+          </>
+        );
         break;
       case "albums":
         body = <AlbumGrid albums={albums} onOpen={(album) => setDrill({ kind: "album", album })} />;
         break;
       case "artists":
         body = <ArtistList artists={artists} onOpen={(artist) => setDrill({ kind: "artist", artist })} />;
+        break;
+      case "years":
+        body = <YearList decades={years} onOpen={(year) => setDrill({ kind: "year", year })} />;
         break;
       case "playlists":
         body = <PlaylistList onOpen={(playlist) => setDrill({ kind: "playlist", playlist })} />;
@@ -116,7 +158,7 @@ function MusicInner() {
     }
   }
 
-  const searchable = !drill && ["songs", "albums", "artists"].includes(activeTab);
+  const searchable = !drill && ["songs", "albums", "artists", "years"].includes(activeTab);
 
   return (
     <div className="mx-auto w-full min-w-0 max-w-4xl p-4 sm:p-6">
@@ -164,6 +206,8 @@ function MusicInner() {
                 <option value="title">Title</option>
                 <option value="recent">Recently added</option>
                 <option value="plays">Most played</option>
+                <option value="rating">Top rated</option>
+                <option value="year">Newest</option>
               </select>
               <button
                 onClick={() => setLikedOnly((v) => !v)}

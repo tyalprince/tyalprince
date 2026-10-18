@@ -63,6 +63,13 @@ export class DuplicateIndex {
     return this.byKey.get(key)?.find((e) => closeLength(e.duration, duration))?.label ?? null;
   }
 
+  /** Id of the library track this song duplicates, or null. */
+  findId(title: string | null | undefined, artist: string | null | undefined, duration: number | null): string | null {
+    const key = duplicateKey(title, artist);
+    if (!key) return null;
+    return this.byKey.get(key)?.find((e) => e.id && closeLength(e.duration, duration))?.id ?? null;
+  }
+
   add(title: string | null | undefined, artist: string | null | undefined, duration: number | null, id?: string) {
     const key = duplicateKey(title, artist);
     if (!key) return;

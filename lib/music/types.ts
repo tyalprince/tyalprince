@@ -30,6 +30,11 @@ export type Track = {
   liked: boolean;
   playCount: number;
   lastPlayedAt: string | null;
+  /** 0–100, 20 per star (iTunes scale); null = unrated. */
+  rating: number | null;
+  skipCount: number;
+  /** When it entered the library in iTunes (null if added here). */
+  addedAt: string | null;
   createdAt: string;
 };
 
@@ -78,4 +83,9 @@ export function formatReleaseDate(value: string | null): string | null {
   const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(value);
   if (!m) return value.slice(0, 4);
   return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3])).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+}
+
+/** "1 song", "2,807 songs". */
+export function plural(n: number, word: string, many = `${word}s`): string {
+  return `${n.toLocaleString()} ${n === 1 ? word : many}`;
 }
