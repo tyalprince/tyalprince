@@ -9,6 +9,7 @@ import {
   primaryKey,
   index,
   jsonb,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
 
@@ -405,4 +406,82 @@ export const loggedSets = pgTable(
     completedAt: timestamp("completed_at", { withTimezone: true }),
   },
   (t) => [index("logged_sets_logged_exercise_id_idx").on(t.loggedExerciseId)],
+);
+
+// ---------------------------------------------------------------------------
+// Music library (audio files live in object storage; rows here are the
+// catalog, the audio analysis used for similarity, and playlists)
+// ---------------------------------------------------------------------------
+
+export const musicTracks = pgTable(
+  "music_tracks",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    objectKey: text("object_key").notNull(),
+    // SHA-256 of the file — makes re-running an import skip what's already in.
+    contentHash: text("content_hash").notNull(),
+    fileName: text("file_name").notNull(),
+    fileSize: integer("file_size").notNull(),
+    mimeType: text("mime_type").notNull(),
+    title: text("title").notNull(),
+    artist: text("artist"),
+    albumArtist: text("album_artist"),
+    album: text("album"),
+    genre: text("genre"),
+    year: integer("year"),
+    trackNumber: integer("track_number"),
+    discNumber: integer("disc_number"),
+    durationSeconds: numeric("duration_seconds", { precision: 10, scale: 2 }),
+    bitrate: integer("bitrate"),
+    artworkKey: text("artwork_key"),
+    // Audio analysis (tempo, key, energy…) and the derived similarity vector.
+    features: jsonb("features").$type<Record<string, number>>(),
+    featureVector: jsonb("feature_vector").$type<number[]>(),
+    liked: boolean("liked").notNull().default(false),
+    playCount: integer("play_count").notNull().default(0),
+    lastPlayedAt: timestamp("last_played_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    index("music_tracks_user_id_idx").on(t.userId),
+    uniqueIndex("music_tracks_user_hash_idx").on(t.userId, t.contentHash),
+  ],
+);
+
+export const musicPlaylists = pgTable(
+  "music_playlists",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    description: text("description"),
+    kind: text("kind", { enum: ["manual", "generated"] }).notNull().default("manual"),
+    // How a generated playlist was made (seed tracks, mood preset…) so it can be refreshed.
+    recipe: jsonb("recipe").$type<Record<string, unknown>>(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("music_playlists_user_id_idx").on(t.userId)],
+);
+
+export const musicPlaylistTracks = pgTable(
+  "music_playlist_tracks",
+  {
+    playlistId: uuid("playlist_id")
+      .notNull()
+      .references(() => musicPlaylists.id, { onDelete: "cascade" }),
+    trackId: uuid("track_id")
+      .notNull()
+      .references(() => musicTracks.id, { onDelete: "cascade" }),
+    position: integer("position").notNull(),
+  },
+  (t) => [
+    primaryKey({ columns: [t.playlistId, t.position] }),
+    index("music_playlist_tracks_track_id_idx").on(t.trackId),
+  ],
 );

@@ -7,6 +7,13 @@ const envSchema = z.object({
   S3_REGION: z.string().min(1).optional(),
   S3_ACCESS_KEY_ID: z.string().min(1).optional(),
   S3_SECRET_ACCESS_KEY: z.string().min(1).optional(),
+  // Music library storage. Any S3-compatible bucket; Cloudflare R2 is the
+  // recommended default (free egress). Falls back to the S3_* values above.
+  MUSIC_STORAGE_ENDPOINT: z.string().url().optional(),
+  MUSIC_STORAGE_BUCKET: z.string().min(1).optional(),
+  MUSIC_STORAGE_REGION: z.string().min(1).optional(),
+  MUSIC_STORAGE_ACCESS_KEY_ID: z.string().min(1).optional(),
+  MUSIC_STORAGE_SECRET_ACCESS_KEY: z.string().min(1).optional(),
   OCR_API_URL: z.string().min(1).optional(),
   OCR_API_KEY: z.string().min(1).optional(),
 });

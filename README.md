@@ -90,6 +90,37 @@ plan reviews and the History tab are computed by the pure builders in
 Migration `drizzle/0001_plan_wizard.sql` adds the plan/day columns this needs
 (additive only — run `npm run db:migrate`).
 
+### Music library
+
+The Music tab is a personal streaming library: songs, albums, artists,
+playlists, a player that keeps playing across tabs (with lock-screen
+controls), and generated playlists ("song radio" from seed songs, and mood
+mixes like Workout or Chill).
+
+- **Audio lives in object storage, not the database.** Configure any
+  S3-compatible bucket with the `MUSIC_STORAGE_*` env vars; Cloudflare R2 is
+  recommended (free for 10 GB and no egress fees for streaming). If they're
+  unset, the `S3_*` receipts bucket is used. Neon only holds the catalog,
+  audio analysis and playlists.
+- **Import runs in the browser** (Music → Import → choose a folder in
+  Chrome/Edge): each file is hashed (re-runs skip songs already imported),
+  its tags and cover art are read with `music-metadata`, the audio is
+  analysed (tempo, key, energy, beat strength, brightness —
+  `lib/music/analysis.ts`), and the file is PUT straight to the bucket via a
+  presigned URL. Nothing large passes through Vercel.
+- **Similarity and mixes** (`lib/music/similarity.ts`) combine the audio
+  features with genre, artist and era, all computed client-side over the
+  library.
+
+R2 setup: create a bucket and an API token with Object Read & Write, then
+set `MUSIC_STORAGE_ENDPOINT` (`https://<account-id>.r2.cloudflarestorage.com`),
+`MUSIC_STORAGE_BUCKET`, `MUSIC_STORAGE_ACCESS_KEY_ID` and
+`MUSIC_STORAGE_SECRET_ACCESS_KEY`. Add a CORS rule on the bucket allowing
+`PUT` and `GET` from the app's origin with the `Content-Type` header, or
+browser uploads will fail.
+
+Migration `drizzle/0002_music_library.sql` adds the music tables.
+
 ## Authorization model
 
 Neon is plain Postgres — there's no built-in `auth.uid()`-based row-level

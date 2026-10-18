@@ -15,6 +15,13 @@
       "when": 1790526096994,
       "tag": "0001_plan_wizard",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792329141138,
+      "tag": "0002_music_library",
+      "breakpoints": true
     }
   ]
 }
