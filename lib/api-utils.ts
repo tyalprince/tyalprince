@@ -2,6 +2,16 @@ import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 import { UnauthorizedError } from "@/lib/session";
 
+/** Throw from route code to return a specific status with a user-facing message. */
+export class HttpError extends Error {
+  constructor(
+    public status: number,
+    message: string,
+  ) {
+    super(message);
+  }
+}
+
 /** Wraps an API route handler with consistent auth/validation error handling. */
 export function withApiErrors<T extends unknown[]>(
   handler: (...args: T) => Promise<Response>,
@@ -12,6 +22,9 @@ export function withApiErrors<T extends unknown[]>(
     } catch (err) {
       if (err instanceof UnauthorizedError) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (err instanceof HttpError) {
+        return NextResponse.json({ error: err.message }, { status: err.status });
       }
       if (err instanceof ZodError) {
         return NextResponse.json(
