@@ -11,6 +11,7 @@ import { AlbumGrid, AlbumView, ArtistList, ArtistView, groupAlbums, groupArtists
 import { PlaylistList, PlaylistView } from "./playlists";
 import { Mixes } from "./mixes";
 import { ImportPanel } from "./import-panel";
+import { DetailsPanel } from "./details-panel";
 import { formatBytes, type PlaylistSummary, type Track } from "@/lib/music/types";
 
 const TABS = ["songs", "albums", "artists", "playlists", "mixes", "import"] as const;
@@ -182,6 +183,7 @@ function MusicInner() {
       {library.tracks !== null && (
         <div className={activeTab === "import" && !drill ? undefined : "hidden"}>
           <ImportPanel />
+          <DetailsPanel />
         </div>
       )}
 

@@ -74,6 +74,11 @@ export async function presignDownload(key: string, expiresIn = 60 * 60 * 6): Pro
   return getSignedUrl(client, new GetObjectCommand({ Bucket: bucket, Key: key }), { expiresIn });
 }
 
+export async function putObject(key: string, body: Uint8Array, contentType: string): Promise<void> {
+  const { client, bucket } = config();
+  await client.send(new PutObjectCommand({ Bucket: bucket, Key: key, Body: body, ContentType: contentType }));
+}
+
 export async function deleteObject(key: string): Promise<void> {
   const { client, bucket } = config();
   await client.send(new DeleteObjectCommand({ Bucket: bucket, Key: key }));

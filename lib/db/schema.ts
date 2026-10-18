@@ -440,6 +440,20 @@ export const musicTracks = pgTable(
     // Audio analysis (tempo, key, energy…) and the derived similarity vector.
     features: jsonb("features").$type<Record<string, number>>(),
     featureVector: jsonb("feature_vector").$type<number[]>(),
+    // Details from the file's own tags, filled in further by online lookups
+    // (iTunes catalog for artwork/release date, MusicBrainz for credits).
+    releaseDate: text("release_date"), // "YYYY-MM-DD" or "YYYY"
+    composer: text("composer"),
+    lyricist: text("lyricist"),
+    producer: text("producer"),
+    label: text("label"),
+    copyright: text("copyright"),
+    lyrics: text("lyrics"),
+    syncedLyrics: text("synced_lyrics"), // LRC format: "[mm:ss.xx] line"
+    lyricsSource: text("lyrics_source", { enum: ["embedded", "lrclib"] }),
+    lyricsCheckedAt: timestamp("lyrics_checked_at", { withTimezone: true }),
+    enrichedAt: timestamp("enriched_at", { withTimezone: true }),
+    external: jsonb("external").$type<Record<string, string>>(),
     liked: boolean("liked").notNull().default(false),
     playCount: integer("play_count").notNull().default(0),
     lastPlayedAt: timestamp("last_played_at", { withTimezone: true }),

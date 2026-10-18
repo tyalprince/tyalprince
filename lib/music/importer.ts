@@ -4,6 +4,7 @@ import { parseBlob, selectCover } from "music-metadata";
 import { apiFetch } from "@/lib/api-client";
 import { analyzeSamples, type AudioFeatures } from "@/lib/music/analysis";
 import { buildFeatureVector } from "@/lib/music/similarity";
+import { parseReleaseDate } from "@/lib/music/metadata-sources";
 import { PROTECTED_EXTENSIONS, audioExtension, audioMimeType, extensionOf } from "@/lib/music/formats";
 import type { Track } from "@/lib/music/types";
 
@@ -114,6 +115,21 @@ async function putWithRetry(url: string, body: Blob | Uint8Array, contentType: s
   throw lastError;
 }
 
+function joinTag(values: string[] | undefined): string | null {
+  const joined = [...new Set((values ?? []).map((v) => v.trim()).filter(Boolean))].join(", ");
+  return joined ? joined.slice(0, 500) : null;
+}
+
+/** Unsynchronised lyrics embedded in the file (ID3 USLT / MP4 ©lyr). */
+function firstLyrics(tags: unknown): string | null {
+  if (!Array.isArray(tags)) return null;
+  for (const t of tags) {
+    const text = typeof t === "string" ? t : (t as { text?: string })?.text;
+    if (text?.trim()) return text.trim().slice(0, 20000);
+  }
+  return null;
+}
+
 function firstNumber(n: number | null | undefined): number | null {
   return typeof n === "number" && Number.isFinite(n) && n > 0 ? Math.round(n) : null;
 }
@@ -217,6 +233,14 @@ export class LibraryImporter {
         artworkKey,
         features,
         featureVector: features ? buildFeatureVector(features) : null,
+        // Credits, label and lyrics the file already carries (online lookups fill gaps later).
+        releaseDate: parseReleaseDate(common?.date ?? common?.originaldate ?? null),
+        composer: joinTag(common?.composer ?? common?.writer),
+        lyricist: joinTag(common?.lyricist),
+        producer: joinTag(common?.producer),
+        label: joinTag(common?.label),
+        copyright: common?.copyright?.slice(0, 500) ?? null,
+        lyrics: firstLyrics(common?.lyrics),
       }),
     });
     return { outcome: track ? "added" : "exists", track: track ?? undefined };

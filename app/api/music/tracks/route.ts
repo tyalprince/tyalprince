@@ -45,6 +45,13 @@ export const POST = withApiErrors(async (req: Request) => {
       artworkKey: body.artworkKey ?? null,
       features: body.features ?? null,
       featureVector: body.featureVector ?? null,
+      releaseDate: body.releaseDate ?? null,
+      composer: body.composer ?? null,
+      lyricist: body.lyricist ?? null,
+      producer: body.producer ?? null,
+      label: body.label ?? null,
+      copyright: body.copyright ?? null,
+      ...(body.lyrics ? { lyrics: body.lyrics, lyricsSource: "embedded" as const, lyricsCheckedAt: new Date() } : {}),
     })
     .onConflictDoNothing({ target: [musicTracks.userId, musicTracks.contentHash] })
     .returning(trackColumns);

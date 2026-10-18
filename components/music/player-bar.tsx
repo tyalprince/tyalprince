@@ -3,7 +3,9 @@
 import { useState } from "react";
 import {
   ChevronDown,
+  Info,
   ListMusic,
+  MicVocal,
   Music2,
   Pause,
   Play,
@@ -16,7 +18,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { usePlayer, usePlayerProgress } from "./player-context";
-import { artworkUrl, displayArtist, formatTime, type Track } from "@/lib/music/types";
+import { artworkUrl, displayArtist, formatReleaseDate, formatTime, type Track } from "@/lib/music/types";
+import { CreditsList, LyricsView } from "./song-info";
 import { keyLabel } from "@/lib/music/analysis";
 
 export function Artwork({ track, className }: { track: Pick<Track, "artworkKey" | "album"> | null; className?: string }) {
@@ -84,8 +87,10 @@ export function PlayerBar() {
 function NowPlaying({ onClose }: { onClose: () => void }) {
   const p = usePlayer();
   const { position, duration } = usePlayerProgress();
-  const [showQueue, setShowQueue] = useState(false);
+  const [view, setView] = useState<"art" | "lyrics" | "credits" | "queue">("art");
+  const toggle = (v: typeof view) => setView((cur) => (cur === v ? "art" : v));
   const t = p.current!;
+  const released = formatReleaseDate(t.releaseDate) ?? (t.year ? String(t.year) : null);
   const RepeatIcon = p.repeat === "one" ? Repeat1 : Repeat;
 
   return (
@@ -94,18 +99,42 @@ function NowPlaying({ onClose }: { onClose: () => void }) {
         <button onClick={onClose} className="rounded p-1" aria-label="Close">
           <ChevronDown className="h-6 w-6" />
         </button>
-        <span className="text-xs font-medium uppercase tracking-wide text-neutral-500">Now playing</span>
-        <button
-          onClick={() => setShowQueue((v) => !v)}
-          className={cn("rounded p-1", showQueue && "text-indigo-500")}
-          aria-label="Queue"
-        >
-          <ListMusic className="h-6 w-6" />
-        </button>
+        <span className="text-xs font-medium uppercase tracking-wide text-neutral-500">
+          {view === "lyrics" ? "Lyrics" : view === "credits" ? "Credits" : view === "queue" ? "Up next" : "Now playing"}
+        </span>
+        <div className="flex items-center gap-1">
+          {(
+            [
+              ["lyrics", MicVocal, "Lyrics"],
+              ["credits", Info, "Credits"],
+              ["queue", ListMusic, "Queue"],
+            ] as const
+          ).map(([v, Icon, label]) => (
+            <button
+              key={v}
+              onClick={() => toggle(v)}
+              className={cn("rounded p-1.5", view === v ? "text-indigo-500" : "text-neutral-600 dark:text-neutral-300")}
+              aria-label={label}
+              aria-pressed={view === v}
+            >
+              <Icon className="h-5 w-5" />
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="mx-auto flex w-full max-w-md flex-1 flex-col gap-5 overflow-y-auto px-6 pb-8">
-        {showQueue ? (
+        {view === "lyrics" ? (
+          <>
+            <SongHeading track={t} released={released} compact />
+            <LyricsView track={t} follow />
+          </>
+        ) : view === "credits" ? (
+          <>
+            <SongHeading track={t} released={released} compact />
+            <CreditsList track={t} />
+          </>
+        ) : view === "queue" ? (
           <ol className="space-y-1">
             {p.queue.map((q, i) => (
               <li key={`${q.id}-${i}`}>
@@ -128,19 +157,7 @@ function NowPlaying({ onClose }: { onClose: () => void }) {
         ) : (
           <>
             <Artwork track={t} className="aspect-square w-full rounded-xl shadow-lg" />
-            <div>
-              <h2 className="truncate text-xl font-semibold">{t.title}</h2>
-              <p className="truncate text-neutral-500">
-                {displayArtist(t)}
-                {t.album ? ` — ${t.album}` : ""}
-              </p>
-              {t.features && (
-                <p className="mt-1 text-xs text-neutral-400">
-                  {Math.round(t.features.tempo)} BPM · {keyLabel(t.features.key, t.features.mode)} · energy{" "}
-                  {Math.round(t.features.energy * 100)}%
-                </p>
-              )}
-            </div>
+            <SongHeading track={t} released={released} />
           </>
         )}
 
@@ -205,6 +222,32 @@ function NowPlaying({ onClose }: { onClose: () => void }) {
             />
           </label>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function SongHeading({ track: t, released, compact }: { track: Track; released: string | null; compact?: boolean }) {
+  return (
+    <div className={compact ? "flex items-center gap-3" : undefined}>
+      {compact && <Artwork track={t} className="h-14 w-14 rounded-md" />}
+      <div className="min-w-0">
+        <h2 className={cn("truncate font-semibold", compact ? "text-base" : "text-xl")}>{t.title}</h2>
+        <p className="truncate text-neutral-500">
+          {displayArtist(t)}
+          {t.album ? ` — ${t.album}` : ""}
+        </p>
+        {!compact && (
+          <p className="mt-1 text-xs text-neutral-400">
+            {[
+              released && `Released ${released}`,
+              t.features && `${Math.round(t.features.tempo)} BPM`,
+              t.features && keyLabel(t.features.key, t.features.mode),
+            ]
+              .filter(Boolean)
+              .join(" · ")}
+          </p>
+        )}
       </div>
     </div>
   );
