@@ -20,7 +20,7 @@ function useLyrics(trackId: string) {
     error: false,
   }));
   useEffect(() => {
-    if (lyricsCache.has(trackId)) return;
+    if (lyricsCache.has(trackId) || trackId.startsWith("jamendo:")) return;
     let cancelled = false;
     apiFetch<Lyrics>(`/api/music/tracks/${trackId}/lyrics`)
       .then((l) => {
@@ -53,6 +53,7 @@ export function LyricsView({ track, follow = false }: { track: Track; follow?: b
     activeRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
   }, [active]);
 
+  if (track.remote) return <p className="text-sm text-neutral-500">Lyrics aren&apos;t available for Explore songs.</p>;
   if (error) return <p className="text-sm text-neutral-500">Couldn&apos;t load lyrics right now.</p>;
   if (!lyrics) return <p className="text-sm text-neutral-500">Finding lyrics…</p>;
   if (lyrics.instrumental) return <p className="text-sm text-neutral-500">Instrumental — no lyrics.</p>;
@@ -127,7 +128,23 @@ export function CreditsList({ track }: { track: Track }) {
       ) : (
         <p className="text-sm text-neutral-500">No details yet.</p>
       )}
-      {!track.enrichedAt && <p className="text-xs text-neutral-400">Looking up artwork, release date and songwriters…</p>}
+      {!track.enrichedAt && !track.remote && <p className="text-xs text-neutral-400">Looking up artwork, release date and songwriters…</p>}
+      {track.remote?.license && (
+        <p className="text-xs text-neutral-500">
+          Free on Jamendo under{" "}
+          <a href={track.remote.licenseUrl ?? undefined} target="_blank" rel="noreferrer" className="underline">
+            {track.remote.license}
+          </a>
+          {track.remote.pageUrl && (
+            <>
+              {" · "}
+              <a href={track.remote.pageUrl} target="_blank" rel="noreferrer" className="underline">
+                Song page
+              </a>
+            </>
+          )}
+        </p>
+      )}
       {track.enrichedAt && !track.composer && (
         <p className="text-xs text-neutral-400">Songwriter credits weren&apos;t found for this recording.</p>
       )}
