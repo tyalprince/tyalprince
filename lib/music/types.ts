@@ -4,6 +4,7 @@ import type { AudioFeatures } from "@/lib/music/analysis";
 export type Track = {
   id: string;
   title: string;
+  fileName: string;
   artist: string | null;
   albumArtist: string | null;
   album: string | null;

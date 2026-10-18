@@ -18,21 +18,40 @@ export type ImportEvent =
   | { type: "start"; file: File }
   | { type: "done"; file: File; outcome: ImportOutcome; track?: Track; error?: string };
 
-export type SortedSelection = { audio: File[]; protectedFiles: File[]; ignored: number; totalBytes: number };
+export type SortedSelection = {
+  audio: File[]; // still to import
+  alreadyImported: number; // matched to the library by name + size, skipped without reading
+  protectedFiles: File[];
+  ignored: number;
+  totalBytes: number;
+};
 
-/** Splits a folder selection into playable audio, DRM-protected files, and everything else. */
-export function sortSelection(files: File[]): SortedSelection {
+/** Cheap identity for a file already in the library: name + exact byte size. */
+export function fileFingerprint(name: string, size: number): string {
+  return `${name.toLowerCase()}|${size}`;
+}
+
+/**
+ * Splits a folder selection into audio still to import, songs already in the
+ * library, DRM-protected files, and everything else. `known` holds
+ * fingerprints of imported tracks, so re-running after an interruption skips
+ * them instantly instead of re-reading and re-hashing gigabytes of audio.
+ */
+export function sortSelection(files: File[], known: Set<string> = new Set()): SortedSelection {
   const audio: File[] = [];
   const protectedFiles: File[] = [];
   let ignored = 0;
+  let alreadyImported = 0;
   for (const f of files) {
     if (f.name.startsWith("._")) ignored += 1; // macOS resource forks copied onto Windows drives
-    else if (audioExtension(f.name)) audio.push(f);
-    else if (PROTECTED_EXTENSIONS.has(extensionOf(f.name))) protectedFiles.push(f);
+    else if (audioExtension(f.name)) {
+      if (known.has(fileFingerprint(f.name, f.size))) alreadyImported += 1;
+      else audio.push(f);
+    } else if (PROTECTED_EXTENSIONS.has(extensionOf(f.name))) protectedFiles.push(f);
     else ignored += 1;
   }
   audio.sort((a, b) => pathOf(a).localeCompare(pathOf(b)));
-  return { audio, protectedFiles, ignored, totalBytes: audio.reduce((s, f) => s + f.size, 0) };
+  return { audio, alreadyImported, protectedFiles, ignored, totalBytes: audio.reduce((s, f) => s + f.size, 0) };
 }
 
 export function pathOf(f: File): string {
@@ -46,12 +65,26 @@ async function sha256Hex(data: ArrayBuffer | Uint8Array): Promise<string> {
 }
 
 const ANALYSIS_RATE = 22050;
+/** Larger files (long lossless tracks) skip analysis: decoding them can use hundreds of MB of RAM. */
+export const ANALYSIS_MAX_BYTES = 80 * 1024 * 1024;
 
-/** Decodes with Web Audio (resampled to 22.05 kHz) and analyses a mono mixdown. */
+// Only one decode at a time across all workers — decoding is the memory-heavy step.
+let analysisQueue: Promise<unknown> = Promise.resolve();
+
+function analyzeOneAtATime(buffer: ArrayBuffer): Promise<AudioFeatures | null> {
+  const run = analysisQueue.then(() => analyze(buffer));
+  analysisQueue = run.catch(() => null);
+  return run;
+}
+
+/**
+ * Decodes with Web Audio (resampled to 22.05 kHz) and analyses a mono mixdown.
+ * Takes ownership of `buffer` (decodeAudioData detaches it) to avoid a copy.
+ */
 async function analyze(buffer: ArrayBuffer): Promise<AudioFeatures | null> {
   try {
     const ctx = new OfflineAudioContext(1, 1, ANALYSIS_RATE);
-    const decoded = await ctx.decodeAudioData(buffer.slice(0));
+    const decoded = await ctx.decodeAudioData(buffer);
     const mono = new Float32Array(decoded.length);
     for (let c = 0; c < decoded.numberOfChannels; c++) {
       const ch = decoded.getChannelData(c);
@@ -98,7 +131,8 @@ export class LibraryImporter {
 
   constructor(
     private onEvent: (e: ImportEvent) => void,
-    private concurrency = 3,
+    // Two at a time keeps uploads flowing without overloading the PC.
+    private concurrency = 2,
   ) {}
 
   pause() {
@@ -152,9 +186,10 @@ export class LibraryImporter {
     if (decision.status === "exists") return { outcome: "exists" };
     if (decision.status === "unsupported") return { outcome: "unsupported" };
 
+    // The hash is taken, so the buffer can be handed to the decoder (no copy).
     const [tags, features] = await Promise.all([
       parseBlob(file, { duration: true }).catch(() => null),
-      analyze(buffer),
+      file.size <= ANALYSIS_MAX_BYTES ? analyzeOneAtATime(buffer) : Promise.resolve(null),
     ]);
     const common = tags?.common;
     const artworkKey = await this.uploadArtwork(selectCover(common?.picture));

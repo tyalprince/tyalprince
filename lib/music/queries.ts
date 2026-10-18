@@ -7,6 +7,7 @@ import { musicPlaylistTracks, musicPlaylists, musicTracks } from "@/lib/db/schem
 export const trackColumns = {
   id: musicTracks.id,
   title: musicTracks.title,
+  fileName: musicTracks.fileName,
   artist: musicTracks.artist,
   albumArtist: musicTracks.albumArtist,
   album: musicTracks.album,

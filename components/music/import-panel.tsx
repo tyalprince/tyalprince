@@ -4,7 +4,14 @@ import { useEffect, useRef, useState } from "react";
 import { CheckCircle2, FolderOpen, Pause, Play, Square, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLibrary } from "./library-context";
-import { LibraryImporter, pathOf, sortSelection, type ImportEvent, type SortedSelection } from "@/lib/music/importer";
+import {
+  LibraryImporter,
+  fileFingerprint,
+  pathOf,
+  sortSelection,
+  type ImportEvent,
+  type SortedSelection,
+} from "@/lib/music/importer";
 import { formatBytes, type Track } from "@/lib/music/types";
 
 type Stats = { done: number; added: number; exists: number; failed: number; unsupported: number; bytes: number };
@@ -54,7 +61,8 @@ export function ImportPanel() {
 
   function choose(list: FileList | null) {
     if (!list?.length) return;
-    setSelection(sortSelection([...list]));
+    const known = new Set((library.tracks ?? []).map((t) => fileFingerprint(t.fileName, t.fileSize)));
+    setSelection(sortSelection([...list], known));
     setStats(EMPTY);
     setFailures([]);
     setState("idle");
@@ -138,7 +146,14 @@ export function ImportPanel() {
         <div className="space-y-3 rounded-lg border border-neutral-200 p-4 dark:border-neutral-800">
           <div className="text-sm">
             <p>
-              <span className="font-semibold">{total.toLocaleString()}</span> songs ({formatBytes(selection.totalBytes)}) ready to import
+              {total > 0 ? (
+                <>
+                  <span className="font-semibold">{total.toLocaleString()}</span> {selection.alreadyImported ? "new " : ""}songs (
+                  {formatBytes(selection.totalBytes)}) ready to import
+                </>
+              ) : (
+                <span className="font-semibold">Everything in this folder is already in your library.</span>
+              )}
             </p>
             {selection.protectedFiles.length > 0 && (
               <p className="text-xs text-amber-700 dark:text-amber-400">
@@ -146,6 +161,11 @@ export function ImportPanel() {
                   ? "1 copy-protected Apple Music file (.m4p) will be skipped"
                   : `${selection.protectedFiles.length} copy-protected Apple Music files (.m4p) will be skipped`}{" "}
                 — they only play in Apple&apos;s apps.
+              </p>
+            )}
+            {selection.alreadyImported > 0 && (
+              <p className="text-xs text-emerald-700 dark:text-emerald-400">
+                {selection.alreadyImported.toLocaleString()} songs already in your library — skipped without re-reading.
               </p>
             )}
             {selection.ignored > 0 && <p className="text-xs text-neutral-500">{selection.ignored} non-audio files ignored.</p>}
