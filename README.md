@@ -129,7 +129,8 @@ credits, rate-limited to ~1 request/second) and LRCLIB (plain and
 time-synced lyrics, fetched on demand and cached). Songs are looked up the
 first time they're played, or in bulk from Music → Import. While the Music
 tab is open, cover art is also filled in the background, one song per album
-that has none, paced for Apple's ~20 searches/minute. Migration
+that has none, paced for Apple's ~20 searches/minute; when a song's title
+isn't found the album is searched instead. Migration
 `drizzle/0003_music_details.sql` adds the columns.
 
 **Duplicates** (`lib/music/duplicates.ts`): besides exact-file matches, the
@@ -139,6 +140,13 @@ length within 3 seconds; live, remix and acoustic versions stay distinct. The
 Import tab lists duplicates already in the library and removes the extra
 copies in one go, moving playlist entries, likes and play counts to the copy
 that's kept (`POST /api/music/tracks/merge`).
+
+**Missing-songs report** (`lib/music/itunes-library.ts`): open an iTunes
+"File → Library → Export Library…" XML in the Import tab and it's compared
+with the library on the device (nothing is uploaded): songs already here, and
+missing ones grouped by why — on the PC but not imported, in iCloud but not
+downloaded, old protected purchases (re-download to get them unlocked), and
+Apple Music subscription songs (locked; can't be imported). Exports as CSV.
 
 ## Authorization model
 

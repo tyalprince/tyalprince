@@ -10,6 +10,7 @@ import {
   normalizeTitle,
   parseLrc,
   parseReleaseDate,
+  pickItunesAlbum,
   pickItunesMatch,
   pickLrclib,
   pickMbRecording,
@@ -158,5 +159,21 @@ describe("album art sharing", () => {
     expect(nextArtworkCandidate(list, tried)!.id).toBe("d");
     tried.add(albumKeyOf(list[3]));
     expect(nextArtworkCandidate(list, tried)).toBeNull();
+  });
+});
+
+describe("pickItunesAlbum", () => {
+  const results = [
+    { wrapperType: "collection", collectionName: "Nellyville (Clean)", artistName: "Nelly", artworkUrl100: "https://is1-ssl.mzstatic.com/a/100x100bb.jpg" },
+    { wrapperType: "collection", collectionName: "Nellyville", artistName: "Nelly", artworkUrl100: "https://is1-ssl.mzstatic.com/b/100x100bb.jpg" },
+    { wrapperType: "collection", collectionName: "Nellyville", artistName: "Someone Else", artworkUrl100: "https://x/c.jpg" },
+  ];
+  it("prefers the exact album by the same artist", () => {
+    expect(pickItunesAlbum(results, "Nellyville", "Nelly")?.artworkUrl100).toContain("/b/");
+  });
+  it("matches an edition by its base title and rejects other artists", () => {
+    expect(pickItunesAlbum(results.slice(0, 1), "Nellyville", "Nelly")).not.toBeNull();
+    expect(pickItunesAlbum(results.slice(2), "Nellyville", "Nelly")).toBeNull();
+    expect(pickItunesAlbum(results, "Country Grammar", "Nelly")).toBeNull();
   });
 });

@@ -99,6 +99,38 @@ export function pickItunesMatch(results: ItunesSong[], q: TrackQuery): ItunesSon
   return best?.r ?? null;
 }
 
+export type ItunesAlbum = {
+  wrapperType?: string;
+  collectionName?: string;
+  artistName?: string;
+  artworkUrl100?: string;
+  releaseDate?: string;
+  primaryGenreName?: string;
+  collectionViewUrl?: string;
+};
+
+/**
+ * Album search fallback for cover art when the song itself isn't found (its
+ * title is spelled differently in the catalog): album title and artist must agree.
+ */
+export function pickItunesAlbum(results: ItunesAlbum[], album: string, artist: string | null): ItunesAlbum | null {
+  const want = normalizeTitle(album);
+  if (!want) return null;
+  const candidates = results.filter(
+    (r) =>
+      (!r.wrapperType || r.wrapperType === "collection") &&
+      r.collectionName &&
+      r.artworkUrl100 &&
+      (!artist || artistsMatch(r.artistName ?? "", artist)),
+  );
+  return (
+    candidates.find((r) => r.collectionName!.trim().toLowerCase() === album.trim().toLowerCase()) ??
+    candidates.find((r) => normalizeTitle(r.collectionName) === want) ??
+    candidates.find((r) => titlesMatch(r.collectionName!, album)) ??
+    null
+  );
+}
+
 /** iTunes returns a 100px thumbnail; the same URL serves larger sizes. */
 export function itunesArtworkUrl(url: string, size = 600): string {
   return url.replace(/\/\d+x\d+(bb)?\.(jpg|png)$/i, `/${size}x${size}bb.jpg`);
