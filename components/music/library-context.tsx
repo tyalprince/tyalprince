@@ -6,8 +6,9 @@ import { usePlayer } from "./player-context";
 import { albumKeyOf, applyLookup, nextArtworkCandidate } from "@/lib/music/album-art";
 import type { PlaylistSummary, Track } from "@/lib/music/types";
 
-// Apple's catalog allows roughly 20 searches a minute.
-const ARTWORK_GAP_MS = 3500;
+// Apple's catalog allows roughly 20 searches a minute, and a lookup can take
+// two (song, then album).
+const ARTWORK_GAP_MS = 5000;
 const RATE_LIMIT_PAUSE_MS = 60_000;
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 

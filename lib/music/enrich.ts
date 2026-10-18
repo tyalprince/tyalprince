@@ -9,10 +9,12 @@ import {
   isAllowedArtworkHost,
   itunesArtworkUrl,
   parseReleaseDate,
+  pickItunesAlbum,
   pickItunesMatch,
   pickLrclib,
   pickMbRecording,
   workIdsFrom,
+  type ItunesAlbum,
   type ItunesSong,
   type LrclibRecord,
   type MbRecording,
@@ -65,6 +67,16 @@ async function lookupItunes(q: TrackQuery): Promise<ItunesSong | null | undefine
   );
   if (!data) return undefined;
   return pickItunesMatch(data.results ?? [], q);
+}
+
+/** Album lookup for cover art; same null/undefined convention as lookupItunes. */
+async function lookupItunesAlbum(album: string, artist: string | null): Promise<ItunesAlbum | null | undefined> {
+  const term = [artist, album].filter(Boolean).join(" ").replace(/[*]/g, "");
+  const data = await getJson<{ results?: ItunesAlbum[] }>(
+    `https://itunes.apple.com/search?${new URLSearchParams({ term, media: "music", entity: "album", limit: "15" })}`,
+  );
+  if (!data) return undefined;
+  return pickItunesAlbum(data.results ?? [], album, artist);
 }
 
 /** Downloads cover art from Apple's CDN into our bucket; returns the object key. */
@@ -185,6 +197,22 @@ export async function enrichTrack(userId: string, trackId: string, opts: EnrichO
       if (needsArt && match.artworkUrl100) {
         const key = await storeArtwork(userId, match.artworkUrl100);
         if (key) changes.artworkKey = key;
+      }
+    }
+    // Song not found under this title (e.g. "Hot In Here" vs "Hot In Herre"): try the album.
+    if (needsArt && !changes.artworkKey && itunesAnswered && track.album) {
+      const artist = albumArtist && !/various/i.test(albumArtist) ? albumArtist : null;
+      const album = await lookupItunesAlbum(track.album, artist);
+      if (album === undefined) {
+        retryLater = true;
+        itunesAnswered = false;
+        delete external.itunesChecked;
+      } else if (album?.artworkUrl100) {
+        const key = await storeArtwork(userId, album.artworkUrl100);
+        if (key) changes.artworkKey = key;
+        const date = parseReleaseDate(album.releaseDate);
+        if (date && needsDate && !changes.releaseDate) changes.releaseDate = date;
+        if (!track.genre && !changes.genre && album.primaryGenreName) changes.genre = album.primaryGenreName;
       }
     }
   }
