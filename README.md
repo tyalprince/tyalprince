@@ -127,7 +127,9 @@ the iTunes Search API (album art, saved into the bucket, and release dates;
 shared across an album), MusicBrainz (songwriter / lyricist / producer
 credits, rate-limited to ~1 request/second) and LRCLIB (plain and
 time-synced lyrics, fetched on demand and cached). Songs are looked up the
-first time they're played, or in bulk from Music → Import. Migration
+first time they're played, or in bulk from Music → Import. While the Music
+tab is open, cover art is also filled in the background, one song per album
+that has none, paced for Apple's ~20 searches/minute. Migration
 `drizzle/0003_music_details.sql` adds the columns.
 
 ## Authorization model

@@ -1,9 +1,15 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { apiFetch } from "@/lib/api-client";
 import { usePlayer } from "./player-context";
+import { albumKeyOf, applyLookup, nextArtworkCandidate } from "@/lib/music/album-art";
 import type { PlaylistSummary, Track } from "@/lib/music/types";
+
+// Apple's catalog allows roughly 20 searches a minute.
+const ARTWORK_GAP_MS = 3500;
+const RATE_LIMIT_PAUSE_MS = 60_000;
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 type Library = {
   tracks: Track[] | null;
@@ -56,16 +62,63 @@ export function LibraryProvider({ children }: { children: React.ReactNode }) {
       .catch(() => setStorageConfigured(false));
   }, [reload, reloadPlaylists]);
 
-  const { updateTrack: updatePlayingTrack, current: playing } = player;
+  const { updateTrack: updatePlayingTrack, updateTracks: updateQueuedTracks, onLookup } = player;
 
-  // The player enriches songs as they play (art, release date, credits);
-  // overlay the playing song's fresher copy onto the library list.
-  const merged = useMemo(() => {
-    if (!tracks || !playing?.enrichedAt) return tracks;
-    return tracks.map((t) => (t.id === playing.id && t.enrichedAt !== playing.enrichedAt ? { ...t, ...playing } : t));
-  }, [tracks, playing]);
+  // A looked-up song (art, release date, credits) and the album-mates it shares art with.
+  const replaceTrack = useCallback(
+    (track: Track) => {
+      setTracks((prev) => (prev ? applyLookup(prev, track) : prev));
+      updateQueuedTracks((queue) => applyLookup(queue, track));
+    },
+    [updateQueuedTracks],
+  );
+
+  // Songs looked up by the player on first play.
+  useEffect(() => onLookup(replaceTrack), [onLookup, replaceTrack]);
+
+  // Background cover-art fill while the Music tab is open: one song per album
+  // that has no art, paced for Apple's limit. Results are saved, so it picks up
+  // where it left off next time.
+  const latest = useRef<Track[] | null>(null);
+  useEffect(() => {
+    latest.current = tracks;
+  }, [tracks]);
+  const loaded = tracks !== null;
+  useEffect(() => {
+    if (!loaded) return;
+    let cancelled = false;
+    const tried = new Set<string>();
+    (async () => {
+      await sleep(2000);
+      while (!cancelled) {
+        const next = nextArtworkCandidate(latest.current ?? [], tried);
+        if (!next) return;
+        tried.add(albumKeyOf(next));
+        try {
+          const res = await apiFetch<{ track: Track; retryLater?: boolean }>(`/api/music/tracks/${next.id}/enrich`, {
+            method: "POST",
+            body: JSON.stringify({ artworkOnly: true }),
+          });
+          if (cancelled) return;
+          replaceTrack({ ...next, ...res.track });
+          if (res.retryLater) {
+            tried.delete(albumKeyOf(next));
+            await sleep(RATE_LIMIT_PAUSE_MS);
+            continue;
+          }
+        } catch {
+          // Skip this album for now; it's retried next visit.
+        }
+        await sleep(ARTWORK_GAP_MS);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [loaded, replaceTrack]);
+
   const value = useMemo<Library>(() => {
-    const byId = new Map((merged ?? []).map((t) => [t.id, t]));
+    const byId = new Map((tracks ?? []).map((t) => [t.id, t]));
     const updateTrack = async (id: string, changes: Partial<Track>) => {
       const { track } = await apiFetch<{ track: Track }>(`/api/music/tracks/${id}`, {
         method: "PATCH",
@@ -75,17 +128,14 @@ export function LibraryProvider({ children }: { children: React.ReactNode }) {
       updatePlayingTrack(track);
     };
     return {
-      tracks: merged,
+      tracks,
       playlists,
       storageConfigured,
       byId,
       reload,
       reloadPlaylists,
       addTracks: (added) => setTracks((prev) => [...(prev ?? []), ...added]),
-      replaceTrack: (track) => {
-        setTracks((prev) => prev?.map((t) => (t.id === track.id ? { ...t, ...track } : t)) ?? prev);
-        updatePlayingTrack(track);
-      },
+      replaceTrack,
       updateTrack,
       removeTrack: async (id) => {
         await apiFetch(`/api/music/tracks/${id}`, { method: "DELETE" });
@@ -112,7 +162,7 @@ export function LibraryProvider({ children }: { children: React.ReactNode }) {
         reloadPlaylists();
       },
     };
-  }, [merged, playlists, storageConfigured, reload, reloadPlaylists, updatePlayingTrack]);
+  }, [tracks, playlists, storageConfigured, reload, reloadPlaylists, updatePlayingTrack, replaceTrack]);
 
   return <LibraryContext.Provider value={value}>{children}</LibraryContext.Provider>;
 }
