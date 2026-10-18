@@ -26,6 +26,10 @@ type PlayerState = {
   cycleRepeat: () => void;
   setVolume: (v: number) => void;
   updateTrack: (track: Track) => void;
+  /** Refreshes queued copies of songs (e.g. album art found for an album). */
+  updateTracks: (apply: (tracks: Track[]) => Track[]) => void;
+  /** Called with each song the player looks up on first play; returns an unsubscribe. */
+  onLookup: (listener: (track: Track) => void) => () => void;
 };
 
 const PlayerContext = createContext<PlayerState | null>(null);
@@ -148,6 +152,19 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
     setOriginal((q) => q.map((t) => (t.id === track.id ? track : t)));
   }, []);
 
+  const updateTracks = useCallback((apply: (tracks: Track[]) => Track[]) => {
+    setQueue(apply);
+    setOriginal(apply);
+  }, []);
+
+  const lookupListeners = useRef(new Set<(track: Track) => void>());
+  const onLookup = useCallback((listener: (track: Track) => void) => {
+    lookupListeners.current.add(listener);
+    return () => {
+      lookupListeners.current.delete(listener);
+    };
+  }, []);
+
   const value = useMemo<PlayerState>(
     () => ({
       queue,
@@ -178,8 +195,10 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
         if (audioRef.current) audioRef.current.volume = v;
       },
       updateTrack,
+      updateTracks,
+      onLookup,
     }),
-    [queue, index, current, playing, shuffle, repeat, volume, play, toggle, next, prev, seek, setShuffle, updateTrack],
+    [queue, index, current, playing, shuffle, repeat, volume, play, toggle, next, prev, seek, setShuffle, updateTrack, updateTracks, onLookup],
   );
   const progress = useMemo(() => ({ position, duration }), [position, duration]);
 
@@ -190,7 +209,11 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
     if (!current || current.enrichedAt || enrichingRef.current.has(current.id)) return;
     enrichingRef.current.add(current.id);
     apiFetch<{ track: Track }>(`/api/music/tracks/${current.id}/enrich`, { method: "POST", body: "{}" })
-      .then(({ track }) => updateTrack({ ...current, ...track }))
+      .then(({ track }) => {
+        const updated = { ...current, ...track };
+        updateTrack(updated);
+        lookupListeners.current.forEach((l) => l(updated));
+      })
       .catch(() => {});
   }, [current, updateTrack]);
 

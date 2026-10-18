@@ -57,12 +57,14 @@ function queryFor(t: TrackRow): TrackQuery {
   };
 }
 
-async function lookupItunes(q: TrackQuery): Promise<ItunesSong | null> {
+/** The best catalog match, null for no match, or undefined if Apple didn't answer (e.g. rate-limited). */
+async function lookupItunes(q: TrackQuery): Promise<ItunesSong | null | undefined> {
   const term = [q.artist, q.title].filter(Boolean).join(" ").replace(/[*]/g, "");
   const data = await getJson<{ results?: ItunesSong[] }>(
     `https://itunes.apple.com/search?${new URLSearchParams({ term, media: "music", entity: "song", limit: "15" })}`,
   );
-  return pickItunesMatch(data?.results ?? [], q);
+  if (!data) return undefined;
+  return pickItunesMatch(data.results ?? [], q);
 }
 
 /** Downloads cover art from Apple's CDN into our bucket; returns the object key. */
@@ -113,15 +115,24 @@ async function lookupCredits(q: TrackQuery) {
 
 const join = (xs: string[]) => (xs.length ? xs.join(", ") : null);
 
+export type EnrichOptions = {
+  credits?: boolean;
+  force?: boolean;
+  /** Background cover-art fill: art + release date only, and the song still gets its full lookup when played. */
+  artworkOnly?: boolean;
+};
+
 /**
  * Looks up artwork, release date and (optionally) credits for one track and
  * saves whatever was found. Album-level results (art, date) are shared with
  * the rest of the album so a library is filled in roughly one lookup per album.
+ * `retryLater` is set when Apple's catalog didn't answer (usually its rate limit).
  */
-export async function enrichTrack(userId: string, trackId: string, opts: { credits?: boolean; force?: boolean } = {}) {
+export async function enrichTrack(userId: string, trackId: string, opts: EnrichOptions = {}) {
   const track = await getUserTrack(userId, trackId);
   if (!track) return null;
-  if (track.enrichedAt && !opts.force) return track;
+  if (track.enrichedAt && !opts.force) return { row: track, retryLater: false };
+  if (opts.artworkOnly && track.external?.itunesChecked && !opts.force) return { row: track, retryLater: false };
 
   const q = queryFor(track);
   const external = { ...(track.external ?? {}) };
@@ -139,19 +150,33 @@ export async function enrichTrack(userId: string, trackId: string, opts: { credi
 
   // Reuse art / date already found for another song on the same album.
   if (sameAlbum && (!track.artworkKey || !track.releaseDate)) {
-    const [sibling] = await db
+    const siblings = await db
       .select({ artworkKey: musicTracks.artworkKey, releaseDate: musicTracks.releaseDate })
       .from(musicTracks)
-      .where(and(sameAlbum, ne(musicTracks.id, track.id), sql`${musicTracks.enrichedAt} is not null`))
-      .limit(1);
-    if (sibling?.artworkKey && !track.artworkKey) changes.artworkKey = sibling.artworkKey;
-    if (sibling?.releaseDate && !track.releaseDate) changes.releaseDate = sibling.releaseDate;
+      .where(
+        and(
+          sameAlbum,
+          ne(musicTracks.id, track.id),
+          or(sql`${musicTracks.artworkKey} is not null`, sql`${musicTracks.releaseDate} is not null`),
+        ),
+      )
+      .limit(10);
+    const art = siblings.find((s) => s.artworkKey)?.artworkKey;
+    const date = siblings.find((s) => s.releaseDate)?.releaseDate;
+    if (art && !track.artworkKey) changes.artworkKey = art;
+    if (date && !track.releaseDate) changes.releaseDate = date;
   }
 
+  let retryLater = false;
+  let itunesAnswered = false;
   const needsArt = !track.artworkKey && !changes.artworkKey;
   const needsDate = !track.releaseDate && !changes.releaseDate;
-  if (needsArt || needsDate || opts.force) {
+  // A song Apple already had no match for isn't asked again unless forced.
+  if ((needsArt || needsDate || opts.force) && (!external.itunesChecked || opts.force)) {
     const match = await lookupItunes(q);
+    retryLater = match === undefined;
+    itunesAnswered = match !== undefined;
+    if (itunesAnswered) external.itunesChecked = "1";
     if (match) {
       const date = parseReleaseDate(match.releaseDate);
       if (date && (needsDate || opts.force)) changes.releaseDate = date;
@@ -165,7 +190,7 @@ export async function enrichTrack(userId: string, trackId: string, opts: { credi
   }
   if (!track.year && changes.releaseDate) changes.year = Number(changes.releaseDate.slice(0, 4));
 
-  if (opts.credits !== false && (!track.composer || opts.force) && (!external.musicbrainzChecked || opts.force)) {
+  if (!opts.artworkOnly && opts.credits !== false && (!track.composer || opts.force) && (!external.musicbrainzChecked || opts.force)) {
     const credits = await lookupCredits(q);
     external.musicbrainzChecked = "1";
     if (credits) {
@@ -178,7 +203,7 @@ export async function enrichTrack(userId: string, trackId: string, opts: { credi
 
   await db
     .update(musicTracks)
-    .set({ ...changes, external, enrichedAt: new Date() })
+    .set({ ...changes, external, ...(opts.artworkOnly ? {} : { enrichedAt: new Date() }) })
     .where(and(eq(musicTracks.id, track.id), eq(musicTracks.userId, userId)));
 
   // Share newly found album art with album-mates that have none.
@@ -188,7 +213,15 @@ export async function enrichTrack(userId: string, trackId: string, opts: { credi
   if (sameAlbum && changes.releaseDate) {
     await db.update(musicTracks).set({ releaseDate: changes.releaseDate }).where(and(sameAlbum, isNull(musicTracks.releaseDate)));
   }
-  return getUserTrack(userId, trackId);
+  // Apple had nothing for this album: don't ask again for each of its songs.
+  if (sameAlbum && itunesAnswered && !changes.artworkKey && needsArt) {
+    await db
+      .update(musicTracks)
+      .set({ external: sql`coalesce(${musicTracks.external}, '{}'::jsonb) || '{"itunesChecked":"1"}'::jsonb` })
+      .where(and(sameAlbum, isNull(musicTracks.artworkKey)));
+  }
+  const row = await getUserTrack(userId, trackId);
+  return row ? { row, retryLater } : null;
 }
 
 export type LyricsResult = { plain: string | null; synced: string | null; source: "embedded" | "lrclib" | null; instrumental: boolean };

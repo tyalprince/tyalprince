@@ -12,10 +12,11 @@ import {
   type ImportEvent,
   type SortedSelection,
 } from "@/lib/music/importer";
+import { DuplicateIndex } from "@/lib/music/duplicates";
 import { formatBytes, type Track } from "@/lib/music/types";
 
-type Stats = { done: number; added: number; exists: number; failed: number; unsupported: number; bytes: number };
-const EMPTY: Stats = { done: 0, added: 0, exists: 0, failed: 0, unsupported: 0, bytes: 0 };
+type Stats = { done: number; added: number; exists: number; duplicate: number; failed: number; unsupported: number; bytes: number };
+const EMPTY: Stats = { done: 0, added: 0, exists: 0, duplicate: 0, failed: 0, unsupported: 0, bytes: 0 };
 
 
 function eta(seconds: number) {
@@ -35,6 +36,8 @@ export function ImportPanel() {
   const [stats, setStats] = useState<Stats>(EMPTY);
   const [current, setCurrent] = useState<string[]>([]);
   const [failures, setFailures] = useState<{ path: string; error: string }[]>([]);
+  const [skipDuplicates, setSkipDuplicates] = useState(true);
+  const [skipped, setSkipped] = useState<{ path: string; duplicateOf: string }[]>([]);
   const [startedAt, setStartedAt] = useState(0);
   const [now, setNow] = useState(0);
 
@@ -65,6 +68,7 @@ export function ImportPanel() {
     setSelection(sortSelection([...list], known));
     setStats(EMPTY);
     setFailures([]);
+    setSkipped([]);
     setState("idle");
   }
 
@@ -75,7 +79,7 @@ export function ImportPanel() {
     }
   }
 
-  async function start(files: File[]) {
+  async function start(files: File[], checkDuplicates = skipDuplicates) {
     setState("running");
     setStartedAt(Date.now());
     setNow(Date.now());
@@ -93,11 +97,12 @@ export function ImportPanel() {
         [e.outcome]: s[e.outcome] + 1,
       }));
       if (e.outcome === "failed") setFailures((f) => [...f, { path, error: e.error ?? "Unknown error" }]);
+      if (e.outcome === "duplicate") setSkipped((d) => [...d, { path, duplicateOf: e.duplicateOf ?? "" }]);
       if (e.track) {
         pending.current.push(e.track);
         if (pending.current.length >= 20) flushAdded();
       }
-    });
+    }, checkDuplicates ? new DuplicateIndex(library.tracks ?? []) : null);
     importer.current = runner;
     await runner.run(files);
     flushAdded();
@@ -172,10 +177,24 @@ export function ImportPanel() {
           </div>
 
           {state === "idle" && total > 0 && (
-            <Button onClick={() => start(selection.audio)}>
-              <Play className="h-4 w-4" />
-              Start import
-            </Button>
+            <div className="space-y-2">
+              <label className="flex items-start gap-2 text-xs text-neutral-600 dark:text-neutral-400">
+                <input
+                  type="checkbox"
+                  className="mt-0.5"
+                  checked={skipDuplicates}
+                  onChange={(e) => setSkipDuplicates(e.target.checked)}
+                />
+                <span>
+                  Skip likely duplicates automatically — same song and artist with the same length, even if the file
+                  name, album or tags differ. You&apos;ll see a list afterwards.
+                </span>
+              </label>
+              <Button onClick={() => start(selection.audio)}>
+                <Play className="h-4 w-4" />
+                Start import
+              </Button>
+            </div>
           )}
 
           {state !== "idle" && (
@@ -192,6 +211,7 @@ export function ImportPanel() {
               <p className="text-xs">
                 <span className="text-emerald-600">{stats.added} added</span> ·{" "}
                 <span>{stats.exists} already in library</span>
+                {stats.duplicate > 0 && <> · {stats.duplicate} duplicates skipped</>}
                 {stats.unsupported > 0 && <> · {stats.unsupported} unsupported</>}
                 {stats.failed > 0 && <span className="text-red-600"> · {stats.failed} failed</span>}
               </p>
@@ -227,6 +247,34 @@ export function ImportPanel() {
                   <CheckCircle2 className="h-4 w-4" />
                   {stats.done < total ? "Import stopped." : "Import finished."} {stats.added} songs added.
                 </p>
+              )}
+              {skipped.length > 0 && !busy && (
+                <div className="space-y-2">
+                  <details className="text-xs">
+                    <summary className="cursor-pointer text-neutral-600 dark:text-neutral-400">
+                      {skipped.length.toLocaleString()} likely duplicates skipped — see which
+                    </summary>
+                    <ul className="mt-1 max-h-48 space-y-0.5 overflow-y-auto text-neutral-500">
+                      {skipped.slice(0, 500).map((d) => (
+                        <li key={d.path}>
+                          <span className="font-mono">{d.path}</span> → same as {d.duplicateOf}
+                        </li>
+                      ))}
+                    </ul>
+                  </details>
+                  <Button
+                    variant="secondary"
+                    onClick={() => {
+                      const paths = new Set(skipped.map((d) => d.path));
+                      setSkipped([]);
+                      setFailures([]);
+                      setStats(EMPTY);
+                      start(selection.audio.filter((f) => paths.has(pathOf(f))), false);
+                    }}
+                  >
+                    Import these anyway
+                  </Button>
+                </div>
               )}
               {failures.length > 0 && !busy && (
                 <div className="space-y-2">

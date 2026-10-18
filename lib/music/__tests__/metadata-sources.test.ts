@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { albumKeyOf, applyLookup, nextArtworkCandidate } from "@/lib/music/album-art";
+import type { Track } from "@/lib/music/types";
 import {
   activeLyricIndex,
   creditsFrom,
@@ -117,5 +119,44 @@ describe("lyrics", () => {
       q,
     );
     expect(pick?.syncedLyrics).toBe("[00:01.00] x");
+  });
+});
+
+describe("album art sharing", () => {
+  const base = {
+    id: "a",
+    title: "Song",
+    artist: "*NSYNC",
+    albumArtist: null,
+    album: "*NSYNC",
+    artworkKey: null,
+    releaseDate: null,
+    enrichedAt: null,
+    external: null,
+  } as unknown as Track;
+  const t = (over: Partial<Track>) => ({ ...base, ...over }) as Track;
+
+  it("gives a found cover and date to album-mates only", () => {
+    const list = [t({ id: "a" }), t({ id: "b" }), t({ id: "c", album: "Other" }), t({ id: "d", artist: "112" })];
+    const out = applyLookup(list, t({ id: "a", artworkKey: "art.jpg", releaseDate: "1997-05-26" }));
+    expect(out.map((x) => x.artworkKey)).toEqual(["art.jpg", "art.jpg", null, null]);
+    expect(out[1].releaseDate).toBe("1997-05-26");
+    expect(out[2]).toBe(list[2]);
+  });
+
+  it("returns the same array when nothing changes", () => {
+    const list = [t({ id: "x", album: "Elsewhere" })];
+    expect(applyLookup(list, t({ id: "a", artworkKey: "art.jpg" }))).toBe(list);
+  });
+
+  it("picks one song per album that still needs art", () => {
+    const list = [t({ id: "a", artworkKey: "k" }), t({ id: "b" }), t({ id: "c" }), t({ id: "d", album: "Two" })];
+    const tried = new Set<string>();
+    const first = nextArtworkCandidate(list, tried)!;
+    expect(first.id).toBe("b");
+    tried.add(albumKeyOf(first));
+    expect(nextArtworkCandidate(list, tried)!.id).toBe("d");
+    tried.add(albumKeyOf(list[3]));
+    expect(nextArtworkCandidate(list, tried)).toBeNull();
   });
 });
