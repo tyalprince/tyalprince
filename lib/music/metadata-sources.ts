@@ -201,26 +201,27 @@ export function mbFirstReleaseDate(recordings: MbRecording[], q: TrackQuery): st
   return earliest;
 }
 
-/** A file year this close before MusicBrainz's date means MusicBrainz is missing the original release. */
-const TAG_TRUST_YEARS = 3;
-
 /**
- * Release date to show: MusicBrainz's original date when known (unless the
- * file's year is slightly earlier — MusicBrainz then only knows a later
- * compilation; a big gap means the file's year is the wrong one); otherwise
- * the earlier of the catalog date and the file's year, so a reissue or
- * remaster never makes an old song look new.
+ * Release date to show: the earliest of MusicBrainz's original date, the
+ * catalog date and the file's year. A song can't come out after its earliest
+ * known release, and reissues, remasters, live versions and compilations only
+ * ever carry later dates — so the earliest is the original.
  */
 export function chooseReleaseDate(opts: { musicbrainz?: string | null; catalog?: string | null; tagYear?: number | null }): string | null {
   const tag = opts.tagYear && opts.tagYear >= 1000 && opts.tagYear <= 3000 ? String(opts.tagYear) : null;
-  if (opts.musicbrainz) {
-    const gap = tag ? Number(opts.musicbrainz.slice(0, 4)) - Number(tag) : 0;
-    return gap > 0 && gap <= TAG_TRUST_YEARS ? tag : opts.musicbrainz;
+  let best: string | null = null;
+  for (const d of [opts.musicbrainz, opts.catalog, tag]) {
+    if (!d) continue;
+    // Same year: keep the more precise date ("1983-06-01" over "1983").
+    if (!best || d.slice(0, 4) < best.slice(0, 4) || (d.slice(0, 4) === best.slice(0, 4) && d.length > best.length)) best = d;
   }
-  const catalog = opts.catalog ?? null;
-  if (!catalog) return tag;
-  if (!tag) return catalog;
-  return Number(catalog.slice(0, 4)) <= Number(tag) ? catalog : tag;
+  return best;
+}
+
+/** Whether a catalog result's album is the album in the user's file (so its cover is the right cover). */
+export function sameAlbumTitle(catalogAlbum: string | null | undefined, fileAlbum: string | null | undefined): boolean {
+  if (!catalogAlbum || !fileAlbum) return false;
+  return normalizeTitle(catalogAlbum) === normalizeTitle(fileAlbum) || titlesMatch(catalogAlbum, fileAlbum);
 }
 
 export type Credits = { composer: string[]; lyricist: string[]; producer: string[] };

@@ -1,10 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { albumKeyOf, applyLookup, nextArtworkCandidate } from "@/lib/music/album-art";
+import { albumKeyOf, applyArtRecheck, applyLookup, nextArtRecheckCandidate, nextArtworkCandidate } from "@/lib/music/album-art";
 import type { Track } from "@/lib/music/types";
 import {
   activeLyricIndex,
   chooseReleaseDate,
   mbFirstReleaseDate,
+  sameAlbumTitle,
   creditsFrom,
   isAllowedArtworkHost,
   itunesArtworkUrl,
@@ -205,14 +206,36 @@ describe("release dates", () => {
     expect(mbFirstReleaseDate([], q)).toBeNull();
   });
 
-  it("never lets a reissue date make a song newer than its file says", () => {
+  it("uses the earliest known release, so reissues and live versions can't win", () => {
     expect(chooseReleaseDate({ catalog: "2024-07-26", tagYear: 1983 })).toBe("1983");
     expect(chooseReleaseDate({ catalog: "1983-06-01", tagYear: 2005 })).toBe("1983-06-01");
-    expect(chooseReleaseDate({ musicbrainz: "1987-08-31", catalog: "2012-01-01", tagYear: 1970 })).toBe("1987-08-31");
-    // MusicBrainz only knows a later compilation: a slightly earlier file year wins.
-    expect(chooseReleaseDate({ musicbrainz: "1986-11-05", catalog: "2024-07-26", tagYear: 1983 })).toBe("1983");
-    expect(chooseReleaseDate({ musicbrainz: "1983-05-20", tagYear: 1986 })).toBe("1983-05-20");
     expect(chooseReleaseDate({ catalog: null, tagYear: 1999 })).toBe("1999");
     expect(chooseReleaseDate({ catalog: "2024-01-26", tagYear: null })).toBe("2024-01-26");
+    // MusicBrainz only knows a later live/compilation release: the file's year still wins.
+    expect(chooseReleaseDate({ musicbrainz: "2020-04-21", catalog: "2020-04-21", tagYear: 2006 })).toBe("2006");
+    expect(chooseReleaseDate({ musicbrainz: "1986-11-05", catalog: "2024-07-26", tagYear: 1983 })).toBe("1983");
+    // The file's year is a compilation year: the earlier original wins.
+    expect(chooseReleaseDate({ musicbrainz: "1983-09-12", tagYear: 1999 })).toBe("1983-09-12");
+    expect(chooseReleaseDate({ musicbrainz: "1983", catalog: "1983-06-01" })).toBe("1983-06-01");
+  });
+
+  it("only trusts a catalog cover when it's from the file's album", () => {
+    expect(sameAlbumTitle("Synchronicity (Remastered)", "Synchronicity")).toBe(true);
+    expect(sameAlbumTitle("Essence Music Vol. 8", "Luvanmusiq")).toBe(false);
+    expect(sameAlbumTitle("Luvanmusiq", null)).toBe(false);
+  });
+});
+
+describe("cover re-check", () => {
+  const base = { id: "a", title: "Teach Me", artist: "Musiq Soulchild", albumArtist: null, album: "Luvanmusiq", artworkKey: "old", external: { artRecheck: "1" } } as unknown as Track;
+  const t = (over: Partial<Track>) => ({ ...base, ...over }) as Track;
+
+  it("picks one flagged song per album and applies the checked cover to its album", () => {
+    const list = [t({ id: "a" }), t({ id: "b" }), t({ id: "c", album: "Other", external: null })];
+    expect(nextArtRecheckCandidate(list, new Set())?.id).toBe("a");
+    const out = applyArtRecheck(list, t({ id: "a", artworkKey: "new", external: {} }));
+    expect(out.map((x) => x.artworkKey)).toEqual(["new", "new", "old"]);
+    expect(out[1].external?.artRecheck).toBeUndefined();
+    expect(out[2]).toBe(list[2]);
   });
 });
