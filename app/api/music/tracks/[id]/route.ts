@@ -19,7 +19,7 @@ export const PATCH = withApiErrors(async (req: Request, { params }: Params) => {
   // A year typed in by the user wins over looked-up dates, and stays put.
   if (typeof body.year === "number") {
     changes.releaseDate = sql`case when left(coalesce(${musicTracks.releaseDate}, ''), 4) = ${String(body.year)} then ${musicTracks.releaseDate} else ${String(body.year)} end`;
-    changes.external = sql`coalesce(${musicTracks.external}, '{}'::jsonb) || '{"yearFromUser":"1","mbDateChecked":"1"}'::jsonb`;
+    changes.external = sql`coalesce(${musicTracks.external}, '{}'::jsonb) || '{"yearFromUser":"1","yearSource":"edit","mbDateChecked":"1"}'::jsonb`;
   }
   const [track] = await db
     .update(musicTracks)

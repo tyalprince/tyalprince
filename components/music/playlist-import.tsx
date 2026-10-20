@@ -130,7 +130,8 @@ export function PlaylistImport() {
               <input type="checkbox" className="mt-0.5" checked={useYears} onChange={(e) => setUseYears(e.target.checked)} />
               <span>
                 <span className="font-medium">Use my {plural(yearPlaylists.length, "year playlist")} to set song years</span> —{" "}
-                {plural(years.size, "song")} matched. Your years win over looked-up dates and won&apos;t be changed automatically.
+                {plural(years.size, "song")} matched. A song only moves earlier, never later (Apple&apos;s year can be a
+                re-release year), and years you fixed with Edit or Refresh details are kept.
               </span>
             </label>
           )}
