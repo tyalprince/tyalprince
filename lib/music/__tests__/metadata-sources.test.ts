@@ -209,6 +209,9 @@ describe("release dates", () => {
     expect(chooseReleaseDate({ catalog: "2024-07-26", tagYear: 1983 })).toBe("1983");
     expect(chooseReleaseDate({ catalog: "1983-06-01", tagYear: 2005 })).toBe("1983-06-01");
     expect(chooseReleaseDate({ musicbrainz: "1987-08-31", catalog: "2012-01-01", tagYear: 1970 })).toBe("1987-08-31");
+    // MusicBrainz only knows a later compilation: a slightly earlier file year wins.
+    expect(chooseReleaseDate({ musicbrainz: "1986-11-05", catalog: "2024-07-26", tagYear: 1983 })).toBe("1983");
+    expect(chooseReleaseDate({ musicbrainz: "1983-05-20", tagYear: 1986 })).toBe("1983-05-20");
     expect(chooseReleaseDate({ catalog: null, tagYear: 1999 })).toBe("1999");
     expect(chooseReleaseDate({ catalog: "2024-01-26", tagYear: null })).toBe("2024-01-26");
   });
