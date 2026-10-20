@@ -131,9 +131,11 @@ first time they're played, or in bulk from Music → Import. While the Music
 tab is open, cover art is also filled in the background, one song per album
 that has none, paced for Apple's ~20 searches/minute; when a song's title
 isn't found the album is searched instead. Release dates
-are the song's *original* date: MusicBrainz's `first-release-date` when
-known, otherwise the earlier of the catalog date and the file's year tag (so
-remasters, alternate mixes and compilations can't make an old song look new);
+are the song's *original* date: the earliest of MusicBrainz's
+`first-release-date`, the catalog date and the file's year tag (reissues,
+remasters, live versions and compilations only carry later dates). Catalog
+covers are only taken from the file's own album; otherwise the album is
+searched by name, and older covers are re-checked the same way;
 every song is re-checked in the background, ~1 request/second.
 Migration
 `drizzle/0003_music_details.sql` adds the columns.

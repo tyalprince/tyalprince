@@ -12,6 +12,7 @@ import {
   chooseReleaseDate,
   mbFirstReleaseDate,
   pickItunesAlbum,
+  sameAlbumTitle,
   pickItunesMatch,
   pickLrclib,
   pickMbRecording,
@@ -204,7 +205,10 @@ export async function enrichTrack(userId: string, trackId: string, opts: EnrichO
       if (date && (needsDate || opts.force)) changes.releaseDate = date;
       if (!track.genre && match.primaryGenreName) changes.genre = match.primaryGenreName;
       if (match.trackViewUrl) external.appleMusicUrl = match.trackViewUrl;
-      if (needsArt && match.artworkUrl100) {
+      if (match.collectionName) external.itunesAlbum = match.collectionName.slice(0, 200);
+      // Only the cover of the file's own album (not a compilation or live album the song is also on);
+      // otherwise the album search below finds the right one.
+      if (needsArt && match.artworkUrl100 && (!track.album || sameAlbumTitle(match.collectionName, track.album))) {
         const key = await storeArtwork(userId, match.artworkUrl100);
         if (key) changes.artworkKey = key;
       }
@@ -233,7 +237,13 @@ export async function enrichTrack(userId: string, trackId: string, opts: EnrichO
     if (credits) {
       external.musicbrainzChecked = "1";
       external.mbDateChecked = "1";
-      if (credits.firstReleaseDate) changes.releaseDate = chooseReleaseDate({ musicbrainz: credits.firstReleaseDate, tagYear: track.year });
+      if (credits.firstReleaseDate) {
+        changes.releaseDate = chooseReleaseDate({
+          musicbrainz: credits.firstReleaseDate,
+          catalog: changes.releaseDate ?? track.releaseDate,
+          tagYear: track.year,
+        });
+      }
       if (credits.recordingId) external.musicbrainzRecordingId = credits.recordingId;
       if (credits.composer.length && !track.composer) changes.composer = join(credits.composer);
       if (credits.lyricist.length && !track.lyricist) changes.lyricist = join(credits.lyricist);
@@ -285,6 +295,44 @@ export async function verifyReleaseDate(userId: string, trackId: string) {
     .update(musicTracks)
     .set({ releaseDate, external: { ...(track.external ?? {}), mbDateChecked: "1" } })
     .where(and(eq(musicTracks.id, track.id), eq(musicTracks.userId, userId)));
+  const row = await getUserTrack(userId, trackId);
+  return row ? { row, retryLater: false } : null;
+}
+
+/**
+ * Re-checks a cover that came from the old song-level lookup (which could pick
+ * a compilation or live album's art): searches the file's album by name and
+ * artist and, only if found, replaces the cover for the album's flagged songs.
+ * The existing cover is kept when the album isn't in the catalog.
+ */
+export async function recheckArtwork(userId: string, trackId: string) {
+  const track = await getUserTrack(userId, trackId);
+  if (!track) return null;
+  const clearFlag = sql`${musicTracks.external} - 'artRecheck'`;
+  const albumArtist = track.albumArtist || track.artist;
+  const sameAlbum = track.album
+    ? and(
+        eq(musicTracks.userId, userId),
+        eq(musicTracks.album, track.album),
+        albumArtist
+          ? or(eq(musicTracks.albumArtist, albumArtist), and(isNull(musicTracks.albumArtist), eq(musicTracks.artist, albumArtist)))
+          : sql`true`,
+      )
+    : and(eq(musicTracks.userId, userId), eq(musicTracks.id, track.id));
+
+  if (track.album && track.external?.artRecheck) {
+    const artist = albumArtist && !/various/i.test(albumArtist) ? albumArtist : null;
+    const album = await lookupItunesAlbum(track.album, artist);
+    if (album === undefined) return { row: track, retryLater: true };
+    const key = album?.artworkUrl100 ? await storeArtwork(userId, album.artworkUrl100) : null;
+    if (key) {
+      await db
+        .update(musicTracks)
+        .set({ artworkKey: key, external: clearFlag })
+        .where(and(sameAlbum, sql`${musicTracks.external} ? 'artRecheck'`));
+    }
+  }
+  await db.update(musicTracks).set({ external: clearFlag }).where(sameAlbum);
   const row = await getUserTrack(userId, trackId);
   return row ? { row, retryLater: false } : null;
 }

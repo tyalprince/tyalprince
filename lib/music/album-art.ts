@@ -66,3 +66,24 @@ export function nextDateCandidate(tracks: Track[], tried: Set<string>): Track | 
   }
   return fallback;
 }
+
+/** Next song (one per album) whose cover is flagged for a re-check against its album. */
+export function nextArtRecheckCandidate(tracks: Track[], tried: Set<string>): Track | null {
+  for (const t of tracks) {
+    if (!t.external?.artRecheck || tried.has(albumKeyOf(t))) continue;
+    return t;
+  }
+  return null;
+}
+
+/** After a cover re-check: the album's flagged songs take the checked cover, and the flags clear. */
+export function applyArtRecheck(tracks: Track[], updated: Track): Track[] {
+  const next = tracks.map((t) => {
+    if (t.id === updated.id) return { ...t, ...updated };
+    if (!sameAlbum(updated, t) || !t.external?.artRecheck) return t;
+    const rest = { ...t.external };
+    delete rest.artRecheck;
+    return { ...t, artworkKey: updated.artworkKey ?? t.artworkKey, external: rest };
+  });
+  return next.some((t, i) => t !== tracks[i]) ? next : tracks;
+}

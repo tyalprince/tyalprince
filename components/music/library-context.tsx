@@ -3,7 +3,14 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { apiFetch } from "@/lib/api-client";
 import { usePlayer } from "./player-context";
-import { albumKeyOf, applyLookup, nextArtworkCandidate, nextDateCandidate } from "@/lib/music/album-art";
+import {
+  albumKeyOf,
+  applyArtRecheck,
+  applyLookup,
+  nextArtRecheckCandidate,
+  nextArtworkCandidate,
+  nextDateCandidate,
+} from "@/lib/music/album-art";
 import type { PlaylistSummary, Track } from "@/lib/music/types";
 
 // Apple's catalog allows roughly 20 searches a minute, and a lookup can take
@@ -78,6 +85,14 @@ export function LibraryProvider({ children }: { children: React.ReactNode }) {
     [updateQueuedTracks],
   );
 
+  const applyRecheck = useCallback(
+    (track: Track) => {
+      setTracks((prev) => (prev ? applyArtRecheck(prev, track) : prev));
+      updateQueuedTracks((queue) => applyArtRecheck(queue, track));
+    },
+    [updateQueuedTracks],
+  );
+
   // Songs looked up by the player on first play.
   useEffect(() => onLookup(replaceTrack), [onLookup, replaceTrack]);
 
@@ -96,16 +111,19 @@ export function LibraryProvider({ children }: { children: React.ReactNode }) {
     (async () => {
       await sleep(2000);
       while (!cancelled) {
-        const next = nextArtworkCandidate(latest.current ?? [], tried);
+        // Missing covers first, then covers flagged for a re-check against their album.
+        const missing = nextArtworkCandidate(latest.current ?? [], tried);
+        const next = missing ?? nextArtRecheckCandidate(latest.current ?? [], tried);
         if (!next) return;
         tried.add(albumKeyOf(next));
         try {
-          const res = await apiFetch<{ track: Track; retryLater?: boolean }>(`/api/music/tracks/${next.id}/enrich`, {
-            method: "POST",
-            body: JSON.stringify({ artworkOnly: true }),
-          });
+          const res = await apiFetch<{ track: Track; retryLater?: boolean }>(
+            missing ? `/api/music/tracks/${next.id}/enrich` : `/api/music/tracks/${next.id}/artwork-check`,
+            missing ? { method: "POST", body: JSON.stringify({ artworkOnly: true }) } : { method: "POST" },
+          );
           if (cancelled) return;
-          replaceTrack({ ...next, ...res.track });
+          if (missing) replaceTrack({ ...next, ...res.track });
+          else if (!res.retryLater) applyRecheck({ ...next, ...res.track });
           if (res.retryLater) {
             tried.delete(albumKeyOf(next));
             await sleep(RATE_LIMIT_PAUSE_MS);
@@ -120,7 +138,7 @@ export function LibraryProvider({ children }: { children: React.ReactNode }) {
     return () => {
       cancelled = true;
     };
-  }, [loaded, replaceTrack]);
+  }, [loaded, replaceTrack, applyRecheck]);
 
   // Background release-date check: each song's original release date from
   // MusicBrainz, so remasters and compilations don't make old songs look new.
