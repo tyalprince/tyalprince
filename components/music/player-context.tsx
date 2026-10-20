@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { apiFetch } from "@/lib/api-client";
-import { artworkUrl, displayArtist, streamUrl, type Track } from "@/lib/music/types";
+import { displayArtist, trackArtworkUrl, trackAudioUrl, type Track } from "@/lib/music/types";
 
 type Repeat = "off" | "all" | "one";
 
@@ -81,7 +81,7 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
     if (!audio || !current) return;
     if (audio.dataset.trackId !== current.id) {
       audio.dataset.trackId = current.id;
-      audio.src = streamUrl(current.id);
+      audio.src = trackAudioUrl(current);
       countedRef.current = null;
       audio.play().catch(() => setPlaying(false));
     }
@@ -206,7 +206,7 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
   // release date and credits in the background, then refresh it everywhere.
   const enrichingRef = useRef(new Set<string>());
   useEffect(() => {
-    if (!current || current.enrichedAt || enrichingRef.current.has(current.id)) return;
+    if (!current || current.remote || current.enrichedAt || enrichingRef.current.has(current.id)) return;
     enrichingRef.current.add(current.id);
     apiFetch<{ track: Track }>(`/api/music/tracks/${current.id}/enrich`, { method: "POST", body: "{}" })
       .then(({ track }) => {
@@ -220,7 +220,7 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
   // Lock-screen / headphone controls and metadata.
   useEffect(() => {
     if (!("mediaSession" in navigator) || !current) return;
-    const art = artworkUrl(current.artworkKey);
+    const art = trackArtworkUrl(current);
     navigator.mediaSession.metadata = new MediaMetadata({
       title: current.title,
       artist: displayArtist(current),
@@ -256,7 +256,7 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
           const t = e.currentTarget.currentTime;
           setPosition(t);
           // Count a play after 30s (or half of a short track), once per load.
-          if (current && countedRef.current !== current.id && (t > 30 || t > (e.currentTarget.duration || 60) / 2)) {
+          if (current && !current.remote && countedRef.current !== current.id && (t > 30 || t > (e.currentTarget.duration || 60) / 2)) {
             countedRef.current = current.id;
             apiFetch(`/api/music/tracks/${current.id}/play`, { method: "POST" }).catch(() => {});
           }

@@ -23,13 +23,14 @@ import { FilterBar } from "./filter-bar";
 import { applyFilters, groupByYear, NO_FILTERS, trackYear, type SongFilters, type YearGroup } from "@/lib/music/facets";
 import { PlaylistList, PlaylistView } from "./playlists";
 import { Mixes } from "./mixes";
+import { Explore } from "./explore";
 import { ImportPanel } from "./import-panel";
 import { DetailsPanel } from "./details-panel";
 import { DuplicatesPanel } from "./duplicates-panel";
 import { MissingReportPanel } from "./missing-report";
 import { formatBytes, type PlaylistSummary, type Track } from "@/lib/music/types";
 
-const TABS = ["songs", "albums", "artists", "years", "playlists", "mixes", "import"] as const;
+const TABS = ["songs", "albums", "artists", "years", "playlists", "mixes", "explore", "import"] as const;
 type Tab = (typeof TABS)[number];
 type Sort = "title" | "artist" | "recent" | "plays" | "rating" | "year";
 
@@ -151,6 +152,9 @@ function MusicInner() {
         break;
       case "mixes":
         body = <Mixes key={mixSeed?.id ?? "none"} initialSeed={mixSeed} onDetails={setDetails} />;
+        break;
+      case "explore":
+        body = <Explore />;
         break;
       case "import":
         body = null; // rendered below and kept mounted so an import survives tab switches

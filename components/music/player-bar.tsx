@@ -18,12 +18,12 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { usePlayer, usePlayerProgress } from "./player-context";
-import { artworkUrl, displayArtist, formatReleaseDate, formatTime, type Track } from "@/lib/music/types";
+import { trackArtworkUrl, displayArtist, formatReleaseDate, formatTime, type Track } from "@/lib/music/types";
 import { CreditsList, LyricsView } from "./song-info";
 import { keyLabel } from "@/lib/music/analysis";
 
-export function Artwork({ track, className }: { track: Pick<Track, "artworkKey" | "album"> | null; className?: string }) {
-  const url = track ? artworkUrl(track.artworkKey) : null;
+export function Artwork({ track, className }: { track: Pick<Track, "artworkKey" | "album" | "remote"> | null; className?: string }) {
+  const url = track ? trackArtworkUrl(track) : null;
   return (
     <div
       className={cn(

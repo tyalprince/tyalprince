@@ -35,7 +35,20 @@ export type Track = {
   skipCount: number;
   /** When it entered the library in iTunes (null if added here). */
   addedAt: string | null;
+  /** Set for songs streamed from an online catalog (Explore) rather than the user's library. */
+  remote?: RemoteTrack;
   createdAt: string;
+};
+
+export type RemoteTrack = {
+  source: "jamendo";
+  jamendoId: string;
+  audioUrl: string;
+  imageUrl: string | null;
+  pageUrl: string | null;
+  license: string | null;
+  licenseUrl: string | null;
+  downloadable: boolean;
 };
 
 export type PlaylistSummary = {
@@ -57,6 +70,16 @@ export function artworkUrl(artworkKey: string | null): string | null {
 
 export function streamUrl(trackId: string): string {
   return `/api/music/tracks/${trackId}/stream`;
+}
+
+/** Cover image for any track: the library's stored art, or the catalog's image for Explore songs. */
+export function trackArtworkUrl(t: Pick<Track, "artworkKey" | "remote">): string | null {
+  return t.remote?.imageUrl ?? artworkUrl(t.artworkKey);
+}
+
+/** Where the player loads a track's audio from. */
+export function trackAudioUrl(t: Pick<Track, "id" | "remote">): string {
+  return t.remote?.audioUrl || streamUrl(t.id);
 }
 
 export function formatTime(seconds: number | string | null | undefined): string {

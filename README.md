@@ -153,6 +153,15 @@ songs (→ liked) and playlists over to the matching songs (`POST
 (tracked in `imported_play_count`) and updates playlists it created.
 Migration `drizzle/0004_itunes_stats.sql` adds the columns.
 
+**Explore** (`lib/music/jamendo*.ts`, `components/music/explore.tsx`): free,
+Creative Commons-licensed music from independent artists on
+[Jamendo](https://www.jamendo.com) — trending, new releases, genres and
+search, streamed straight from Jamendo. Songs whose artists allow downloads
+can be saved into the library (`POST /api/music/explore/save` copies the MP3
+and cover into the bucket). Needs a free Jamendo API client id
+(devportal.jamendo.com) in `JAMENDO_CLIENT_ID`; the tab shows setup steps
+until it's set. Jamendo's free API tier is for non-commercial use.
+
 **Browsing**: a Years tab (decades → years), and multi-select filters on
 Songs for decade, year, genre, artist and minimum rating
 (`lib/music/facets.ts`).
