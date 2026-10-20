@@ -78,12 +78,16 @@ export const updateTrackSchema = z.object({
 export const playlistSchema = z.object({
   name: z.string().trim().min(1).max(200),
   description: z.string().max(1000).nullable().optional(),
-  kind: z.enum(["manual", "generated"]).default("manual"),
+  kind: z.enum(["manual", "generated", "history"]).default("manual"),
   recipe: z.record(z.string(), z.unknown()).nullable().optional(),
   trackIds: z.array(z.uuid()).max(5000).default([]),
 });
 
-export const updatePlaylistSchema = playlistSchema.partial().omit({ kind: true });
+export const updatePlaylistSchema = playlistSchema
+  .partial()
+  .omit({ kind: true })
+  // Saving a mix from history turns it into a regular generated playlist.
+  .extend({ kind: z.enum(["manual", "generated"]).optional() });
 
 /** Ratings, plays etc. carried over from an iTunes library export, matched to tracks by the client. */
 export const itunesStatsSchema = z.object({

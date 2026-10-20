@@ -27,6 +27,7 @@ export const PATCH = withApiErrors(async (req: Request, { params }: Params) => {
       ...(body.name !== undefined ? { name: body.name } : {}),
       ...(body.description !== undefined ? { description: body.description } : {}),
       ...(body.recipe !== undefined ? { recipe: body.recipe } : {}),
+      ...(body.kind !== undefined ? { kind: body.kind } : {}),
       updatedAt: new Date(),
     })
     .where(and(eq(musicPlaylists.id, id), eq(musicPlaylists.userId, userId)))

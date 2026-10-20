@@ -38,6 +38,7 @@ export function AiMix({ count, onDetails }: { count: number; onDetails: (t: Trac
   const [lastPrompt, setLastPrompt] = useState("");
   const [name, setName] = useState("");
   const [saved, setSaved] = useState(false);
+  const [historyId, setHistoryId] = useState<string | null>(null);
 
   useEffect(() => {
     apiFetch<{ configured: boolean }>("/api/music/ai-mix")
@@ -58,6 +59,18 @@ export function AiMix({ count, onDetails }: { count: number; onDetails: (t: Trac
       setResult(r);
       setName(r.name);
       setLastPrompt(request);
+      setHistoryId(null);
+      // Keep every AI mix in history so it can be found again later.
+      library
+        .createPlaylist({
+          name: r.name,
+          description: r.description,
+          trackIds: r.trackIds,
+          kind: "history",
+          recipe: { source: "ai", prompt: request },
+        })
+        .then((p) => setHistoryId(p.id))
+        .catch(() => {});
     } catch (err) {
       setError(err instanceof Error ? err.message : "Couldn't make that playlist.");
     } finally {
@@ -67,6 +80,11 @@ export function AiMix({ count, onDetails }: { count: number; onDetails: (t: Trac
 
   async function save() {
     if (!tracks.length) return;
+    if (historyId) {
+      await library.keepMix(historyId, name.trim() || result?.name);
+      setSaved(true);
+      return;
+    }
     await library.createPlaylist({
       name: name.trim() || result?.name || "AI mix",
       description: result?.description,

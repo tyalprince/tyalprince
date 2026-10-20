@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Check, Play, RefreshCw, Save, Search, Sparkles, X } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Check, History, Play, RefreshCw, Save, Search, Sparkles, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,7 +12,7 @@ import { TrackList } from "./track-list";
 import { AiMix } from "./ai-mix";
 import { MOODS, totalDurationSeconds, type MoodKey } from "@/lib/music/similarity";
 import { recipeName, runRecipe, type MixRecipe } from "@/lib/music/mixes";
-import { displayArtist, formatTime, type Track } from "@/lib/music/types";
+import { displayArtist, formatTime, plural, type PlaylistSummary, type Track } from "@/lib/music/types";
 
 const COUNTS = [15, 25, 50, 100];
 
@@ -38,7 +38,15 @@ function Chip({ active, onClick, children }: { active: boolean; onClick: () => v
  * be previewed, played, regenerated, and saved as a playlist that remembers
  * its recipe so it can be refreshed later.
  */
-export function Mixes({ initialSeed, onDetails }: { initialSeed: Track | null; onDetails: (t: Track) => void }) {
+export function Mixes({
+  initialSeed,
+  onDetails,
+  onOpenPlaylist,
+}: {
+  initialSeed: Track | null;
+  onDetails: (t: Track) => void;
+  onOpenPlaylist: (p: PlaylistSummary) => void;
+}) {
   const library = useLibrary();
   const player = usePlayer();
   const tracks = useMemo(() => library.tracks ?? [], [library.tracks]);
@@ -54,6 +62,36 @@ export function Mixes({ initialSeed, onDetails }: { initialSeed: Track | null; o
   const [result, setResult] = useState<Track[]>(() => (recipe ? runRecipe(recipe, library.tracks ?? []) : []));
   const [name, setName] = useState(initialSeed ? `More like ${initialSeed.title}` : "");
   const [saved, setSaved] = useState(false);
+  // Every generated mix is kept in history; this is the current one's entry.
+  const [historyId, setHistoryId] = useState<string | null>(null);
+  const historyToken = useRef(0);
+
+  async function remember(r: MixRecipe, list: Track[], mixName: string) {
+    const token = ++historyToken.current;
+    setHistoryId(null);
+    if (!list.length) return;
+    try {
+      const p = await library.createPlaylist({
+        name: mixName,
+        trackIds: list.map((t) => t.id),
+        kind: "history",
+        recipe: r as unknown as Record<string, unknown>,
+      });
+      if (token === historyToken.current) setHistoryId(p.id);
+    } catch {
+      // History is a convenience; the mix still plays and can be saved.
+    }
+  }
+
+  // A mix opened from a song's "Make a mix" is kept too.
+  const rememberedInitial = useRef(false);
+  useEffect(() => {
+    if (rememberedInitial.current || !recipe || !result.length) return;
+    rememberedInitial.current = true;
+    void remember(recipe, result, name);
+    // Only the mix the tab opened with; later ones are kept by generate().
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const analyzed = tracks.filter((t) => t.features).length;
 
   const topGenres = useMemo(() => {
@@ -76,13 +114,21 @@ export function Mixes({ initialSeed, onDetails }: { initialSeed: Track | null; o
 
   function generate(r: MixRecipe, variety = 0) {
     setRecipe(r);
-    setResult(runRecipe(r, tracks, variety));
-    setName(recipeName(r, tracks));
+    const list = runRecipe(r, tracks, variety);
+    const mixName = recipeName(r, tracks);
+    setResult(list);
+    setName(mixName);
     setSaved(false);
+    void remember(r, list, mixName);
   }
 
   async function save() {
     if (!recipe || !result.length) return;
+    if (historyId) {
+      await library.keepMix(historyId, name.trim() || recipeName(recipe, tracks));
+      setSaved(true);
+      return;
+    }
     await library.createPlaylist({
       name: name.trim() || recipeName(recipe, tracks),
       trackIds: result.map((t) => t.id),
@@ -226,6 +272,56 @@ export function Mixes({ initialSeed, onDetails }: { initialSeed: Track | null; o
           <TrackList tracks={result} onDetails={onDetails} empty="Nothing matched — try fewer filters." />
         </section>
       )}
+
+      <RecentMixes onOpen={onOpenPlaylist} />
     </div>
+  );
+}
+
+const SOURCE_LABEL: Record<string, string> = { ai: "AI", similar: "Song radio", mood: "Mood mix" };
+
+function mixSource(p: PlaylistSummary): string | null {
+  const r = p.recipe as { source?: string; type?: string; prompt?: string } | null;
+  if (!r) return null;
+  if (r.source === "ai") return r.prompt ? `AI · “${r.prompt}”` : "AI";
+  return SOURCE_LABEL[r.type ?? ""] ?? null;
+}
+
+/** Mixes generated earlier (kept automatically, newest first); open to play or save. */
+function RecentMixes({ onOpen }: { onOpen: (p: PlaylistSummary) => void }) {
+  const library = useLibrary();
+  const [showAll, setShowAll] = useState(false);
+  if (!library.history.length) return null;
+  const shown = showAll ? library.history : library.history.slice(0, 8);
+  return (
+    <section className="space-y-2">
+      <div>
+        <h3 className="flex items-center gap-1.5 font-semibold">
+          <History className="h-4 w-4 text-neutral-400" />
+          Recent mixes
+        </h3>
+        <p className="text-xs text-neutral-500">Every mix you make is kept here (the last 100). Open one to play it again or save it.</p>
+      </div>
+      <div className="divide-y divide-neutral-100 dark:divide-neutral-800/70">
+        {shown.map((p) => (
+          <button key={p.id} onClick={() => onOpen(p)} className="flex w-full items-center gap-3 py-2 text-left">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded bg-neutral-100 text-neutral-500 dark:bg-neutral-800">
+              <Sparkles className="h-4 w-4" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block truncate text-sm font-medium">{p.name}</span>
+              <span className="block truncate text-xs text-neutral-500">
+                {[mixSource(p), plural(p.trackCount, "song"), new Date(p.createdAt).toLocaleDateString()].filter(Boolean).join(" · ")}
+              </span>
+            </span>
+          </button>
+        ))}
+      </div>
+      {library.history.length > shown.length && (
+        <Button variant="ghost" onClick={() => setShowAll(true)}>
+          Show all {library.history.length}
+        </Button>
+      )}
+    </section>
   );
 }

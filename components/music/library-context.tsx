@@ -24,6 +24,8 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 type Library = {
   tracks: Track[] | null;
   playlists: PlaylistSummary[];
+  /** Generated mixes kept automatically (newest first), not yet saved as playlists. */
+  history: PlaylistSummary[];
   storageConfigured: boolean | null;
   byId: Map<string, Track>;
   reload: () => void;
@@ -35,7 +37,9 @@ type Library = {
   /** Keeps one copy of each song and removes the others; returns how many were removed. */
   mergeDuplicates: (groups: { keepId: string; removeIds: string[] }[]) => Promise<number>;
   toggleLike: (track: Track) => Promise<void>;
-  createPlaylist: (input: { name: string; trackIds: string[]; kind?: "manual" | "generated"; recipe?: Record<string, unknown>; description?: string }) => Promise<PlaylistSummary>;
+  createPlaylist: (input: { name: string; trackIds: string[]; kind?: "manual" | "generated" | "history"; recipe?: Record<string, unknown>; description?: string }) => Promise<PlaylistSummary>;
+  /** Saves a mix from history as a regular playlist. */
+  keepMix: (id: string, name?: string) => Promise<void>;
   addToPlaylist: (playlistId: string, trackIds: string[]) => Promise<void>;
 };
 
@@ -184,7 +188,8 @@ export function LibraryProvider({ children }: { children: React.ReactNode }) {
     };
     return {
       tracks,
-      playlists,
+      playlists: playlists.filter((p) => p.kind !== "history"),
+      history: playlists.filter((p) => p.kind === "history").sort((a, b) => b.createdAt.localeCompare(a.createdAt)),
       storageConfigured,
       byId,
       reload,
@@ -220,6 +225,13 @@ export function LibraryProvider({ children }: { children: React.ReactNode }) {
         });
         reloadPlaylists();
         return playlist;
+      },
+      keepMix: async (id, name) => {
+        await apiFetch(`/api/music/playlists/${id}`, {
+          method: "PATCH",
+          body: JSON.stringify({ kind: "generated", ...(name?.trim() ? { name: name.trim() } : {}) }),
+        });
+        reloadPlaylists();
       },
       addToPlaylist: async (playlistId, trackIds) => {
         const { trackIds: existing } = await apiFetch<{ trackIds: string[] }>(`/api/music/playlists/${playlistId}`);

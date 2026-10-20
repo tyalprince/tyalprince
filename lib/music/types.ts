@@ -55,7 +55,7 @@ export type PlaylistSummary = {
   id: string;
   name: string;
   description: string | null;
-  kind: "manual" | "generated";
+  kind: "manual" | "generated" | "history";
   recipe: Record<string, unknown> | null;
   trackCount: number;
   createdAt: string;

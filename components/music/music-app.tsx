@@ -151,7 +151,14 @@ function MusicInner() {
         body = <PlaylistList onOpen={(playlist) => setDrill({ kind: "playlist", playlist })} />;
         break;
       case "mixes":
-        body = <Mixes key={mixSeed?.id ?? "none"} initialSeed={mixSeed} onDetails={setDetails} />;
+        body = (
+          <Mixes
+            key={mixSeed?.id ?? "none"}
+            initialSeed={mixSeed}
+            onDetails={setDetails}
+            onOpenPlaylist={(playlist) => setDrill({ kind: "playlist", playlist })}
+          />
+        );
         break;
       case "explore":
         body = <Explore />;
