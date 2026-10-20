@@ -251,6 +251,8 @@ export async function enrichTrack(userId: string, trackId: string, opts: EnrichO
     }
   }
 
+  if (track.external?.yearFromUser) delete changes.releaseDate; // the user's own year stands
+
   await db
     .update(musicTracks)
     .set({ ...changes, external, ...(opts.artworkOnly ? {} : { enrichedAt: new Date() }) })
@@ -283,7 +285,7 @@ export async function enrichTrack(userId: string, trackId: string, opts: EnrichO
 export async function verifyReleaseDate(userId: string, trackId: string) {
   const track = await getUserTrack(userId, trackId);
   if (!track) return null;
-  if (track.external?.mbDateChecked) return { row: track, retryLater: false };
+  if (track.external?.mbDateChecked || track.external?.yearFromUser) return { row: track, retryLater: false };
   const recordings = await searchMbRecordings(queryFor(track));
   if (!recordings) return { row: track, retryLater: true };
   const releaseDate = chooseReleaseDate({

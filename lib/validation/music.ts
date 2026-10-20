@@ -107,6 +107,11 @@ export const itunesStatsSchema = z.object({
     .max(500),
 });
 
+/** Years the user set for songs (e.g. from their own year playlists). */
+export const songYearsSchema = z.object({
+  years: z.array(z.object({ id: z.uuid(), year: z.number().int().min(1900).max(2100) })).min(1).max(1000),
+});
+
 export const mergeDuplicatesSchema = z.object({
   groups: z
     .array(z.object({ keepId: z.string().uuid(), removeIds: z.array(z.string().uuid()).min(1).max(20) }))

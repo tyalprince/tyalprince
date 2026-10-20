@@ -28,6 +28,7 @@ import { ImportPanel } from "./import-panel";
 import { DetailsPanel } from "./details-panel";
 import { DuplicatesPanel } from "./duplicates-panel";
 import { MissingReportPanel } from "./missing-report";
+import { PlaylistImport } from "./playlist-import";
 import { formatBytes, type PlaylistSummary, type Track } from "@/lib/music/types";
 
 const TABS = ["songs", "albums", "artists", "years", "playlists", "mixes", "explore", "import"] as const;
@@ -242,6 +243,7 @@ function MusicInner() {
           <ImportPanel />
           <DetailsPanel />
           <MissingReportPanel />
+          <PlaylistImport />
           <DuplicatesPanel />
         </div>
       )}
