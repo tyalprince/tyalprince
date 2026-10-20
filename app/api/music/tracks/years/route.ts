@@ -6,8 +6,10 @@ import { withApiErrors } from "@/lib/api-utils";
 import { songYearsSchema } from "@/lib/validation/music";
 
 /**
- * Sets songs' years from the user's own knowledge (their year playlists).
- * These are locked (external.yearFromUser) so automatic date lookups leave them alone.
+ * Years from the user's year playlists. Apple builds those from each song's
+ * Year field, which can be a re-release year, so they count like a file's year
+ * tag: the song's date only moves earlier, never later, and nothing is locked.
+ * Songs whose year was set by hand (Edit / Refresh details) are left alone.
  */
 export const POST = withApiErrors(async (req: Request) => {
   const userId = await requireUserId();
@@ -18,11 +20,13 @@ export const POST = withApiErrors(async (req: Request) => {
   );
   const result = await db.execute(sql`
     update music_tracks as t set
-      year = v.year,
-      release_date = case when left(coalesce(t.release_date, ''), 4) = v.year::text then t.release_date else v.year::text end,
-      external = coalesce(t.external, '{}'::jsonb) || '{"yearFromUser":"1","mbDateChecked":"1"}'::jsonb
+      year = least(coalesce(t.year, v.year), v.year),
+      release_date = case
+        when t.release_date ~ '^[0-9]{4}' and left(t.release_date, 4)::int <= v.year then t.release_date
+        else v.year::text
+      end
     from (values ${values}) as v(id, year)
-    where t.id = v.id and t.user_id = ${userId}
+    where t.id = v.id and t.user_id = ${userId} and not coalesce(t.external ? 'yearFromUser', false)
     returning t.id
   `);
   return NextResponse.json({ updated: result.rows.length });

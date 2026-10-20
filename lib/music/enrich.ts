@@ -195,13 +195,17 @@ export async function enrichTrack(userId: string, trackId: string, opts: EnrichO
   const needsArt = !track.artworkKey && !changes.artworkKey;
   const needsDate = !track.releaseDate && !changes.releaseDate;
   // A song Apple already had no match for isn't asked again unless forced.
+  // Dates found this run, kept apart so a manual refresh can decide from fresh data only.
+  let catalogDate: string | null = null;
+  let mbDate: string | null = null;
   if ((needsArt || needsDate || opts.force) && (!external.itunesChecked || opts.force)) {
     const match = await lookupItunes(q);
     retryLater = match === undefined;
     itunesAnswered = match !== undefined;
     if (itunesAnswered) external.itunesChecked = "1";
     if (match) {
-      const date = chooseReleaseDate({ catalog: parseReleaseDate(match.releaseDate), tagYear: track.year });
+      catalogDate = parseReleaseDate(match.releaseDate);
+      const date = chooseReleaseDate({ catalog: catalogDate, tagYear: track.year });
       if (date && (needsDate || opts.force)) changes.releaseDate = date;
       if (!track.genre && match.primaryGenreName) changes.genre = match.primaryGenreName;
       if (match.trackViewUrl) external.appleMusicUrl = match.trackViewUrl;
@@ -224,7 +228,9 @@ export async function enrichTrack(userId: string, trackId: string, opts: EnrichO
       } else if (album?.artworkUrl100) {
         const key = await storeArtwork(userId, album.artworkUrl100);
         if (key) changes.artworkKey = key;
-        const date = chooseReleaseDate({ catalog: parseReleaseDate(album.releaseDate), tagYear: track.year });
+        const albumDate = parseReleaseDate(album.releaseDate);
+        if (albumDate && (!catalogDate || albumDate < catalogDate)) catalogDate = albumDate;
+        const date = chooseReleaseDate({ catalog: albumDate, tagYear: track.year });
         if (date && needsDate && !changes.releaseDate) changes.releaseDate = date;
         if (!track.genre && !changes.genre && album.primaryGenreName) changes.genre = album.primaryGenreName;
       }
@@ -237,6 +243,7 @@ export async function enrichTrack(userId: string, trackId: string, opts: EnrichO
     if (credits) {
       external.musicbrainzChecked = "1";
       external.mbDateChecked = "1";
+      mbDate = credits.firstReleaseDate;
       if (credits.firstReleaseDate) {
         changes.releaseDate = chooseReleaseDate({
           musicbrainz: credits.firstReleaseDate,
@@ -251,7 +258,21 @@ export async function enrichTrack(userId: string, trackId: string, opts: EnrichO
     }
   }
 
-  if (track.external?.yearFromUser) delete changes.releaseDate; // the user's own year stands
+  if (opts.force) {
+    // "Refresh details" is the user asking for the real date: decide from what was just looked
+    // up (the file's year only if nothing was found), set the year to match, and lock it so
+    // background checks and re-imports leave it alone.
+    const fresh = chooseReleaseDate({ musicbrainz: mbDate, catalog: catalogDate, tagYear: mbDate || catalogDate ? null : track.year });
+    if (fresh) {
+      changes.releaseDate = fresh;
+      changes.year = Number(fresh.slice(0, 4));
+      external.yearFromUser = "1";
+      external.yearSource = "refresh";
+      external.mbDateChecked = "1";
+    }
+  } else if (track.external?.yearFromUser) {
+    delete changes.releaseDate; // a year the user set or refreshed stands
+  }
 
   await db
     .update(musicTracks)

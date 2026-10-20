@@ -42,15 +42,15 @@ type Drill =
   | { kind: "playlist"; playlist: PlaylistSummary }
   | null;
 
-export function MusicApp() {
+export function MusicApp({ initialPlaylistId = null }: { initialPlaylistId?: string | null }) {
   return (
     <LibraryProvider>
-      <MusicInner />
+      <MusicInner initialPlaylistId={initialPlaylistId} />
     </LibraryProvider>
   );
 }
 
-function MusicInner() {
+function MusicInner({ initialPlaylistId }: { initialPlaylistId: string | null }) {
   const library = useLibrary();
   const [tab, setTab] = useState<Tab | null>(null);
   const [query, setQuery] = useState("");
@@ -67,6 +67,17 @@ function MusicInner() {
   const [landing, setLanding] = useState<Tab | null>(null);
   if (landing === null && library.tracks) setLanding(library.tracks.length ? "songs" : "import");
   const activeTab: Tab = tab ?? landing ?? "songs";
+
+  // Opened with ?playlist=<id>: show that playlist once playlists have loaded.
+  const [pendingPlaylist, setPendingPlaylist] = useState(initialPlaylistId);
+  if (pendingPlaylist && (library.playlists.length || library.history.length)) {
+    const found = [...library.playlists, ...library.history].find((p) => p.id === pendingPlaylist);
+    setPendingPlaylist(null);
+    if (found) {
+      setTab("playlists");
+      setDrill({ kind: "playlist", playlist: found });
+    }
+  }
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
