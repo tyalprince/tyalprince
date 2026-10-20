@@ -178,6 +178,14 @@ number, so it can only choose songs the user owns. Needs `OPENROUTER_API_KEY`;
 `OPENROUTER_MODEL` picks the model (default `anthropic/claude-sonnet-5.5`,
 falling back to `openrouter/auto` if unavailable).
 
+**Playlist CSV import** (`lib/music/playlist-csv.ts`): Import tab → "Import
+playlists from a file" reads a "songs by playlist" CSV (one column per
+playlist headed `Name [N songs]`, cells `Title - Artist`), matches songs by
+title + main artist and recreates the chosen playlists (re-importing updates
+them). Year-named playlists ("1997") can set songs' years
+(`POST /api/music/tracks/years`); those, and years typed in with Edit, are
+locked (`external.yearFromUser`) so automatic date lookups leave them alone.
+
 **Browsing**: a Years tab (decades → years), and multi-select filters on
 Songs for decade, year, genre, artist and minimum rating
 (`lib/music/facets.ts`).

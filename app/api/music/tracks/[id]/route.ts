@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { musicTracks } from "@/lib/db/schema";
 import { requireUserId } from "@/lib/session";
@@ -14,8 +14,13 @@ export const PATCH = withApiErrors(async (req: Request, { params }: Params) => {
   const userId = await requireUserId();
   const { id } = await params;
   const body = updateTrackSchema.parse(await req.json());
-  const changes = Object.fromEntries(Object.entries(body).filter(([, v]) => v !== undefined));
+  const changes: Record<string, unknown> = Object.fromEntries(Object.entries(body).filter(([, v]) => v !== undefined));
   if (!Object.keys(changes).length) return NextResponse.json({ error: "Nothing to update" }, { status: 400 });
+  // A year typed in by the user wins over looked-up dates, and stays put.
+  if (typeof body.year === "number") {
+    changes.releaseDate = sql`case when left(coalesce(${musicTracks.releaseDate}, ''), 4) = ${String(body.year)} then ${musicTracks.releaseDate} else ${String(body.year)} end`;
+    changes.external = sql`coalesce(${musicTracks.external}, '{}'::jsonb) || '{"yearFromUser":"1","mbDateChecked":"1"}'::jsonb`;
+  }
   const [track] = await db
     .update(musicTracks)
     .set(changes)
