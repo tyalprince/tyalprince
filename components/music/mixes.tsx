@@ -9,6 +9,7 @@ import { usePlayer } from "./player-context";
 import { useLibrary } from "./library-context";
 import { Artwork } from "./player-bar";
 import { TrackList } from "./track-list";
+import { AiMix } from "./ai-mix";
 import { MOODS, totalDurationSeconds, type MoodKey } from "@/lib/music/similarity";
 import { recipeName, runRecipe, type MixRecipe } from "@/lib/music/mixes";
 import { displayArtist, formatTime, type Track } from "@/lib/music/types";
@@ -113,6 +114,8 @@ export function Mixes({ initialSeed, onDetails }: { initialSeed: Track | null; o
           </Chip>
         ))}
       </div>
+
+      <AiMix count={count} onDetails={onDetails} />
 
       <section className="space-y-3">
         <div>

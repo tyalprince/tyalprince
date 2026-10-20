@@ -167,6 +167,15 @@ and cover into the bucket). Needs a free Jamendo API client id
 (devportal.jamendo.com) in `JAMENDO_CLIENT_ID`; the tab shows setup steps
 until it's set. Jamendo's free API tier is for non-commercial use.
 
+**AI playlists** (`lib/music/ai-mix.ts`, `lib/music/ai-candidates.ts`): Mixes →
+"Describe a playlist" sends a free-text request through
+[OpenRouter](https://openrouter.ai). One call turns it into criteria (genres,
+era, artists, specific songs, energy, tempo); the library is scored against
+those locally; a second call picks and orders songs from that shortlist by
+number, so it can only choose songs the user owns. Needs `OPENROUTER_API_KEY`;
+`OPENROUTER_MODEL` picks the model (default `anthropic/claude-sonnet-5.5`,
+falling back to `openrouter/auto` if unavailable).
+
 **Browsing**: a Years tab (decades → years), and multi-select filters on
 Songs for decade, year, genre, artist and minimum rating
 (`lib/music/facets.ts`).
