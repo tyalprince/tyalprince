@@ -74,6 +74,7 @@ export function PlaylistView({
   const [name, setName] = useState(playlist.name);
   const [renaming, setRenaming] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [kept, setKept] = useState(false);
 
   useEffect(() => {
     apiFetch<{ trackIds: string[] }>(`/api/music/playlists/${playlist.id}`)
@@ -121,7 +122,7 @@ export function PlaylistView({
 
   return (
     <div>
-      <BackLink onClick={onBack} label="Playlists" />
+      <BackLink onClick={onBack} label={playlist.kind === "history" ? "Back" : "Playlists"} />
       <div className="mb-4 space-y-2">
         {renaming ? (
           <div className="flex gap-2">
@@ -134,6 +135,7 @@ export function PlaylistView({
         <p className="text-xs text-neutral-500">
           {tracks.length} songs · {formatTime(totalDurationSeconds(tracks))}
           {playlist.kind === "generated" ? " · generated mix" : ""}
+          {playlist.kind === "history" ? ` · made ${new Date(playlist.createdAt).toLocaleDateString()}${kept ? " · saved to playlists" : ""}` : ""}
         </p>
         <div className="flex flex-wrap gap-2">
           <Button onClick={() => player.play(tracks)} disabled={!tracks.length}>
@@ -148,6 +150,18 @@ export function PlaylistView({
             <Shuffle className="h-4 w-4" />
             Shuffle
           </Button>
+          {playlist.kind === "history" && !kept && (
+            <Button
+              variant="secondary"
+              onClick={async () => {
+                await library.keepMix(playlist.id, name);
+                setKept(true);
+              }}
+            >
+              <Plus className="h-4 w-4" />
+              Save to playlists
+            </Button>
+          )}
           {recipe && library.tracks && (
             <Button variant="secondary" onClick={() => save(runRecipe(recipe, library.tracks!).map((t) => t.id))}>
               <RefreshCw className="h-4 w-4" />

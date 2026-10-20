@@ -481,7 +481,8 @@ export const musicPlaylists = pgTable(
       .references(() => users.id, { onDelete: "cascade" }),
     name: text("name").notNull(),
     description: text("description"),
-    kind: text("kind", { enum: ["manual", "generated"] }).notNull().default("manual"),
+    // "history": a generated mix kept automatically (Mixes → Recent mixes) until the user saves it.
+    kind: text("kind", { enum: ["manual", "generated", "history"] }).notNull().default("manual"),
     // How a generated playlist was made (seed tracks, mood preset…) so it can be refreshed.
     recipe: jsonb("recipe").$type<Record<string, unknown>>(),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),

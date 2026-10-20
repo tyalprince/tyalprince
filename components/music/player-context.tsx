@@ -33,6 +33,44 @@ type PlayerState = {
 };
 
 const PlayerContext = createContext<PlayerState | null>(null);
+
+// The queue and position survive reloads (kept in this browser only).
+const STORAGE_KEY = "lifeos.music.player.v1";
+const MAX_SAVED = 1000;
+
+type SavedPlayer = {
+  queue: Track[];
+  original: Track[];
+  index: number;
+  position: number;
+  shuffle: boolean;
+  repeat: Repeat;
+  volume: number;
+};
+
+/** Drops the similarity vector (not needed to play) to keep the saved queue small. */
+function slim(tracks: Track[]): Track[] {
+  return tracks.slice(0, MAX_SAVED).map((t) => ({ ...t, featureVector: null }));
+}
+
+function readSaved(): SavedPlayer | null {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    const saved = raw ? (JSON.parse(raw) as SavedPlayer) : null;
+    if (!saved || !Array.isArray(saved.queue) || !saved.queue.length) return null;
+    return saved;
+  } catch {
+    return null;
+  }
+}
+
+function writeSaved(saved: SavedPlayer) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+  } catch {
+    // Storage full or blocked (private window): the player just won't resume.
+  }
+}
 // Position changes several times a second; kept separate so only the
 // progress UI re-renders, not every track list that reads the player.
 const ProgressContext = createContext<{ position: number; duration: number }>({ position: 0, duration: 0 });
@@ -75,6 +113,63 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
   const countedRef = useRef<string | null>(null);
   const current = queue[index] ?? null;
 
+  // Restore the last queue after a reload, paused where it left off (browsers
+  // don't allow audio to start by itself).
+  const restoredRef = useRef(false);
+  const resumeAtRef = useRef<number | null>(null);
+  const pendingSeekRef = useRef<number | null>(null);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const saved = readSaved();
+      if (saved) {
+        resumeAtRef.current = Math.max(0, saved.position || 0);
+        setQueue(saved.queue);
+        setOriginal(Array.isArray(saved.original) && saved.original.length ? saved.original : saved.queue);
+        setIndex(Math.min(Math.max(0, saved.index || 0), saved.queue.length - 1));
+        setShuffleState(Boolean(saved.shuffle));
+        setRepeat(saved.repeat === "all" || saved.repeat === "one" ? saved.repeat : "off");
+        const v = typeof saved.volume === "number" ? Math.min(1, Math.max(0, saved.volume)) : 1;
+        setVolumeState(v);
+        if (audioRef.current) audioRef.current.volume = v;
+      }
+      restoredRef.current = true;
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const saveState = useCallback(
+    (overrides: Partial<SavedPlayer> = {}) => {
+      if (!restoredRef.current || !queue.length) {
+        if (restoredRef.current && !queue.length) {
+          try {
+            localStorage.removeItem(STORAGE_KEY);
+          } catch {}
+        }
+        return;
+      }
+      writeSaved({
+        queue: slim(queue),
+        original: slim(original),
+        index,
+        position: audioRef.current?.currentTime ?? 0,
+        shuffle,
+        repeat,
+        volume,
+        ...overrides,
+      });
+    },
+    [queue, original, index, shuffle, repeat, volume],
+  );
+  useEffect(() => saveState(), [saveState]);
+
+  // Save the position now and then while playing, and when the page closes.
+  const lastSaveRef = useRef(0);
+  useEffect(() => {
+    const onHide = () => saveState();
+    window.addEventListener("pagehide", onHide);
+    return () => window.removeEventListener("pagehide", onHide);
+  }, [saveState]);
+
   // Load a new source whenever the current track changes.
   useEffect(() => {
     const audio = audioRef.current;
@@ -83,7 +178,10 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
       audio.dataset.trackId = current.id;
       audio.src = trackAudioUrl(current);
       countedRef.current = null;
-      audio.play().catch(() => setPlaying(false));
+      const resumeAt = resumeAtRef.current;
+      resumeAtRef.current = null;
+      if (resumeAt !== null) pendingSeekRef.current = resumeAt; // restored: cue up, don't autoplay
+      else audio.play().catch(() => setPlaying(false));
     }
   }, [current]);
 
@@ -251,10 +349,21 @@ export function MusicPlayerProvider({ children }: { children: React.ReactNode })
         preload="auto"
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
-        onLoadedMetadata={(e) => setDuration(e.currentTarget.duration || 0)}
+        onLoadedMetadata={(e) => {
+          setDuration(e.currentTarget.duration || 0);
+          if (pendingSeekRef.current !== null) {
+            e.currentTarget.currentTime = Math.min(pendingSeekRef.current, Math.max(0, (e.currentTarget.duration || 0) - 1));
+            pendingSeekRef.current = null;
+          }
+        }}
         onTimeUpdate={(e) => {
           const t = e.currentTarget.currentTime;
           setPosition(t);
+          const now = e.timeStamp;
+          if (now - lastSaveRef.current > 5000) {
+            lastSaveRef.current = now;
+            saveState({ position: t });
+          }
           // Count a play after 30s (or half of a short track), once per load.
           if (current && !current.remote && countedRef.current !== current.id && (t > 30 || t > (e.currentTarget.duration || 60) / 2)) {
             countedRef.current = current.id;
