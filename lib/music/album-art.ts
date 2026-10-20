@@ -50,3 +50,19 @@ export function nextArtworkCandidate(tracks: Track[], tried: Set<string>): Track
   }
   return null;
 }
+
+/**
+ * Next song whose release date hasn't been checked against MusicBrainz yet.
+ * Songs whose looked-up date is well after their file's year tag (likely a
+ * reissue date) go first.
+ */
+export function nextDateCandidate(tracks: Track[], tried: Set<string>): Track | null {
+  let fallback: Track | null = null;
+  for (const t of tracks) {
+    if (t.remote || t.external?.mbDateChecked || tried.has(t.id) || !(t.artist || t.albumArtist)) continue;
+    const looked = t.releaseDate ? Number(t.releaseDate.slice(0, 4)) : null;
+    if (looked && t.year && looked > t.year + 1) return t;
+    fallback ??= t;
+  }
+  return fallback;
+}

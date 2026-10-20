@@ -130,7 +130,12 @@ time-synced lyrics, fetched on demand and cached). Songs are looked up the
 first time they're played, or in bulk from Music → Import. While the Music
 tab is open, cover art is also filled in the background, one song per album
 that has none, paced for Apple's ~20 searches/minute; when a song's title
-isn't found the album is searched instead. Migration
+isn't found the album is searched instead. Release dates
+are the song's *original* date: MusicBrainz's `first-release-date` when
+known, otherwise the earlier of the catalog date and the file's year tag (so
+remasters, alternate mixes and compilations can't make an old song look new);
+every song is re-checked in the background, ~1 request/second.
+Migration
 `drizzle/0003_music_details.sql` adds the columns.
 
 **Duplicates** (`lib/music/duplicates.ts`): besides exact-file matches, the

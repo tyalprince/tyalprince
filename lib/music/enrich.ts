@@ -9,6 +9,8 @@ import {
   isAllowedArtworkHost,
   itunesArtworkUrl,
   parseReleaseDate,
+  chooseReleaseDate,
+  mbFirstReleaseDate,
   pickItunesAlbum,
   pickItunesMatch,
   pickLrclib,
@@ -98,18 +100,26 @@ async function storeArtwork(userId: string, artworkUrl100: string): Promise<stri
   }
 }
 
-async function lookupCredits(q: TrackQuery) {
-  if (!q.artist) return null;
+/** MusicBrainz recordings for a song; undefined if MusicBrainz didn't answer (rate limit, outage). */
+async function searchMbRecordings(q: TrackQuery): Promise<MbRecording[] | undefined> {
+  if (!q.artist) return [];
   const esc = (s: string) => s.replace(/(["\\])/g, "\\$1");
   const search = await getJson<{ recordings?: MbRecording[] }>(
     `https://musicbrainz.org/ws/2/recording?${new URLSearchParams({
       query: `recording:"${esc(q.title)}" AND artist:"${esc(q.artist.replace(/[*]/g, ""))}"`,
       fmt: "json",
-      limit: "10",
+      limit: "25",
     })}`,
   );
-  const recording = pickMbRecording(search?.recordings ?? [], q);
-  if (!recording) return null;
+  return search ? (search.recordings ?? []) : undefined;
+}
+
+async function lookupCredits(q: TrackQuery) {
+  const recordings = await searchMbRecordings(q);
+  if (!recordings) return undefined;
+  const firstReleaseDate = mbFirstReleaseDate(recordings, q);
+  const recording = pickMbRecording(recordings, q);
+  if (!recording) return { recordingId: null, firstReleaseDate, composer: [], lyricist: [], producer: [] };
 
   await sleep(MB_GAP_MS);
   const detail = await getJson<{ relations?: MbRelation[] }>(
@@ -122,7 +132,7 @@ async function lookupCredits(q: TrackQuery) {
     const work = await getJson<{ relations?: MbRelation[] }>(`https://musicbrainz.org/ws/2/work/${workId}?inc=artist-rels&fmt=json`);
     workRels.push(work?.relations ?? []);
   }
-  return { recordingId: recording.id, ...creditsFrom(recRels, workRels) };
+  return { recordingId: recording.id, firstReleaseDate, ...creditsFrom(recRels, workRels) };
 }
 
 const join = (xs: string[]) => (xs.length ? xs.join(", ") : null);
@@ -190,7 +200,7 @@ export async function enrichTrack(userId: string, trackId: string, opts: EnrichO
     itunesAnswered = match !== undefined;
     if (itunesAnswered) external.itunesChecked = "1";
     if (match) {
-      const date = parseReleaseDate(match.releaseDate);
+      const date = chooseReleaseDate({ catalog: parseReleaseDate(match.releaseDate), tagYear: track.year });
       if (date && (needsDate || opts.force)) changes.releaseDate = date;
       if (!track.genre && match.primaryGenreName) changes.genre = match.primaryGenreName;
       if (match.trackViewUrl) external.appleMusicUrl = match.trackViewUrl;
@@ -210,7 +220,7 @@ export async function enrichTrack(userId: string, trackId: string, opts: EnrichO
       } else if (album?.artworkUrl100) {
         const key = await storeArtwork(userId, album.artworkUrl100);
         if (key) changes.artworkKey = key;
-        const date = parseReleaseDate(album.releaseDate);
+        const date = chooseReleaseDate({ catalog: parseReleaseDate(album.releaseDate), tagYear: track.year });
         if (date && needsDate && !changes.releaseDate) changes.releaseDate = date;
         if (!track.genre && !changes.genre && album.primaryGenreName) changes.genre = album.primaryGenreName;
       }
@@ -220,9 +230,11 @@ export async function enrichTrack(userId: string, trackId: string, opts: EnrichO
 
   if (!opts.artworkOnly && opts.credits !== false && (!track.composer || opts.force) && (!external.musicbrainzChecked || opts.force)) {
     const credits = await lookupCredits(q);
-    external.musicbrainzChecked = "1";
     if (credits) {
-      external.musicbrainzRecordingId = credits.recordingId;
+      external.musicbrainzChecked = "1";
+      external.mbDateChecked = "1";
+      if (credits.firstReleaseDate) changes.releaseDate = credits.firstReleaseDate;
+      if (credits.recordingId) external.musicbrainzRecordingId = credits.recordingId;
       if (credits.composer.length && !track.composer) changes.composer = join(credits.composer);
       if (credits.lyricist.length && !track.lyricist) changes.lyricist = join(credits.lyricist);
       if (credits.producer.length && !track.producer) changes.producer = join(credits.producer);
@@ -250,6 +262,31 @@ export async function enrichTrack(userId: string, trackId: string, opts: EnrichO
   }
   const row = await getUserTrack(userId, trackId);
   return row ? { row, retryLater } : null;
+}
+
+/**
+ * Re-checks a song's release date against MusicBrainz's original release date
+ * (one request), falling back to the earlier of its current date and the
+ * file's year so reissue dates don't stick. `retryLater` when MusicBrainz
+ * didn't answer.
+ */
+export async function verifyReleaseDate(userId: string, trackId: string) {
+  const track = await getUserTrack(userId, trackId);
+  if (!track) return null;
+  if (track.external?.mbDateChecked) return { row: track, retryLater: false };
+  const recordings = await searchMbRecordings(queryFor(track));
+  if (!recordings) return { row: track, retryLater: true };
+  const releaseDate = chooseReleaseDate({
+    musicbrainz: mbFirstReleaseDate(recordings, queryFor(track)),
+    catalog: track.releaseDate,
+    tagYear: track.year,
+  });
+  await db
+    .update(musicTracks)
+    .set({ releaseDate, external: { ...(track.external ?? {}), mbDateChecked: "1" } })
+    .where(and(eq(musicTracks.id, track.id), eq(musicTracks.userId, userId)));
+  const row = await getUserTrack(userId, trackId);
+  return row ? { row, retryLater: false } : null;
 }
 
 export type LyricsResult = { plain: string | null; synced: string | null; source: "embedded" | "lrclib" | null; instrumental: boolean };

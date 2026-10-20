@@ -3,13 +3,15 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { apiFetch } from "@/lib/api-client";
 import { usePlayer } from "./player-context";
-import { albumKeyOf, applyLookup, nextArtworkCandidate } from "@/lib/music/album-art";
+import { albumKeyOf, applyLookup, nextArtworkCandidate, nextDateCandidate } from "@/lib/music/album-art";
 import type { PlaylistSummary, Track } from "@/lib/music/types";
 
 // Apple's catalog allows roughly 20 searches a minute, and a lookup can take
 // two (song, then album).
 const ARTWORK_GAP_MS = 5000;
 const RATE_LIMIT_PAUSE_MS = 60_000;
+// MusicBrainz asks for at most one request a second.
+const DATE_CHECK_GAP_MS = 1200;
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 type Library = {
@@ -113,6 +115,38 @@ export function LibraryProvider({ children }: { children: React.ReactNode }) {
           // Skip this album for now; it's retried next visit.
         }
         await sleep(ARTWORK_GAP_MS);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [loaded, replaceTrack]);
+
+  // Background release-date check: each song's original release date from
+  // MusicBrainz, so remasters and compilations don't make old songs look new.
+  useEffect(() => {
+    if (!loaded) return;
+    let cancelled = false;
+    const tried = new Set<string>();
+    (async () => {
+      await sleep(4000);
+      while (!cancelled) {
+        const next = nextDateCandidate(latest.current ?? [], tried);
+        if (!next) return;
+        tried.add(next.id);
+        try {
+          const res = await apiFetch<{ track: Track; retryLater?: boolean }>(`/api/music/tracks/${next.id}/release-date`, { method: "POST" });
+          if (cancelled) return;
+          if (res.retryLater) {
+            tried.delete(next.id);
+            await sleep(RATE_LIMIT_PAUSE_MS);
+            continue;
+          }
+          replaceTrack({ ...next, ...res.track });
+        } catch {
+          // Skip for now; retried next visit.
+        }
+        await sleep(DATE_CHECK_GAP_MS);
       }
     })();
     return () => {

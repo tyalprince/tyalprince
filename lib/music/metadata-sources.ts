@@ -22,6 +22,8 @@ export type MbRecording = {
   score?: number;
   title?: string;
   length?: number;
+  /** Earliest release of this recording anywhere — the song's original date. */
+  "first-release-date"?: string;
   "artist-credit"?: { name?: string; artist?: { name?: string } }[];
 };
 
@@ -81,7 +83,16 @@ function artistsMatch(a: string, b: string): boolean {
 
 export type TrackQuery = { title: string; artist: string | null; album: string | null; durationSeconds: number | null };
 
-/** Best iTunes catalog match: title and artist must agree; album and duration break ties. */
+// Reissue/variant markers: a catalog result carrying one the user's own title
+// doesn't is a remaster, alternate mix, live take… rather than the original.
+const VARIANT = /\b(remaster(ed)?|alternate|alt\.?|mix|remix|version|live|edit|demo|acoustic|instrumental|re-?recorded|anniversary|deluxe|expanded|mono|stereo|sped up|slowed)\b/i;
+const COMPILATION = /\b(greatest hits|best of|the best|collection|anthology|essentials?|hits|gold|platinum|playlist|now that's|ultimate|classics|years|decade|vol(ume)?\.? ?\d)\b/i;
+
+/**
+ * Best iTunes catalog match: title and artist must agree; album and duration
+ * break ties; originals beat remasters, alternate mixes and compilations, and
+ * among equals the earliest release wins.
+ */
 export function pickItunesMatch(results: ItunesSong[], q: TrackQuery): ItunesSong | null {
   let best: { r: ItunesSong; score: number } | null = null;
   for (const r of results) {
@@ -94,7 +105,11 @@ export function pickItunesMatch(results: ItunesSong[], q: TrackQuery): ItunesSon
       const diff = Math.abs(r.trackTimeMillis / 1000 - q.durationSeconds);
       score += diff < 3 ? 1 : diff < 10 ? 0.5 : diff > 60 ? -1 : 0;
     }
-    if (!best || score > best.score) best = { r, score };
+    if (VARIANT.test(r.trackName) && !VARIANT.test(q.title)) score -= 3; // a different recording, not just packaging
+    if (r.collectionName && VARIANT.test(r.collectionName) && !(q.album && VARIANT.test(q.album))) score -= 0.5;
+    if (r.collectionName && COMPILATION.test(r.collectionName) && !(q.album && COMPILATION.test(q.album))) score -= 0.75;
+    const earlier = (r.releaseDate ?? "9999") < (best?.r.releaseDate ?? "9999");
+    if (!best || score > best.score || (score === best.score && earlier)) best = { r, score };
   }
   return best?.r ?? null;
 }
@@ -165,6 +180,39 @@ export function pickMbRecording(recordings: MbRecording[], q: TrackQuery): MbRec
     return r;
   }
   return null;
+}
+
+/**
+ * The song's original release date from MusicBrainz: the earliest
+ * "first-release-date" among recordings that match title and artist.
+ */
+export function mbFirstReleaseDate(recordings: MbRecording[], q: TrackQuery): string | null {
+  let earliest: string | null = null;
+  for (const r of recordings) {
+    if ((r.score ?? 100) < 85 || !r.title || !titlesMatch(r.title, q.title)) continue;
+    if (VARIANT.test(r.title) && !VARIANT.test(q.title)) continue;
+    const credit = (r["artist-credit"] ?? []).map((c) => c.name ?? c.artist?.name ?? "").join(" ");
+    if (q.artist && !artistsMatch(credit, q.artist)) continue;
+    const date = parseReleaseDate(r["first-release-date"]);
+    if (date && (!earliest || date.slice(0, 4) < earliest.slice(0, 4) || (date.slice(0, 4) === earliest.slice(0, 4) && date.length > earliest.length))) {
+      earliest = date;
+    }
+  }
+  return earliest;
+}
+
+/**
+ * Release date to show: MusicBrainz's original date when known; otherwise the
+ * earlier of the catalog date and the file's year tag, so a reissue or
+ * remaster never makes an old song look new.
+ */
+export function chooseReleaseDate(opts: { musicbrainz?: string | null; catalog?: string | null; tagYear?: number | null }): string | null {
+  if (opts.musicbrainz) return opts.musicbrainz;
+  const catalog = opts.catalog ?? null;
+  const tag = opts.tagYear && opts.tagYear >= 1000 && opts.tagYear <= 3000 ? String(opts.tagYear) : null;
+  if (!catalog) return tag;
+  if (!tag) return catalog;
+  return Number(catalog.slice(0, 4)) <= Number(tag) ? catalog : tag;
 }
 
 export type Credits = { composer: string[]; lyricist: string[]; producer: string[] };

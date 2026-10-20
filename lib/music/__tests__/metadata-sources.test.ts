@@ -3,6 +3,8 @@ import { albumKeyOf, applyLookup, nextArtworkCandidate } from "@/lib/music/album
 import type { Track } from "@/lib/music/types";
 import {
   activeLyricIndex,
+  chooseReleaseDate,
+  mbFirstReleaseDate,
   creditsFrom,
   isAllowedArtworkHost,
   itunesArtworkUrl,
@@ -175,5 +177,39 @@ describe("pickItunesAlbum", () => {
     expect(pickItunesAlbum(results.slice(0, 1), "Nellyville", "Nelly")).not.toBeNull();
     expect(pickItunesAlbum(results.slice(2), "Nellyville", "Nelly")).toBeNull();
     expect(pickItunesAlbum(results, "Country Grammar", "Nelly")).toBeNull();
+  });
+});
+
+describe("release dates", () => {
+  const q = { title: "Every Breath You Take", artist: "The Police", album: "Synchronicity", durationSeconds: 253 };
+
+  it("prefers the original over alternate mixes, remasters and compilations", () => {
+    const results = [
+      { kind: "song", trackName: "Every Breath You Take (Alternate Mix)", artistName: "The Police", collectionName: "Synchronicity (Super Deluxe)", releaseDate: "2024-07-26T07:00:00Z", trackTimeMillis: 253000 },
+      { kind: "song", trackName: "Every Breath You Take", artistName: "The Police", collectionName: "Greatest Hits", releaseDate: "1992-01-01T08:00:00Z", trackTimeMillis: 253000 },
+      { kind: "song", trackName: "Every Breath You Take", artistName: "The Police", collectionName: "Synchronicity (Remastered)", releaseDate: "1983-06-01T07:00:00Z", trackTimeMillis: 253000 },
+    ];
+    expect(pickItunesMatch(results, q)?.releaseDate).toBe("1983-06-01T07:00:00Z");
+    // Without the original, a plain compilation still beats the alternate mix.
+    expect(pickItunesMatch(results.slice(0, 2), q)?.collectionName).toBe("Greatest Hits");
+  });
+
+  it("takes the earliest MusicBrainz first-release date among matching recordings", () => {
+    const recs = [
+      { id: "a", score: 100, title: "Every Breath You Take", "first-release-date": "2003-11-11", "artist-credit": [{ name: "The Police" }] },
+      { id: "b", score: 98, title: "Every Breath You Take", "first-release-date": "1983-05-20", "artist-credit": [{ name: "The Police" }] },
+      { id: "c", score: 95, title: "Every Breath You Take (live)", "first-release-date": "1979", "artist-credit": [{ name: "The Police" }] },
+      { id: "d", score: 99, title: "Every Breath You Take", "first-release-date": "1970", "artist-credit": [{ name: "Someone Else" }] },
+    ];
+    expect(mbFirstReleaseDate(recs, q)).toBe("1983-05-20");
+    expect(mbFirstReleaseDate([], q)).toBeNull();
+  });
+
+  it("never lets a reissue date make a song newer than its file says", () => {
+    expect(chooseReleaseDate({ catalog: "2024-07-26", tagYear: 1983 })).toBe("1983");
+    expect(chooseReleaseDate({ catalog: "1983-06-01", tagYear: 2005 })).toBe("1983-06-01");
+    expect(chooseReleaseDate({ musicbrainz: "1987-08-31", catalog: "2012-01-01", tagYear: 1970 })).toBe("1987-08-31");
+    expect(chooseReleaseDate({ catalog: null, tagYear: 1999 })).toBe("1999");
+    expect(chooseReleaseDate({ catalog: "2024-01-26", tagYear: null })).toBe("2024-01-26");
   });
 });

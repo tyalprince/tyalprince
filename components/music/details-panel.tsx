@@ -43,6 +43,7 @@ export function DetailsPanel() {
 
   const missingArt = tracks.filter((t) => !t.artworkKey).length;
   const notLookedUp = tracks.filter((t) => !t.enrichedAt).length;
+  const datesToCheck = tracks.filter((t) => !t.remote && !t.external?.mbDateChecked).length;
 
   async function run() {
     const queue = lookupOrder(tracks);
@@ -84,6 +85,12 @@ export function DetailsPanel() {
           <p className="text-xs text-neutral-500">
             {missingArt.toLocaleString()} songs without artwork · {notLookedUp.toLocaleString()} not looked up yet. Songs are
             also filled in automatically the first time you play them.
+            {datesToCheck > 0 && (
+              <>
+                {" "}
+                Checking original release dates in the background while Music is open — {datesToCheck.toLocaleString()} to go.
+              </>
+            )}
           </p>
         </div>
       </div>
