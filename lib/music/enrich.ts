@@ -108,7 +108,7 @@ async function searchMbRecordings(q: TrackQuery): Promise<MbRecording[] | undefi
     `https://musicbrainz.org/ws/2/recording?${new URLSearchParams({
       query: `recording:"${esc(q.title)}" AND artist:"${esc(q.artist.replace(/[*]/g, ""))}"`,
       fmt: "json",
-      limit: "25",
+      limit: "100", // popular songs appear on many releases; the original can sit far down the list
     })}`,
   );
   return search ? (search.recordings ?? []) : undefined;
@@ -233,7 +233,7 @@ export async function enrichTrack(userId: string, trackId: string, opts: EnrichO
     if (credits) {
       external.musicbrainzChecked = "1";
       external.mbDateChecked = "1";
-      if (credits.firstReleaseDate) changes.releaseDate = credits.firstReleaseDate;
+      if (credits.firstReleaseDate) changes.releaseDate = chooseReleaseDate({ musicbrainz: credits.firstReleaseDate, tagYear: track.year });
       if (credits.recordingId) external.musicbrainzRecordingId = credits.recordingId;
       if (credits.composer.length && !track.composer) changes.composer = join(credits.composer);
       if (credits.lyricist.length && !track.lyricist) changes.lyricist = join(credits.lyricist);
