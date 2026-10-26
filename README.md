@@ -121,6 +121,18 @@ browser uploads will fail.
 
 Migration `drizzle/0002_music_library.sql` adds the music tables.
 
+## Files
+
+A personal drive at `/files`, in the same bucket as Music (objects under
+`files/<user>/`). Folders, uploads of any size (files over 64 MB go up in
+parts that each retry on their own; re-uploading the same folder skips what's
+already there and resumes unfinished files), drag-and-drop of whole folders,
+previews (images, video, audio, PDF, text), search, starring, moving, a
+recycle bin emptied after 30 days, storage usage, and view-only share links
+(`/s/<token>`, optionally expiring). Bytes never pass through Vercel. Migration
+`drizzle/0005_drive.sql` adds the `drive_items` table; no extra env vars or
+CORS changes are needed.
+
 **Artwork, release dates, credits and lyrics** (`lib/music/enrich.ts`): tags
 in the file are used first; gaps are filled from free public catalogs —
 the iTunes Search API (album art, saved into the bucket, and release dates;

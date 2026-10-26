@@ -7,7 +7,10 @@ export default auth((req) => {
   const { pathname } = req.nextUrl;
   const isPublic =
     PUBLIC_PATHS.some((p) => pathname === p) ||
-    pathname.startsWith("/api/auth");
+    pathname.startsWith("/api/auth") ||
+    // View-only share links from Files.
+    pathname.startsWith("/s/") ||
+    pathname.startsWith("/api/files/share/");
 
   if (!req.auth && !isPublic) {
     const loginUrl = new URL("/login", req.nextUrl.origin);
