@@ -10,6 +10,8 @@ import {
   index,
   jsonb,
   uniqueIndex,
+  bigint,
+  type AnyPgColumn,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
 
@@ -505,5 +507,46 @@ export const musicPlaylistTracks = pgTable(
   (t) => [
     primaryKey({ columns: [t.playlistId, t.position] }),
     index("music_playlist_tracks_track_id_idx").on(t.trackId),
+  ],
+);
+
+// ---------------------------------------------------------------------------
+// Files (a personal drive). Folders and files share one table so moving,
+// renaming, starring and trashing work the same for both. File bytes live in
+// object storage under files/<user>/<item id>, so renames and moves never
+// touch the bucket.
+// ---------------------------------------------------------------------------
+
+export const driveItems = pgTable(
+  "drive_items",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    // null = the top level ("My files").
+    parentId: uuid("parent_id").references((): AnyPgColumn => driveItems.id, { onDelete: "cascade" }),
+    kind: text("kind", { enum: ["folder", "file"] }).notNull(),
+    name: text("name").notNull(),
+    objectKey: text("object_key"),
+    size: bigint("size", { mode: "number" }).notNull().default(0),
+    contentType: text("content_type"),
+    // A small JPEG preview (images), stored next to the file.
+    thumbnailKey: text("thumbnail_key"),
+    // Multipart upload in progress (large files); cleared on completion.
+    uploadId: text("upload_id"),
+    // null while the upload is still in flight.
+    uploadedAt: timestamp("uploaded_at", { withTimezone: true }),
+    starred: boolean("starred").notNull().default(false),
+    // In the recycle bin since; emptied after 30 days.
+    trashedAt: timestamp("trashed_at", { withTimezone: true }),
+    shareToken: text("share_token"),
+    shareExpiresAt: timestamp("share_expires_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    index("drive_items_user_parent_idx").on(t.userId, t.parentId),
+    uniqueIndex("drive_items_share_token_idx").on(t.shareToken),
   ],
 );

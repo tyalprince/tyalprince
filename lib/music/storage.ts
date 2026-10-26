@@ -22,7 +22,8 @@ export class MusicStorageNotConfiguredError extends HttpError {
 type Config = { client: S3Client; bucket: string };
 let cached: Config | null = null;
 
-function config(): Config {
+/** The app's S3-compatible bucket (shared by Music and Files). */
+export function config(): Config {
   if (cached) return cached;
   const env = getEnv();
   const bucket = env.MUSIC_STORAGE_BUCKET ?? env.S3_BUCKET_NAME;

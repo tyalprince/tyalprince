@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { LayoutDashboard, KeyRound, Receipt, Dumbbell, Music } from "lucide-react";
+import { LayoutDashboard, KeyRound, Receipt, Dumbbell, Music, FolderOpen } from "lucide-react";
 
 export type NavItem = {
   href: string;
@@ -13,4 +13,5 @@ export const NAV_ITEMS: NavItem[] = [
   { href: "/receipts", label: "Receipts", icon: Receipt },
   { href: "/fitness", label: "Fitness", icon: Dumbbell },
   { href: "/music", label: "Music", icon: Music },
+  { href: "/files", label: "Files", icon: FolderOpen },
 ];
